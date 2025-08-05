@@ -1,22 +1,5 @@
 'use client'
-import Image from 'next/image'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useSidebar } from '../context/SidebarContext'
-// import {
-// 	BoxCubeIcon,
-// 	CalenderIcon,
-// 	ChevronDownIcon,
-// 	GridIcon,
-// 	HorizontaLDots,
-// 	ListIcon,
-// 	PageIcon,
-// 	PieChartIcon,
-// 	PlugInIcon,
-// 	TableIcon,
-// 	UserCircleIcon,
-// } from '../icons/index'
+import { getLanguagePrefix } from '@/lib/utils'
 import {
 	Book,
 	BookA,
@@ -27,13 +10,18 @@ import {
 	Podcast,
 	Users,
 } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useSidebar } from '../context/SidebarContext'
 import SidebarWidget from './SidebarWidget'
 
 type NavItem = {
 	name: string
 	icon: React.ReactNode
 	path?: string
-	subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[]
+	subItems?: { name: string; path: string }[]
 }
 
 const navItems: NavItem[] = [
@@ -41,8 +29,8 @@ const navItems: NavItem[] = [
 		icon: <GridIcon />,
 		name: 'Dashboard',
 		subItems: [
-			{ name: 'Boshqaruv paneli', path: '/uz/admin', pro: false },
-			{ name: 'Tizim sozlamalari', path: '/uz/admin/app-settings', pro: false },
+			{ name: 'Boshqaruv paneli', path: '/' },
+			{ name: 'Tizim sozlamalari', path: '/app-settings' },
 		],
 	},
 
@@ -50,61 +38,61 @@ const navItems: NavItem[] = [
 		name: 'Foydalanuvchilar',
 		icon: <Users />,
 		subItems: [
-			{ name: 'Superadminlar', path: '/form-elements', pro: false },
-			{ name: 'Adminlar', path: '/form-elements', pro: false },
-			{ name: 'Moderatorlar', path: '/form-elements', pro: false },
-			{ name: 'Xodimlar', path: '/form-elements', pro: false },
-			{ name: "O'qituvchilar", path: '/form-elements', pro: false },
-			{ name: 'Talabalar', path: '/form-elements', pro: false },
-			{ name: 'Tashqi foydalanuvchilar', path: '/form-elements', pro: false },
-			{ name: "Fakultetlar ro'yxati", path: '/form-elements', pro: false },
-			{ name: 'Qarzdorlar', path: '/form-elements', pro: false },
-			{ name: 'Buyurtmalar', path: '/form-elements', pro: false },
-			{ name: 'Davomat', path: '/form-elements', pro: false },
+			{ name: 'Superadminlar', path: '/superadmins' },
+			{ name: 'Adminlar', path: '/admins' },
+			{ name: 'Moderatorlar', path: '/moderators' },
+			{ name: 'Xodimlar', path: '/employes' },
+			{ name: "O'qituvchilar", path: '/teachers' },
+			{ name: 'Talabalar', path: '/students' },
+			{ name: 'Tashqi foydalanuvchilar', path: '/guests' },
+			{ name: "Fakultetlar ro'yxati", path: '/faculties' },
+			{ name: 'Qarzdorlar', path: '/debtors' },
+			{ name: 'Buyurtmalar', path: '/orders' },
+			{ name: 'Davomat', path: '/attendance' },
 		],
 	},
 	{
 		name: 'Kitoblar',
 		icon: <Book />,
 		subItems: [
-			{ name: "Kitoblar ro'yxati ", path: '/basic-tables', pro: false },
-			{ name: 'Resurslar turi', path: '/basic-tables', pro: false },
-			{ name: 'Binolar', path: '/basic-tables', pro: false },
-			{ name: 'Tillar', path: '/basic-tables', pro: false },
-			{ name: 'Davlatlar', path: '/basic-tables', pro: false },
-			{ name: 'Resurs sohalari', path: '/basic-tables', pro: false },
+			{ name: "Kitoblar ro'yxati ", path: '/basic-tables' },
+			{ name: 'Resurslar turi', path: '/basic-tables' },
+			{ name: 'Binolar', path: '/basic-tables' },
+			{ name: 'Tillar', path: '/basic-tables' },
+			{ name: 'Davlatlar', path: '/basic-tables' },
+			{ name: 'Resurs sohalari', path: '/basic-tables' },
 		],
 	},
 	{
 		name: "Qo'lyozmalar",
 		icon: <BookA />,
 		subItems: [
-			{ name: "Qo'lyozmalar ro'yxati", path: '/blank', pro: false },
-			{ name: "Qo'lyozmalar kategoriyalari", path: '/error-404', pro: false },
+			{ name: "Qo'lyozmalar ro'yxati", path: '/blank' },
+			{ name: "Qo'lyozmalar kategoriyalari", path: '/error-404' },
 		],
 	},
 	{
 		name: 'Jurnallar',
 		icon: <BookA />,
 		subItems: [
-			{ name: "Qo'lyozmalar ro'yxati", path: '/blank', pro: false },
-			{ name: "Qo'lyozmalar kategoriyalari", path: '/error-404', pro: false },
+			{ name: "Qo'lyozmalar ro'yxati", path: '/blank' },
+			{ name: "Qo'lyozmalar kategoriyalari", path: '/error-404' },
 		],
 	},
 	{
 		name: 'Postlar',
 		icon: <Podcast />,
 		subItems: [
-			{ name: "Qo'lyozmalar ro'yxati", path: '/blank', pro: false },
-			{ name: "Qo'lyozmalar kategoriyalari", path: '/error-404', pro: false },
+			{ name: "Qo'lyozmalar ro'yxati", path: '/blank' },
+			{ name: "Qo'lyozmalar kategoriyalari", path: '/error-404' },
 		],
 	},
 	{
 		name: 'Yangiliklar',
 		icon: <Newspaper />,
 		subItems: [
-			{ name: "Qo'lyozmalar ro'yxati", path: '/blank', pro: false },
-			{ name: "Qo'lyozmalar kategoriyalari", path: '/error-404', pro: false },
+			{ name: "Qo'lyozmalar ro'yxati", path: '/blank' },
+			{ name: "Qo'lyozmalar kategoriyalari", path: '/error-404' },
 		],
 	},
 ]
@@ -114,6 +102,7 @@ const othersItems: NavItem[] = []
 const AppSidebar: React.FC = () => {
 	const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar()
 	const pathname = usePathname()
+	const prefixLang = getLanguagePrefix(pathname)
 
 	const renderMenuItems = (
 		navItems: NavItem[],
@@ -161,14 +150,16 @@ const AppSidebar: React.FC = () => {
 					) : (
 						nav.path && (
 							<Link
-								href={nav.path}
+								href={`${prefixLang}/admin/${nav.path}`}
 								className={`menu-item group ${
-									isActive(nav.path) ? 'menu-item-active' : 'menu-item-inactive'
+									isActive(`${prefixLang}/admin/${nav.path}`)
+										? 'menu-item-active'
+										: 'menu-item-inactive'
 								}`}
 							>
 								<span
 									className={`${
-										isActive(nav.path)
+										isActive(`${prefixLang}/admin/${nav.path}`)
 											? 'menu-item-icon-active'
 											: 'menu-item-icon-inactive'
 									}`}
@@ -198,38 +189,14 @@ const AppSidebar: React.FC = () => {
 								{nav.subItems.map(subItem => (
 									<li key={subItem.name}>
 										<Link
-											href={subItem.path}
+											href={`${prefixLang}/admin/${subItem.path}`}
 											className={`menu-dropdown-item ${
-												isActive(subItem.path)
+												isActive(`${prefixLang}/admin/${subItem.path}`)
 													? 'menu-dropdown-item-active'
 													: 'menu-dropdown-item-inactive'
 											}`}
 										>
 											{subItem.name}
-											<span className='flex items-center gap-1 ml-auto'>
-												{subItem.new && (
-													<span
-														className={`ml-auto ${
-															isActive(subItem.path)
-																? 'menu-dropdown-badge-active'
-																: 'menu-dropdown-badge-inactive'
-														} menu-dropdown-badge `}
-													>
-														new
-													</span>
-												)}
-												{subItem.pro && (
-													<span
-														className={`ml-auto ${
-															isActive(subItem.path)
-																? 'menu-dropdown-badge-active'
-																: 'menu-dropdown-badge-inactive'
-														} menu-dropdown-badge `}
-													>
-														pro
-													</span>
-												)}
-											</span>
 										</Link>
 									</li>
 								))}
