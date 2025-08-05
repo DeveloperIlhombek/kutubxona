@@ -1,9 +1,11 @@
 'use client'
+import { LoaderOne } from '@/components/shared/loader'
 import { getAlladmins } from '@/lib/users/admin'
-import { IUser } from '@/types'
+import { IUser, IUserResult } from '@/types'
 import { BadgeCheck, BadgeX } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import Badge from '../../components/ui/badge/Badge'
 import {
 	Table,
@@ -16,21 +18,50 @@ import Pagination from '../_components/pagination'
 
 function AdminPage() {
 	const [loading, setLoading] = useState(false)
-	const [alladmin, setAlladmin] = useState<IUser[]>([])
+	const [allAdmins, setallAdmins] = useState<IUser[]>([])
+	const [alladminResponse, setAlladminResponse] = useState<IUserResult>()
+	const [pageNumber, setPageNumber] = useState(0)
+	const [pageSize, setPageSize] = useState(10)
+
 	useEffect(() => {
-		const fetchAllGroup = async () => {
+		const fetchAllSuperAdmin = async () => {
 			try {
 				setLoading(true)
-				const response = await getAlladmins()
-				setAlladmin(response.result.items)
+				const response = await getAlladmins({
+					pageNumber,
+					pageSize,
+				})
+				setallAdmins(response.result.items)
+				setAlladminResponse(response.result)
 			} catch (error) {
-				alert(`Guruhlarni yuklashda xatolik: ${error}`)
+				toast(`Guruhlarni yuklashda xatolik: ${error}`)
 			} finally {
 				setLoading(false)
 			}
 		}
-		fetchAllGroup()
-	}, [])
+		fetchAllSuperAdmin()
+	}, [pageNumber, pageSize])
+
+	const handlePageChange = (newPage: number, newPageSize?: number) => {
+		if (newPageSize && newPageSize !== pageSize) {
+			setPageSize(newPageSize)
+		}
+		setPageNumber(newPage)
+	}
+	if (loading) {
+		return (
+			<div className='fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center bg-white dark:bg-black '>
+				<LoaderOne />
+			</div>
+		)
+	}
+	if (alladminResponse?.totalCount === 0) {
+		return (
+			<div className='text-3xl text-gray-600 text-center font-bold '>
+				Foydalanuvchilar mavjud emas !!!
+			</div>
+		)
+	}
 
 	return (
 		<div>
@@ -100,7 +131,7 @@ function AdminPage() {
 
 							{/* Table Body */}
 							<TableBody className='divide-y divide-gray-100 dark:divide-white/[0.05]'>
-								{alladmin.map(item => (
+								{allAdmins.map(item => (
 									<TableRow key={item.id}>
 										<TableCell className='px-5 py-4 sm:px-6 text-start'>
 											<div className='flex items-center gap-3'>
@@ -151,7 +182,16 @@ function AdminPage() {
 					</div>
 				</div>
 			</div>
-			<Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />
+
+			{alladminResponse && (
+				<Pagination
+					currentPage={pageNumber}
+					totalPages={alladminResponse.totalPages}
+					totalItems={alladminResponse.totalCount}
+					pageSize={pageSize}
+					onPageChange={handlePageChange}
+				/>
+			)}
 		</div>
 	)
 }

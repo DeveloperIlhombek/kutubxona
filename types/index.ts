@@ -6,15 +6,16 @@ export interface ChildProps {
 
 export interface IUserResponce {
 	isSuccess: boolean
-	result: {
-		items: IUser[]
-		pageNumber: number
-		pageSize: number
-		totalCount: number
-		totalPages: number
-	}
+	result: IUserResult
 	statusCode: number
 	errorMessages: string[]
+}
+export interface IUserResult {
+	items: IUser[]
+	pageNumber: number
+	pageSize: number
+	totalCount: number
+	totalPages: number
 }
 
 export interface IUser {

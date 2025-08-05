@@ -1,8 +1,14 @@
 const API_URL = 'https://e-libraryrest.samdu.uz'
-export const getAlladmins = async () => {
+export const getAlladmins = async ({
+	pageSize,
+	pageNumber,
+}: {
+	pageSize: number
+	pageNumber: number
+}) => {
 	try {
 		const response = await fetch(
-			`${API_URL}/api/user/getallstudents`,
+			`${API_URL}/api/user/getalladmins?pageSize=${pageSize}&pageNumber=${pageNumber}`,
 
 			{
 				method: 'GET', // agar cookie'lar kerak bo'lsa
@@ -19,6 +25,7 @@ export const getAlladmins = async () => {
 		}
 
 		const data = await response.json()
+		//console.log(data.result)
 
 		return data
 	} catch (error) {

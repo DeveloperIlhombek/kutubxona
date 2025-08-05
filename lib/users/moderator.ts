@@ -1,6 +1,5 @@
 const API_URL = 'https://e-libraryrest.samdu.uz'
-
-export const getAllsuperadmins = async ({
+export const getAllModerator = async ({
 	pageSize,
 	pageNumber,
 }: {
@@ -9,10 +8,10 @@ export const getAllsuperadmins = async ({
 }) => {
 	try {
 		const response = await fetch(
-			`${API_URL}/api/user/getallsuperadmins?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+			`${API_URL}/api/user/getallmoderators?pageSize=${pageSize}&pageNumber=${pageNumber}`,
 
 			{
-				method: 'GET', // agar cookie'lar kerak bo'lsa
+				method: 'GET',
 				headers: {
 					Accept: '*/*',
 					'Content-Type': 'application/json',
@@ -26,8 +25,7 @@ export const getAllsuperadmins = async ({
 		}
 
 		const data = await response.json()
-
-		//console.log('Fetched superadmins:', data.result)
+		//console.log(data.result)
 
 		return data
 	} catch (error) {

@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/sonner'
 import { SidebarProvider } from '@/context/SidebarContext'
 import { ThemeProvider } from '@/context/ThemeContext'
 import { Locale } from '@/i18n/navigation'
@@ -46,6 +47,7 @@ export default async function RootLayout({
 			<body className={`${outfit.className} antialiased dark:bg-gray-900 `}>
 				<NextIntlClientProvider messages={messages}>
 					<ThemeProvider>
+						<Toaster />
 						<SidebarProvider>{children}</SidebarProvider>
 					</ThemeProvider>
 				</NextIntlClientProvider>

@@ -1,9 +1,11 @@
 'use client'
+import { LoaderOne } from '@/components/shared/loader'
 import { getAllsuperadmins } from '@/lib/users/superadmin'
-import { IUser } from '@/types'
+import { IUser, IUserResult } from '@/types'
 import { BadgeCheck, BadgeX } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import Badge from '../../components/ui/badge/Badge'
 import {
 	Table,
@@ -17,20 +19,51 @@ import Pagination from '../_components/pagination'
 function SuperAdminPage() {
 	const [loading, setLoading] = useState(false)
 	const [allsuperadmin, setAllsuperadmin] = useState<IUser[]>([])
+	const [allsuperadminResponse, setAllsuperadminResponse] =
+		useState<IUserResult>()
+	const [pageNumber, setPageNumber] = useState(0)
+	const [pageSize, setPageSize] = useState(10)
+
 	useEffect(() => {
-		const fetchAllGroup = async () => {
+		const fetchAllSuperAdmin = async () => {
 			try {
 				setLoading(true)
-				const response = await getAllsuperadmins()
+				const response = await getAllsuperadmins({
+					pageNumber,
+					pageSize,
+				})
 				setAllsuperadmin(response.result.items)
+				setAllsuperadminResponse(response.result)
 			} catch (error) {
-				alert(`Guruhlarni yuklashda xatolik: ${error}`)
+				toast(`Guruhlarni yuklashda xatolik: ${error}`)
 			} finally {
 				setLoading(false)
 			}
 		}
-		fetchAllGroup()
-	}, [])
+		fetchAllSuperAdmin()
+	}, [pageNumber, pageSize])
+
+	const handlePageChange = (newPage: number, newPageSize?: number) => {
+		if (newPageSize && newPageSize !== pageSize) {
+			setPageSize(newPageSize)
+		}
+		setPageNumber(newPage)
+	}
+
+	if (loading) {
+		return (
+			<div className='fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center bg-white dark:bg-black '>
+				<LoaderOne />
+			</div>
+		)
+	}
+	if (allsuperadminResponse?.totalCount === 0) {
+		return (
+			<div className='text-3xl text-gray-600 text-center font-bold '>
+				Foydalanuvchilar mavjud emas !!!
+			</div>
+		)
+	}
 
 	return (
 		<div>
@@ -151,7 +184,16 @@ function SuperAdminPage() {
 					</div>
 				</div>
 			</div>
-			<Pagination currentPage={1} totalPages={10} onPageChange={() => {}} />
+
+			{allsuperadminResponse && (
+				<Pagination
+					currentPage={pageNumber}
+					totalPages={allsuperadminResponse.totalPages}
+					totalItems={allsuperadminResponse.totalCount}
+					pageSize={pageSize}
+					onPageChange={handlePageChange}
+				/>
+			)}
 		</div>
 	)
 }

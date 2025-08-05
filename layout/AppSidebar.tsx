@@ -41,7 +41,7 @@ const navItems: NavItem[] = [
 			{ name: 'Superadminlar', path: '/superadmins' },
 			{ name: 'Adminlar', path: '/admins' },
 			{ name: 'Moderatorlar', path: '/moderators' },
-			{ name: 'Xodimlar', path: '/employes' },
+			{ name: 'Xodimlar', path: '/employees' },
 			{ name: "O'qituvchilar", path: '/teachers' },
 			{ name: 'Talabalar', path: '/students' },
 			{ name: 'Tashqi foydalanuvchilar', path: '/guests' },
