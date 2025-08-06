@@ -2,11 +2,13 @@
 import { LoaderOne } from '@/components/shared/loader'
 import { getAllModerator } from '@/lib/users/moderator'
 import { IUser, IUserResult } from '@/types'
-import { BadgeCheck, BadgeX } from 'lucide-react'
+import { BadgeCheck, BadgeX, Eye } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import Badge from '../../components/ui/badge/Badge'
+import Button from '../../components/ui/button/Button'
 import {
 	Table,
 	TableBody,
@@ -174,6 +176,17 @@ function ModeratorPage() {
 											>
 												{item.isActive ? <BadgeCheck /> : <BadgeX />}
 											</Badge>
+										</TableCell>
+										<TableCell className='px-4 py-3 text-gray-700 text-start text-theme-sm dark:text-gray-200'>
+											<Link href={`/uz/admin/moderators/${item.id}`}>
+												<Button
+													variant='outline'
+													size='sm'
+													className='flex items-center gap-2'
+												>
+													<Eye className='w-4 h-4' />
+												</Button>
+											</Link>
 										</TableCell>
 									</TableRow>
 								))}

@@ -34,11 +34,16 @@ export interface IUser {
 	group: string | null
 	isActive: boolean
 	userPhoto: IUserPhoto
-	faculty: string | null
+	faculty: IFaculty | null
 	building: string | null
 	studentStatusCode: string | null
 }
 
+interface IFaculty {
+	id: string
+	name: string
+	code: number
+}
 export interface IUserPhoto {
 	id: string
 	size: number
