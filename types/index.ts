@@ -63,3 +63,35 @@ export interface IFaculty {
 	name: string
 	code: number
 }
+
+//================= Dashboard =================
+export interface IDashboardWidget {
+	id: string
+	title: string
+	buildingName: string
+	buildingId: string
+	bookCountByBuilding: number
+	attedanceByBuilding: number | null
+}
+
+export interface IDashboard {
+	widgets: IDashboardWidget[]
+	booksCount: number
+	usersCount: number
+}
+export interface IDashboardResponse {
+	isSuccess: boolean
+	result: IDashboard
+	statusCode: number
+	errorMessages: string[]
+}
+
+export interface LoginResponse {
+	isSuccess: boolean
+	result: {
+		accessToken: string
+		user: Partial<IUser>
+	}
+	statusCode: number
+	errorMessages: string[]
+}

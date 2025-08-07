@@ -1,3 +1,5 @@
+import { LoginDialog } from '@/components/shared/loginwithemail'
+import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 
 export default function Home() {
@@ -11,7 +13,17 @@ export default function Home() {
 				height={38}
 				priority
 			/>
-			<h1> Salom Dunyo</h1>
+			<LoginDialog
+				trigger={
+					<Button
+						variant='destructive'
+						size='lg'
+						className='text-lg bg-gray-800 px-8'
+					>
+						Tizimga kirish
+					</Button>
+				}
+			/>
 		</div>
 	)
 }
