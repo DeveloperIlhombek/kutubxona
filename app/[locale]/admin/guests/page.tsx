@@ -1,5 +1,6 @@
 'use client'
 import { LoaderOne } from '@/components/shared/loader'
+import { Button } from '@/components/ui/button'
 import { getAllGuests } from '@/lib/users/guests'
 import { IUser, IUserResult } from '@/types'
 import { BadgeCheck, BadgeX, Eye } from 'lucide-react'
@@ -8,7 +9,6 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import Badge from '../../components/ui/badge/Badge'
-import Button from '../../components/ui/button/Button'
 import {
 	Table,
 	TableBody,
@@ -154,7 +154,7 @@ function GuestsPage() {
 											{item.lastName}
 										</TableCell>
 										<TableCell className='px-4 py-3 text-gray-700 text-theme-sm dark:text-gray-200'>
-											{item.faculty}
+											{item.faculty?.name}
 										</TableCell>
 
 										<TableCell className='px-4 py-3 text-gray-700 text-theme-sm dark:text-gray-200'>

@@ -39,11 +39,6 @@ export interface IUser {
 	studentStatusCode: string | null
 }
 
-interface IFaculty {
-	id: string
-	name: string
-	code: number
-}
 export interface IUserPhoto {
 	id: string
 	size: number
@@ -54,4 +49,17 @@ export interface IUserPhoto {
 	createdAt: string
 	fileUrl: string
 	originFileUrl: string
+}
+//================= Faculte Interface =================
+export interface IFacultyResult {
+	items: IFaculty[]
+	pageNumber: number
+	pageSize: number
+	totalCount: number
+	totalPages: number
+}
+export interface IFaculty {
+	id: string
+	name: string
+	code: number
 }
