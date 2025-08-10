@@ -55,8 +55,8 @@ const Pagination: React.FC<PaginationProps> = ({
 	const endItem = Math.min((currentPage + 1) * pageSize, totalItems)
 
 	return (
-		<div className='flex flex-col sm:flex-row items-center justify-between gap-4 mt-6'>
-			<div className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400'>
+		<div className='flex animate-slide-in-up flex-col sm:flex-row items-center justify-between gap-4 mt-6'>
+			<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-lg border border-slate-200/60 dark:border-slate-700/60 p-4 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400'>
 				<span>Qatorlar soni:</span>
 				<select
 					value={rowsPerPage}
@@ -144,6 +144,13 @@ const Pagination: React.FC<PaginationProps> = ({
 					<ChevronRight className='h-4 w-4' />
 				</button>
 			</div>
+			<style jsx>
+				{`
+					.animate-slide-in-up {
+					animation: slide-in-up 0.8s ease-out forwards;
+					opacity: 0;
+			`}
+			</style>
 		</div>
 	)
 }
