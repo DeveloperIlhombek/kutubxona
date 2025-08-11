@@ -71,7 +71,7 @@ function AdminPage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Adminlar ro&apos;yxati yuklanmoqda...
+							Talabalar ro&apos;yxati yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -111,7 +111,7 @@ function AdminPage() {
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Adminlar ro&apos;yxati
+							Talabalar ro&apos;yxati
 						</h1>
 					</div>
 				</div>
@@ -126,7 +126,7 @@ function AdminPage() {
 							Foydalanuvchilar mavjud emas
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400'>
-							Hozircha tizimda adminlar ro&apos;yxati bo&apos;sh
+							Hozircha tizimda talabalar ro&apos;yxati bo&apos;sh
 						</p>
 					</div>
 				</div>
@@ -137,7 +137,7 @@ function AdminPage() {
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900'>
 			{/* Hero Section */}
-			<div className='w-full max-w-[1800px] mx-auto h-[20vh] bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 dark:from-indigo-700 dark:via-purple-700 dark:to-indigo-900 flex items-center justify-center relative overflow-hidden'>
+			<div className='w-full h-[20vh] bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 dark:from-indigo-700 dark:via-purple-700 dark:to-indigo-900 flex items-center justify-center relative overflow-hidden'>
 				{/* Animated background elements */}
 				<div className='absolute inset-0'>
 					<div className='absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-float'></div>
@@ -156,7 +156,7 @@ function AdminPage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
-						Adminlar ro&apos;yxati
+						Talabalar ro&apos;yxati
 					</h1>
 					<p className='text-white/80 mt-2 text-lg'>
 						Tizim foydalanuvchilari boshqaruvi
@@ -165,7 +165,7 @@ function AdminPage() {
 			</div>
 
 			{/* Main Content */}
-			<div className='w-full max-w-[1800px] mx-auto p-6 -mt-8 relative z-10'>
+			<div className='w-full p-6 -mt-8 relative z-10'>
 				{/* Statistics Card */}
 				<div className='mb-6 animate-slide-in-up'>
 					<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 p-6'>
@@ -176,7 +176,7 @@ function AdminPage() {
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami adminlar soni
+										Jami talabalar soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxatdan o&apos;tgan
@@ -198,69 +198,71 @@ function AdminPage() {
 				{/* Table Container */}
 				<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 overflow-hidden animate-slide-in-up'>
 					<div className=' overflow-x-auto'>
-						<div className='max-w-[1102px]'>
-							<Table className='w-full'>
+						<div className='min-w-[1132px]'>
+							<Table>
 								<TableHeader className='bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950 dark:to-purple-950 border-b border-indigo-200/50 dark:border-indigo-800/50'>
 									<TableRow>
 										<TableCell
 											isHeader
-											className='w-[100px] px-1 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-4 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
 										>
 											Rasm
 										</TableCell>
 										<TableCell
 											isHeader
-											className='w-[120px] px-1 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
 										>
 											Ism
 										</TableCell>
 										<TableCell
 											isHeader
-											className='w-[120px] px-1 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-2  py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
 										>
 											Familiya
 										</TableCell>
 										<TableCell
 											isHeader
-											className='w-[150px] px-1 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
 										>
 											Fakultet
 										</TableCell>
 										<TableCell
 											isHeader
-											className='w-[100px] px-1 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
 										>
 											Guruh
 										</TableCell>
 										<TableCell
 											isHeader
-											className='w-[80px] px-1 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
 										>
 											Kurs
 										</TableCell>
 										<TableCell
 											isHeader
-											className='w-[200px] px-1 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
 										>
 											Email
 										</TableCell>
 										<TableCell
 											isHeader
-											className='w-[150px] px-1 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
 										>
 											Telefon
 										</TableCell>
 										<TableCell
 											isHeader
-											className='w-[80px] px-1 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
 										>
 											Faol
 										</TableCell>
 										<TableCell
 											isHeader
-											className='w-[80px] px-1 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-end text-sm'
+											className='px-4 py-4 font-semibold text-slate-700 dark:text-slate-400 text-center w-full text-sm'
 										>
-											Ko&apos;rish
+											<div className='flex justify-end w-full'>
+												Ko&apos;rish
+											</div>
 										</TableCell>
 									</TableRow>
 								</TableHeader>
@@ -271,7 +273,7 @@ function AdminPage() {
 											key={item.id}
 											className={`group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 dark:hover:from-indigo-950/50 dark:hover:to-purple-950/50 transition-all duration-300 animate-table-row`}
 										>
-											<TableCell className='w-[100px] px-1 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'>
+											<TableCell className='px-4 py-4'>
 												<div className='flex items-center gap-3'>
 													<div className='w-12 h-12 overflow-hidden rounded-full ring-2 ring-indigo-200 dark:ring-indigo-800 group-hover:ring-indigo-300 dark:group-hover:ring-indigo-700 transition-all duration-300'>
 														<Image
@@ -284,33 +286,33 @@ function AdminPage() {
 													</div>
 												</div>
 											</TableCell>
-											<TableCell className='w-[120px] px-1 py-4  text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300'>
+											<TableCell className='px-2 py-4 text-sm text-slate-700  dark:text-slate-300 group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300 text-start'>
 												{item.firstName}
 											</TableCell>
-											<TableCell className='w-[120px] px-1 py-4  text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300'>
+											<TableCell className='px-2 py-4 group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300 text-gray-700 text-start text-sm dark:text-gray-300'>
 												{item.lastName}
 											</TableCell>
-											<TableCell className='w-[150px] px-1 py-4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300'>
+											<TableCell className='px-2 py-4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
 												{item.faculty?.name || '-'}
 											</TableCell>
-											<TableCell className='px-1 py-4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300'>
+											<TableCell className='px-2 py-4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
 												{item.group || '-'}
 											</TableCell>
-											<TableCell className='px-1 py-4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300'>
+											<TableCell className='px-2 py-4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
 												{item.course || '-'}
 											</TableCell>
-											<TableCell className='px-1 py-4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300'>
+											<TableCell className='px-2 py-4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
 												<div
 													className='max-w-[200px] truncate'
 													title={item.email}
 												>
-													{item.email}
+													{item.email || '-'}
 												</div>
 											</TableCell>
-											<TableCell className='px-1 py-4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300'>
+											<TableCell className='px-2 py-4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
 												{item.phone || '-'}
 											</TableCell>
-											<TableCell className='px-1 py-4 text-sm'>
+											<TableCell className='px-2 py-4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
 												<div className='flex items-center'>
 													{item.isActive ? (
 														<BadgeCheck className='w-4 h-4 text-emerald-600 dark:text-emerald-400' />
@@ -319,9 +321,9 @@ function AdminPage() {
 													)}
 												</div>
 											</TableCell>
-											<TableCell className='px-1 py-3 text-gray-700  text-theme-sm dark:text-gray-200 '>
+											<TableCell className='px-4 py-4 text-gray-700  text-theme-sm dark:text-gray-200 '>
 												<Link href={`${lan}/admin/admins/${item.id}`}>
-													<Eye className='w-5 h-5 text-right ml-auto' />
+													<Eye className='w-5 h-5 text-center ml-auto' />
 												</Link>
 											</TableCell>
 										</TableRow>
@@ -345,84 +347,6 @@ function AdminPage() {
 					</div>
 				)}
 			</div>
-
-			{/* Custom Styles */}
-			<style jsx>{`
-				@keyframes float {
-					0%,
-					100% {
-						transform: translateY(0px) rotate(0deg);
-					}
-					50% {
-						transform: translateY(-20px) rotate(180deg);
-					}
-				}
-
-				@keyframes float-delayed {
-					0%,
-					100% {
-						transform: translateY(0px) rotate(0deg);
-					}
-					50% {
-						transform: translateY(-15px) rotate(-180deg);
-					}
-				}
-
-				@keyframes fade-in-up {
-					from {
-						opacity: 0;
-						transform: translateY(30px);
-					}
-					to {
-						opacity: 1;
-						transform: translateY(0);
-					}
-				}
-
-				@keyframes slide-in-up {
-					from {
-						opacity: 0;
-						transform: translateY(50px) scale(0.95);
-					}
-					to {
-						opacity: 1;
-						transform: translateY(0) scale(1);
-					}
-				}
-
-				@keyframes table-row {
-					from {
-						opacity: 0;
-						transform: translateX(-20px);
-					}
-					to {
-						opacity: 1;
-						transform: translateX(0);
-					}
-				}
-
-				.animate-float {
-					animation: float 6s ease-in-out infinite;
-				}
-
-				.animate-float-delayed {
-					animation: float-delayed 8s ease-in-out infinite;
-				}
-
-				.animate-fade-in-up {
-					animation: fade-in-up 1s ease-out;
-				}
-
-				.animate-slide-in-up {
-					animation: slide-in-up 0.8s ease-out forwards;
-					opacity: 0;
-				}
-
-				.animate-table-row {
-					animation: table-row 0.6s ease-out forwards;
-					opacity: 0;
-				}
-			`}</style>
 		</div>
 	)
 }
