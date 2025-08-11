@@ -24,7 +24,7 @@ import {
 } from '../../components/ui/table'
 import Pagination from '../_components/pagination'
 
-function AdminPage() {
+function StudentPage() {
 	const [loading, setLoading] = useState(false)
 	const [allAdmins, setallAdmins] = useState<IUser[]>([])
 	const [alladminResponse, setAlladminResponse] = useState<IUserResult>()
@@ -351,4 +351,4 @@ function AdminPage() {
 	)
 }
 
-export default AdminPage
+export default StudentPage

@@ -1,11 +1,10 @@
 'use client'
 import UserIDpage from '@/components/user/UserIDpage'
-import { useParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 export default function UserDetailPage() {
-	//const pathname = usePathname()
-	//const userid = pathname.split('/')[4]
-	const { userId } = useParams<{ userId: string }>()
+	const pathname = usePathname()
+	const userid = pathname.split('/')[4]
 
-	return <UserIDpage userid={userId} />
+	return <UserIDpage userid={userid} />
 }
