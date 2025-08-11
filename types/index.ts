@@ -95,3 +95,25 @@ export interface LoginResponse {
 	statusCode: number
 	errorMessages: string[]
 }
+
+//================= Country Interface =================
+export interface ICountry {
+	id: string
+	name: string
+	code: string
+}
+
+export interface ICountryResult {
+	items: ICountry[]
+	pageNumber: number
+	pageSize: number
+	totalCount: number
+	totalPages: number
+}
+
+export interface ICountryResponse {
+	isSuccess: boolean
+	result: ICountryResult
+	statusCode: number
+	errorMessages: string[]
+}
