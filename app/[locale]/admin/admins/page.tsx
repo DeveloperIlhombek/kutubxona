@@ -71,7 +71,7 @@ function AdminPage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Talabalar ro&apos;yxati yuklanmoqda...
+							Adminlar ro&apos;yxati yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -111,7 +111,7 @@ function AdminPage() {
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Talabalar ro&apos;yxati
+							Adminlar ro&apos;yxati
 						</h1>
 					</div>
 				</div>
@@ -126,7 +126,7 @@ function AdminPage() {
 							Foydalanuvchilar mavjud emas
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400'>
-							Hozircha tizimda talabalar ro&apos;yxati bo&apos;sh
+							Hozircha tizimda adminlar ro&apos;yxati bo&apos;sh
 						</p>
 					</div>
 				</div>
@@ -156,7 +156,7 @@ function AdminPage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
-						Talabalar ro&apos;yxati
+						Adminlar ro&apos;yxati
 					</h1>
 					<p className='text-white/80 mt-2 text-lg'>
 						Tizim foydalanuvchilari boshqaruvi
@@ -176,7 +176,7 @@ function AdminPage() {
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami talabalar soni
+										Jami adminlar soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxatdan o&apos;tgan

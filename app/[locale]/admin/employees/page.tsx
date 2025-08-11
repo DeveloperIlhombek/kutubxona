@@ -320,7 +320,7 @@ function Employeespage() {
 												</div>
 											</TableCell>
 											<TableCell className='px-4 py-4 text-gray-700  text-theme-sm dark:text-gray-200 '>
-												<Link href={`${lan}/admin/admins/${item.id}`}>
+												<Link href={`${lan}/admin/employees/${item.id}`}>
 													<Eye className='w-5 h-5 text-center ml-auto' />
 												</Link>
 											</TableCell>
