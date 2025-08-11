@@ -1,9 +1,17 @@
 'use client'
-import { LoaderOne } from '@/components/shared/loader'
 import { Button } from '@/components/ui/button'
 import { getFaculties } from '@/lib/faculty/faculty'
-import { IFacultyResult } from '@/types'
-import { PencilIcon, PlusSquareIcon, Trash2, University } from 'lucide-react'
+import { IFaculty, IFacultyResult } from '@/types'
+import {
+	Globe,
+	PencilIcon,
+	PlusSquare,
+	PlusSquareIcon,
+	Sparkles,
+	Trash2,
+	University,
+	UniversityIcon,
+} from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import {
@@ -20,7 +28,8 @@ import { DeleteFacultyDialog } from './_components/deleteFaculty'
 
 function Faculties() {
 	const [loading, setLoading] = useState(false)
-	const [faculty, setFaculty] = useState<IFacultyResult>()
+	const [facultyResponse, setFacultyResponse] = useState<IFacultyResult>()
+	const [faculty, setFaculty] = useState<IFaculty>()
 	const [pageNumber, setPageNumber] = useState(0)
 	const [pageSize, setPageSize] = useState(10)
 	const [editDialog, setEditDialog] = useState({
@@ -41,7 +50,8 @@ function Faculties() {
 		try {
 			setLoading(true)
 			const response = await getFaculties({ pageNumber, pageSize })
-			setFaculty(response?.result)
+			setFacultyResponse(response?.result)
+			setFaculty(response?.result.items)
 		} catch (error) {
 			toast(`Fakultetlarni yuklashda xatolik: ${error}`)
 		} finally {
@@ -87,16 +97,83 @@ function Faculties() {
 
 	if (loading) {
 		return (
-			<div className='fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center bg-white dark:bg-black '>
-				<LoaderOne />
+			<div className='min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900'>
+				{/* Loading Hero Section */}
+				<div className='w-full h-[20vh] bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 dark:from-indigo-700 dark:via-purple-700 dark:to-indigo-900 flex items-center justify-center relative overflow-hidden'>
+					<div className='absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 animate-pulse'></div>
+					<div className='relative z-10 text-center'>
+						<div className='w-16 h-16 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center animate-spin'>
+							<Sparkles className='w-8 h-8 text-white' />
+						</div>
+						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
+							Fakultetlar ro&apos;yxati yuklanmoqda...
+						</h1>
+					</div>
+				</div>
+
+				{/* Loading Content */}
+				<div className='p-6 -mt-8 relative z-10'>
+					<div className='bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 p-6 animate-pulse'>
+						<div className='space-y-4'>
+							{[...Array(5)].map((_, index) => (
+								<div key={index} className='flex items-center space-x-4'>
+									<div className='w-10 h-10 bg-slate-200 dark:bg-slate-700 rounded-full'></div>
+									<div className='flex-1 space-y-2'>
+										<div className='h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4'></div>
+										<div className='h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2'></div>
+									</div>
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
 			</div>
 		)
 	}
 
-	if (faculty?.totalCount === 0) {
+	if (facultyResponse?.totalCount === 0) {
 		return (
-			<div className='text-3xl text-gray-600 text-center font-bold '>
-				Fakultetlar mavjud emas !
+			<div className='min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900'>
+				{/* Hero Section */}
+				<div className='w-full h-[20vh] bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 dark:from-indigo-700 dark:via-purple-700 dark:to-indigo-900 flex items-center justify-center relative overflow-hidden'>
+					<div className='absolute inset-0'>
+						<div className='absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-float'></div>
+						<div className='absolute top-20 right-20 w-16 h-16 bg-white/10 rounded-full animate-float-delayed'></div>
+					</div>
+					<div className='relative z-10 text-center'>
+						<div className='flex items-center justify-center mb-4'>
+							<Globe className='w-8 h-8 text-white mr-3' />
+							<Sparkles className='w-8 h-8 text-white animate-pulse' />
+						</div>
+						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
+							Fakultetlar ro&apos;yxati
+						</h1>
+					</div>
+				</div>
+
+				{/* Empty State */}
+				<div className='flex items-center justify-center p-12 -mt-8 relative z-10'>
+					<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 p-12 text-center max-w-md'>
+						<div className='w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 rounded-full flex items-center justify-center'>
+							<UniversityIcon className='w-10 h-10 text-slate-400 dark:text-slate-500' />
+						</div>
+						<h3 className='text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3'>
+							Fakultetlar mavjud emas
+						</h3>
+						<p className='text-slate-500 dark:text-slate-400 mb-6'>
+							Hozircha tizimda fakultetlar ro&apos;yxati bo&apos;sh
+						</p>
+						<CreateFaculty
+							trigger={
+								<Button className='bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105'>
+									<PlusSquare className='w-4 h-4 mr-2' />
+									Birinchi fakultetni qo&apos;shish
+								</Button>
+							}
+							onFacultyAdded={handleFacultyAdded}
+						/>
+					</div>
+				</div>
 			</div>
 		)
 	}
@@ -147,7 +224,7 @@ function Faculties() {
 
 							{/* Table Body */}
 							<TableBody className='divide-y divide-gray-100 dark:divide-white/[0.05]'>
-								{faculty?.items.map(item => (
+								{facultyResponse?.items.map(item => (
 									<TableRow key={item.id}>
 										<TableCell className='px-4 py-3 text-gray-700 text-start text-theme-sm dark:text-gray-200'>
 											{item.name}
@@ -196,11 +273,11 @@ function Faculties() {
 				onSuccess={handleFacultyDeleted}
 			/>
 
-			{faculty && (
+			{facultyResponse && (
 				<Pagination
 					currentPage={pageNumber}
-					totalPages={faculty.totalPages}
-					totalItems={faculty.totalCount}
+					totalPages={facultyResponse.totalPages}
+					totalItems={facultyResponse.totalCount}
 					pageSize={pageSize}
 					onPageChange={handlePageChange}
 				/>

@@ -31,6 +31,27 @@ export const getAllCountries = async ({
 	}
 }
 
+export const createCountry = async (data: { name: string; code: string }) => {
+	try {
+		const response = await fetch(`${API_URL}/api/country`, {
+			method: 'POST',
+			headers: {
+				Accept: '*/*',
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			},
+			body: JSON.stringify(data),
+		})
+		if (!response.ok) {
+			throw new Error(`API error: ${response.status} - ${response.statusText}`)
+		}
+		return await response.json()
+	} catch (error) {
+		console.error('Error updating country:', error)
+		return null
+	}
+}
+
 export const getCountryById = async (countryId: string) => {
 	try {
 		const response = await fetch(`${API_URL}/api/country/${countryId}`, {
