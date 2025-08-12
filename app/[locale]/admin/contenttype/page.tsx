@@ -30,7 +30,7 @@ import {
 	TableRow,
 } from '../../components/ui/table'
 import Pagination from '../_components/pagination'
-import CreateCountryDialog from '../countries/_components/createCountry'
+import CreateContentTypeDialog from './_components/createContent'
 import { DeleteContentDialog } from './_components/deleteContentDialog'
 import { EditContentDialog } from './_components/editContentDialog'
 
@@ -151,14 +151,14 @@ function ContentTypepage() {
 						<p className='text-slate-500 dark:text-slate-400 mb-6'>
 							Hozircha tizimda resurs turlari bo&apos;sh
 						</p>
-						<CreateCountryDialog
+						<CreateContentTypeDialog
 							trigger={
 								<Button className='bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105'>
 									<PlusSquare className='w-4 h-4 mr-2' />
 									Birinchi Resurs turini yarating
 								</Button>
 							}
-							onCountryAdded={handleContentAdded}
+							onSuccess={handleContentAdded}
 						/>
 					</div>
 				</div>
@@ -218,14 +218,14 @@ function ContentTypepage() {
 										resurs
 									</p>
 								</div>
-								<CreateCountryDialog
+								<CreateContentTypeDialog
 									trigger={
 										<Button className='bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105'>
 											<PlusSquare className='w-4 h-4 mr-2' />
 											Yaratish
 										</Button>
 									}
-									onCountryAdded={handleContentAdded}
+									onSuccess={handleContentAdded}
 								/>
 							</div>
 						</div>
@@ -427,7 +427,7 @@ function ContentTypepage() {
 			{/* Edit Country Dialog */}
 			{editingContentType && (
 				<EditContentDialog
-					countryId={editingContentType.id}
+					contentId={editingContentType.id}
 					open={!!editingContentType}
 					onOpenChange={open => !open && setEditingContentType(null)}
 					onSuccess={handleEditSuccess}

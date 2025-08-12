@@ -6,18 +6,18 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog'
-import { getCountryById, updateCountry } from '@/lib/books/countries'
+import { getContentTypeById, updateContent } from '@/lib/books/content_type'
 import { Loader2, PencilIcon, Save } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 export function EditContentDialog({
-	countryId,
+	contentId,
 	open,
 	onOpenChange,
 	onSuccess,
 }: {
-	countryId: string
+	contentId: string
 	open: boolean
 	onOpenChange: (open: boolean) => void
 	onSuccess: () => void
@@ -25,41 +25,61 @@ export function EditContentDialog({
 	const [loading, setLoading] = useState(false)
 	const [formData, setFormData] = useState({
 		name: '',
-		code: '',
+		literature: false,
+		article: false,
+		dissertation: false,
+		monographs: false,
 	})
 
 	useEffect(() => {
-		if (open && countryId) {
-			const loadCountry = async () => {
+		if (open && contentId) {
+			const loadContentType = async () => {
 				try {
 					setLoading(true)
-					const response = await getCountryById(countryId)
-					if (response?.isSuccess) {
+					const response = await getContentTypeById(contentId)
+
+					console.log('API Response:', response) // Debug uchun
+
+					if (response?.isSuccess && response.result) {
 						setFormData({
-							name: response.result.name,
-							code: response.result.code,
+							name: response.result.name || '',
+							literature: response.result.literature || false,
+							article: response.result.article || false,
+							dissertation: response.result.dissertation || false,
+							monographs: response.result.monographs || false,
 						})
 					}
 				} catch (error) {
-					toast.error(`Failed to load faculty data ${error}`)
+					toast.error(`Failed to load content type data: ${error}`)
 				} finally {
 					setLoading(false)
 				}
 			}
-			loadCountry()
+			loadContentType()
 		}
-	}, [open, countryId])
+	}, [open, contentId])
+
+	const handleCheckboxChange = (field: keyof typeof formData) => {
+		setFormData(prev => ({
+			...prev,
+			[field]: !prev[field],
+		}))
+	}
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		try {
 			setLoading(true)
-			await updateCountry(countryId, formData)
-			toast.success('Country updated successfully')
-			onOpenChange(false)
-			onSuccess()
+			const response = await updateContent(contentId, formData)
+			if (response?.isSuccess) {
+				toast.success('Content type updated successfully')
+				onOpenChange(false)
+				onSuccess()
+			} else {
+				toast.error(response?.error || 'Failed to update content type')
+			}
 		} catch (error) {
-			toast.error(`Failed to update country ${error}`)
+			toast.error(`Failed to update content type: ${error}`)
 		} finally {
 			setLoading(false)
 		}
@@ -71,7 +91,7 @@ export function EditContentDialog({
 				<DialogHeader className='space-y-3 pb-6 border-b border-slate-200/50'>
 					<DialogTitle className='text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2'>
 						<PencilIcon className='w-6 h-6 text-indigo-600' />
-						Davlatlarni tahrirlash
+						Kontent turini tahrirlash
 					</DialogTitle>
 				</DialogHeader>
 
@@ -90,7 +110,7 @@ export function EditContentDialog({
 						<div className='space-y-4'>
 							<div className='space-y-2'>
 								<label className='text-sm font-semibold text-slate-700 flex items-center gap-2'>
-									Davlat nomi
+									Kontent turi nomi
 									<span className='text-red-500'>*</span>
 								</label>
 								<div className='relative group'>
@@ -100,29 +120,56 @@ export function EditContentDialog({
 											setFormData({ ...formData, name: e.target.value })
 										}
 										className='w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 group-hover:border-indigo-300 shadow-sm hover:shadow-md text-slate-900 placeholder-slate-400'
-										placeholder='Fakultet nomini kiriting...'
+										placeholder='Kontent turi nomini kiriting...'
 										required
 									/>
-									<div className='absolute inset-0 bg-gradient-to-r from-indigo-500/0 to-purple-500/0 group-focus-within:from-indigo-500/5 group-focus-within:to-purple-500/5 rounded-xl transition-all duration-300 pointer-events-none'></div>
 								</div>
 							</div>
 
 							<div className='space-y-2'>
-								<label className='text-sm font-semibold text-slate-700 flex items-center gap-2'>
-									Davlat kodi
-									<span className='text-red-500'>*</span>
+								<label className='text-sm font-semibold text-slate-700'>
+									Kontent turlari
 								</label>
-								<div className='relative group'>
-									<input
-										value={formData.code}
-										onChange={e =>
-											setFormData({ ...formData, code: e.target.value })
-										}
-										className='w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 group-hover:border-indigo-300 shadow-sm hover:shadow-md text-slate-900 placeholder-slate-400 font-mono'
-										placeholder='Kodni kiriting...'
-										required
-									/>
-									<div className='absolute inset-0 bg-gradient-to-r from-indigo-500/0 to-purple-500/0 group-focus-within:from-indigo-500/5 group-focus-within:to-purple-500/5 rounded-xl transition-all duration-300 pointer-events-none'></div>
+								<div className='grid grid-cols-2 gap-4'>
+									<label className='flex items-center space-x-2'>
+										<input
+											type='checkbox'
+											checked={formData.literature}
+											onChange={() => handleCheckboxChange('literature')}
+											className='h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-slate-300 rounded'
+										/>
+										<span>Adabiyot</span>
+									</label>
+
+									<label className='flex items-center space-x-2'>
+										<input
+											type='checkbox'
+											checked={formData.article}
+											onChange={() => handleCheckboxChange('article')}
+											className='h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-slate-300 rounded'
+										/>
+										<span>Maqola</span>
+									</label>
+
+									<label className='flex items-center space-x-2'>
+										<input
+											type='checkbox'
+											checked={formData.dissertation}
+											onChange={() => handleCheckboxChange('dissertation')}
+											className='h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-slate-300 rounded'
+										/>
+										<span>Dissertatsiya</span>
+									</label>
+
+									<label className='flex items-center space-x-2'>
+										<input
+											type='checkbox'
+											checked={formData.monographs}
+											onChange={() => handleCheckboxChange('monographs')}
+											className='h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-slate-300 rounded'
+										/>
+										<span>Monografiya</span>
+									</label>
 								</div>
 							</div>
 						</div>
@@ -157,13 +204,6 @@ export function EditContentDialog({
 						</div>
 					</form>
 				)}
-
-				{/* Custom styles for animations */}
-				<style jsx>{`
-					.animation-delay-150 {
-						animation-delay: 150ms;
-					}
-				`}</style>
 			</DialogContent>
 		</Dialog>
 	)
