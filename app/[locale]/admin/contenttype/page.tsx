@@ -9,11 +9,15 @@ import {
 import { getContentType } from '@/lib/books/content_type'
 import { IContentType, IContenttypeResult } from '@/types'
 import {
+	BadgeCheck,
+	BadgeX,
 	BookA,
+	Edit,
 	Globe,
 	MoreHorizontal,
 	PlusSquare,
 	Sparkles,
+	Trash2,
 	TrendingUp,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -25,7 +29,10 @@ import {
 	TableHeader,
 	TableRow,
 } from '../../components/ui/table'
+import Pagination from '../_components/pagination'
 import CreateCountryDialog from '../countries/_components/createCountry'
+import { DeleteContentDialog } from './_components/deleteContentDialog'
+import { EditContentDialog } from './_components/editContentDialog'
 
 function ContentTypepage() {
 	const [loading, setLoading] = useState(false)
@@ -235,7 +242,7 @@ function ContentTypepage() {
 									<TableRow>
 										<TableCell
 											isHeader
-											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-4 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
 										>
 											#
 										</TableCell>
@@ -245,17 +252,24 @@ function ContentTypepage() {
 										>
 											Resurs turi
 										</TableCell>
-										<TableCell
-											isHeader
-											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
-										>
-											Davlat kodi
-										</TableCell>
+
 										<TableCell
 											isHeader
 											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
 										>
 											Turlar
+										</TableCell>
+										<TableCell
+											isHeader
+											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+										>
+											Tahrirlash
+										</TableCell>
+										<TableCell
+											isHeader
+											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+										>
+											O&apos;chirish
 										</TableCell>
 									</TableRow>
 								</TableHeader>
@@ -267,14 +281,11 @@ function ContentTypepage() {
 											key={item.id}
 											className={`group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 dark:hover:from-indigo-950/50 dark:hover:to-purple-950/50 transition-all duration-300 animate-table-row`}
 										>
-											<TableCell className='px-6 py-4 text-slate-700 dark:text-slate-300 font-medium group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300'>
+											<TableCell className='px-4 py-4 text-slate-700 dark:text-slate-300 font-medium group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300'>
 												{pageNumber * pageSize + index + 1}
 											</TableCell>
-											<TableCell className='px-6 py-4'>
+											<TableCell className='px-1 py-4'>
 												<div className='flex items-center gap-3'>
-													<div className='w-10 h-10 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 rounded-full flex items-center justify-center ring-2 ring-indigo-200 dark:ring-indigo-800 group-hover:ring-indigo-300 dark:group-hover:ring-indigo-700 transition-all duration-300'>
-														<Globe className='w-5 h-5 text-indigo-600 dark:text-indigo-400' />
-													</div>
 													<div>
 														<p className='font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300'>
 															{item.name}
@@ -282,13 +293,7 @@ function ContentTypepage() {
 													</div>
 												</div>
 											</TableCell>
-											<TableCell className='px-6 py-4'>
-												<div className='inline-flex items-center bg-gradient-to-r from-slate-100 to-indigo-100 dark:from-slate-800 dark:to-indigo-900 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 group-hover:border-indigo-300 dark:group-hover:border-indigo-600 transition-all duration-300'>
-													<span className='text-sm font-mono font-bold text-slate-700 dark:text-slate-300 group-hover:text-indigo-700 dark:group-hover:text-indigo-300'>
-														111
-													</span>
-												</div>
-											</TableCell>
+
 											<TableCell className='px-6 py-4'>
 												<DropdownMenu>
 													<DropdownMenuTrigger asChild>
@@ -304,12 +309,98 @@ function ContentTypepage() {
 														align='end'
 														className='w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl'
 													>
-														<DropdownMenuItem>literature</DropdownMenuItem>
-														<DropdownMenuItem>article</DropdownMenuItem>
-														<DropdownMenuItem>dissertation</DropdownMenuItem>
-														<DropdownMenuItem>monographs</DropdownMenuItem>
+														<DropdownMenuItem>
+															<div className='flex items-center justify-between w-full'>
+																<p className='text-gray-700 font-semibold dark:text-gray-400'>
+																	Literature
+																</p>
+																{item.literature ? (
+																	<BadgeCheck className='text-green-500 ml-auto' />
+																) : (
+																	<BadgeX className='text-red-500 ml-auto' />
+																)}
+															</div>
+														</DropdownMenuItem>
+														<DropdownMenuItem>
+															<div className='flex items-center justify-between w-full'>
+																<p className='text-gray-700 font-semibold dark:text-gray-400'>
+																	Article
+																</p>
+																{item.article ? (
+																	<BadgeCheck className='text-green-500 ml-auto' />
+																) : (
+																	<BadgeX className='text-red-500 ml-auto' />
+																)}
+															</div>
+														</DropdownMenuItem>
+														<DropdownMenuItem>
+															<div className='flex items-center justify-between w-full'>
+																<p className='text-gray-700 font-semibold dark:text-gray-400'>
+																	Dissertation
+																</p>
+																{item.dissertation ? (
+																	<BadgeCheck className='text-green-500 ml-auto' />
+																) : (
+																	<BadgeX className='text-red-500 ml-auto' />
+																)}
+															</div>
+														</DropdownMenuItem>
+														<DropdownMenuItem>
+															<div className='flex items-center justify-between w-full'>
+																<p className='text-gray-700 font-semibold dark:text-gray-400'>
+																	Monographs
+																</p>
+																{item.monographs ? (
+																	<BadgeCheck className='text-green-500 ml-auto' />
+																) : (
+																	<BadgeX className='text-red-500 ml-auto' />
+																)}
+															</div>
+														</DropdownMenuItem>
 													</DropdownMenuContent>
 												</DropdownMenu>
+											</TableCell>
+											<TableCell className='px-6 py-4'>
+												<div className='flex items-center gap-3'>
+													<div>
+														<p className='font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300'>
+															<Button
+																onClick={() =>
+																	setEditingContentType({
+																		id: item.id,
+																		name: item.name,
+																		article: true,
+																		dissertation: true,
+																		literature: false,
+																		monographs: true,
+																	})
+																}
+																className='flex items-center gap-2 px-3 py-2 text-slate-700 dark:text-slate-300 hover:bg-indigo-50 dark:hover:bg-indigo-950 cursor-pointer'
+															>
+																<Edit className='w-4 h-4 text-indigo-600 dark:text-indigo-400' />
+															</Button>
+														</p>
+													</div>
+												</div>
+											</TableCell>
+											<TableCell className='px-6 py-4'>
+												<div className='flex items-center gap-3'>
+													<div>
+														<p className='font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300'>
+															<Button
+																onClick={() =>
+																	setDeletingContentType({
+																		id: item.id,
+																		name: item.name,
+																	})
+																}
+																className='flex items-center gap-2 px-3 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950 cursor-pointer'
+															>
+																<Trash2 className='w-4 h-4' />
+															</Button>
+														</p>
+													</div>
+												</div>
 											</TableCell>
 										</TableRow>
 									))}
@@ -318,7 +409,41 @@ function ContentTypepage() {
 						</div>
 					</div>
 				</div>
+				{/* Pagination */}
+				{contentResult && (
+					<div className='mt-6 animate-slide-in-up'>
+						<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-lg border border-slate-200/60 dark:border-slate-700/60 p-4'>
+							<Pagination
+								currentPage={pageNumber}
+								totalPages={contentResult.totalPages}
+								totalItems={contentResult.totalCount}
+								pageSize={pageSize}
+								onPageChange={handlePageChange}
+							/>
+						</div>
+					</div>
+				)}
 			</div>
+			{/* Edit Country Dialog */}
+			{editingContentType && (
+				<EditContentDialog
+					countryId={editingContentType.id}
+					open={!!editingContentType}
+					onOpenChange={open => !open && setEditingContentType(null)}
+					onSuccess={handleEditSuccess}
+				/>
+			)}
+
+			{/* Delete Country Dialog */}
+			{deletingContentType && (
+				<DeleteContentDialog
+					id={deletingContentType.id}
+					contentname={deletingContentType.name}
+					open={!!deletingContentType}
+					onOpenChange={open => !open && setDeletingContentType(null)}
+					onSuccess={handleDeleteSuccess}
+				/>
+			)}
 		</div>
 	)
 }

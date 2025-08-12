@@ -31,3 +31,24 @@ export const getContentType = async ({
 		return null
 	}
 }
+
+export const deleteContent = async (contentId: string) => {
+	try {
+		const response = await fetch(`${API_URL}/api/contenttype/${contentId}`, {
+			method: 'DELETE',
+			headers: {
+				Accept: '*/*',
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			},
+		})
+
+		if (!response.ok) {
+			throw new Error(`API error: ${response.status} - ${response.statusText}`)
+		}
+		return await response.json()
+	} catch (error) {
+		console.error('Error deleting country:', error)
+		return null
+	}
+}
