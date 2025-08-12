@@ -60,7 +60,7 @@ const navItems: NavItem[] = [
 			{ name: 'Binolar', path: '/basic-tables' },
 			{ name: 'Tillar', path: '/language' },
 			{ name: 'Davlatlar', path: '/countries' },
-			{ name: 'Resurs sohalari', path: '/basic-tables' },
+			{ name: 'Resurs sohalari', path: '/fields' },
 		],
 	},
 	{
