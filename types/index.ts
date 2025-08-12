@@ -52,7 +52,7 @@ export interface IUserPhoto {
 }
 //================= Faculte Interface =================
 export interface IFacultyResult {
-	items: IFaculty[]
+	result: IFaculty[]
 	pageNumber: number
 	pageSize: number
 	totalCount: number

@@ -3,13 +3,12 @@ import { Button } from '@/components/ui/button'
 import { getFaculties } from '@/lib/faculty/faculty'
 import { IFaculty, IFacultyResult } from '@/types'
 import {
-	Globe,
+	Building2Icon,
 	PencilIcon,
 	PlusSquare,
-	PlusSquareIcon,
 	Sparkles,
 	Trash2,
-	University,
+	TrendingUp,
 	UniversityIcon,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -29,7 +28,7 @@ import { DeleteFacultyDialog } from './_components/deleteFaculty'
 function Faculties() {
 	const [loading, setLoading] = useState(false)
 	const [facultyResponse, setFacultyResponse] = useState<IFacultyResult>()
-	const [faculty, setFaculty] = useState<IFaculty>()
+	const [faculty, setFaculty] = useState<IFaculty[]>()
 	const [pageNumber, setPageNumber] = useState(0)
 	const [pageSize, setPageSize] = useState(10)
 	const [editDialog, setEditDialog] = useState({
@@ -50,7 +49,7 @@ function Faculties() {
 		try {
 			setLoading(true)
 			const response = await getFaculties({ pageNumber, pageSize })
-			setFacultyResponse(response?.result)
+			setFacultyResponse(response.result)
 			setFaculty(response?.result.items)
 		} catch (error) {
 			toast(`Fakultetlarni yuklashda xatolik: ${error}`)
@@ -142,7 +141,7 @@ function Faculties() {
 					</div>
 					<div className='relative z-10 text-center'>
 						<div className='flex items-center justify-center mb-4'>
-							<Globe className='w-8 h-8 text-white mr-3' />
+							<Building2Icon className='w-8 h-8 text-white mr-3' />
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
@@ -179,79 +178,166 @@ function Faculties() {
 	}
 
 	return (
-		<div>
-			{/* Header Section bg */}
-			<div className='flex items-center justify-between p-0 m-0 w-full h-[150px] backdrop-blur-md bg-gradient-to-r from-blue-600 via-sky-700 to-blue-600 relative'>
-				<div className='absolute inset-0 bg-black/20'></div>
-				<div className='flex items-center gap-2 z-10 text-white ml-8'>
-					<University className='w-10 h-10' />
-					<h1 className='text-3xl font-bold'>Fakultetlar</h1>
+		<div className='min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900'>
+			{/* Hero Section */}
+			<div className='w-full h-[20vh] bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 dark:from-indigo-700 dark:via-purple-700 dark:to-indigo-900 flex items-center justify-center relative overflow-hidden'>
+				{/* Animated background elements */}
+				<div className='absolute inset-0'>
+					<div className='absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full animate-float'></div>
+					<div className='absolute top-20 right-20 w-16 h-16 bg-white/10 rounded-full animate-float-delayed'></div>
+					<div className='absolute bottom-10 left-1/4 w-12 h-12 bg-white/10 rounded-full animate-float'></div>
+					<div className='absolute bottom-20 right-1/3 w-14 h-14 bg-white/10 rounded-full animate-float-delayed'></div>
 				</div>
-				<div className='z-10 mr-8'>
-					<CreateFaculty
-						trigger={
-							<Button className='w-fit h-10' variant='destructive'>
-								Yaratish <PlusSquareIcon className='w-4 h-4 ml-2' />
-							</Button>
-						}
-						onFacultyAdded={handleFacultyAdded}
-					/>
+
+				{/* Gradient overlay */}
+				<div className='absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/20'></div>
+
+				{/* Content */}
+				<div className='relative z-10 text-center animate-fade-in-up'>
+					<div className='flex items-center justify-center mb-4'>
+						<Building2Icon className='w-8 h-8 text-white mr-3' />
+						<Sparkles className='w-8 h-8 text-white animate-pulse' />
+					</div>
+					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
+						Fakultetlar
+					</h1>
+					<p className='text-white/80 mt-2 text-lg'>
+						Tizimdagi fakultetlar boshqaruvi
+					</p>
 				</div>
 			</div>
 
 			{/* Content section*/}
-			<div className='overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]'>
-				<div className='max-w-full overflow-x-auto'>
-					<div className='min-w-[1102px]'>
-						<Table>
-							{/* Table Header */}
-							<TableHeader className='border-b border-gray-100 dark:border-white/[0.05]'>
-								<TableRow>
-									<TableCell
-										isHeader
-										className='px-5 py-3 font-medium text-gray-700 text-start text-md dark:text-gray-200'
-									>
-										Fakultetlar
-									</TableCell>
-									<TableCell
-										isHeader
-										className='px-5 py-3 font-medium text-gray-700 text-start text-md dark:text-gray-200'
-									>
-										Kod
-									</TableCell>
-								</TableRow>
-							</TableHeader>
-
-							{/* Table Body */}
-							<TableBody className='divide-y divide-gray-100 dark:divide-white/[0.05]'>
-								{facultyResponse?.items.map(item => (
-									<TableRow key={item.id}>
-										<TableCell className='px-4 py-3 text-gray-700 text-start text-theme-sm dark:text-gray-200'>
-											{item.name}
+			<div className='p-6 -mt-8 relative z-10'>
+				{/* Statistics and Add Button */}
+				<div className='mb-6 animate-slide-in-up'>
+					<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 p-6'>
+						<div className='flex items-center justify-between'>
+							<div className='flex items-center gap-4'>
+								<div className='w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 rounded-full flex items-center justify-center'>
+									<TrendingUp className='w-6 h-6 text-indigo-600 dark:text-indigo-400' />
+								</div>
+								<div>
+									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
+										Jami fakultetlar soni
+									</h3>
+									<p className='text-slate-600 dark:text-slate-400'>
+										Tizimda ro&apos;yxatdan o&apos;tgan
+									</p>
+								</div>
+							</div>
+							<div className='flex items-center gap-4'>
+								<div className='text-right'>
+									<p className='text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
+										{facultyResponse?.totalCount || 0}
+									</p>
+									<p className='text-sm text-slate-500 dark:text-slate-400'>
+										fakultet
+									</p>
+								</div>
+								<CreateFaculty
+									trigger={
+										<Button className='bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105'>
+											<PlusSquare className='w-4 h-4 mr-2' />
+											Yaratish
+										</Button>
+									}
+									onFacultyAdded={handleFacultyAdded}
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 overflow-hidden animate-slide-in-up'>
+					<div className='max-w-full overflow-x-auto'>
+						<div className='min-w-[800px]'>
+							<Table>
+								{/* Table Header */}
+								<TableHeader className='bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950 dark:to-purple-950 border-b border-indigo-200/50 dark:border-indigo-800/50'>
+									<TableRow>
+										<TableCell
+											isHeader
+											className='px-2 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+										>
+											#
 										</TableCell>
-										<TableCell className='px-4 py-3 text-gray-700 text-start text-theme-sm dark:text-gray-200'>
-											{item.code}
+										<TableCell
+											isHeader
+											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+										>
+											Fakultetlar
 										</TableCell>
-										<TableCell className='px-4 py-3 text-end text-theme-sm dark:text-gray-200'>
-											<button
-												onClick={() => handleEditClick(item.id)}
-												className='p-1 rounded hover:bg-blue-50 transition-colors'
-											>
-												<PencilIcon className='w-4 h-4 text-blue-400 hover:text-blue-600 hover:scale-125 transition-transform' />
-											</button>
+										<TableCell
+											isHeader
+											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+										>
+											Kod
 										</TableCell>
-										<TableCell className='px-4 py-3 text-end text-theme-sm dark:text-gray-200'>
-											<button
-												onClick={() => handleDeleteClick(item.id, item.name)}
-												className='p-1 rounded hover:bg-red-50 transition-colors'
-											>
-												<Trash2 className='w-4 h-4 text-red-400 hover:text-red-600 hover:scale-125 transition-transform' />
-											</button>
+										<TableCell
+											isHeader
+											className='px-1 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-end text-sm'
+										>
+											Tahrirlash
+										</TableCell>
+										<TableCell
+											isHeader
+											className='px-1 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-end text-sm'
+										>
+											O&apos;chirish
 										</TableCell>
 									</TableRow>
-								))}
-							</TableBody>
-						</Table>
+								</TableHeader>
+
+								{/* Table Body */}
+								<TableBody className='divide-y divide-slate-200/50 dark:divide-slate-700/50'>
+									{faculty?.map((item, index) => (
+										<TableRow
+											key={item.id}
+											className={`group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 dark:hover:from-indigo-950/50 dark:hover:to-purple-950/50 transition-all duration-300 animate-table-row`}
+										>
+											<TableCell className='px-6 py-4 text-slate-700 dark:text-slate-300 font-medium group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300'>
+												{pageNumber * pageSize + index + 1}
+											</TableCell>
+											<TableCell className='px-6 py-4'>
+												<div className='flex items-center gap-3'>
+													<div className='w-10 h-10 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 rounded-full flex items-center justify-center ring-2 ring-indigo-200 dark:ring-indigo-800 group-hover:ring-indigo-300 dark:group-hover:ring-indigo-700 transition-all duration-300'>
+														<Building2Icon className='w-5 h-5 text-indigo-600 dark:text-indigo-400' />
+													</div>
+													<div>
+														<p className='font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300'>
+															{item.name}
+														</p>
+													</div>
+												</div>
+											</TableCell>
+											<TableCell className='px-6 py-4'>
+												<div className='inline-flex items-center bg-gradient-to-r from-slate-100 to-indigo-100 dark:from-slate-800 dark:to-indigo-900 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 group-hover:border-indigo-300 dark:group-hover:border-indigo-600 transition-all duration-300'>
+													<span className='text-sm font-mono font-bold text-slate-700 dark:text-slate-300 group-hover:text-indigo-700 dark:group-hover:text-indigo-300'>
+														{item.code}
+													</span>
+												</div>
+											</TableCell>
+											<TableCell className='px-4 py-3 text-end text-theme-sm dark:text-gray-200'>
+												<button
+													onClick={() => handleEditClick(item.id)}
+													className='p-1 rounded hover:bg-blue-50 transition-colors'
+												>
+													<PencilIcon className='w-4 h-4 text-blue-400 hover:text-blue-600 hover:scale-125 transition-transform' />
+												</button>
+											</TableCell>
+											<TableCell className='px-4 py-3 text-end text-theme-sm dark:text-gray-200'>
+												<button
+													onClick={() => handleDeleteClick(item.id, item.name)}
+													className='p-1 rounded hover:bg-red-50 transition-colors'
+												>
+													<Trash2 className='w-4 h-4 text-red-400 hover:text-red-600 hover:scale-125 transition-transform' />
+												</button>
+											</TableCell>
+										</TableRow>
+									))}
+								</TableBody>
+							</Table>
+						</div>
 					</div>
 				</div>
 			</div>
