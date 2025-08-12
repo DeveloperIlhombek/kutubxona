@@ -102,7 +102,6 @@ export interface ICountry {
 	name: string
 	code: string
 }
-
 export interface ICountryResult {
 	items: ICountry[]
 	pageNumber: number
@@ -110,10 +109,28 @@ export interface ICountryResult {
 	totalCount: number
 	totalPages: number
 }
-
 export interface ICountryResponse {
 	isSuccess: boolean
 	result: ICountryResult
 	statusCode: number
 	errorMessages: string[]
+}
+
+//===============Content Type interface====================
+
+export interface IContenttypeResult {
+	items: IContentType[]
+	pageNumber: number
+	pageSize: number
+	totalCount: number
+	totalPages: number
+}
+
+export interface IContentType {
+	id: string
+	name: string
+	literature: boolean
+	article: boolean
+	dissertation: boolean
+	monographs: boolean
 }
