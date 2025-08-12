@@ -58,7 +58,7 @@ const navItems: NavItem[] = [
 			{ name: "Kitoblar ro'yxati ", path: '/basic-tables' },
 			{ name: 'Resurslar turi', path: '/contenttype' },
 			{ name: 'Binolar', path: '/basic-tables' },
-			{ name: 'Tillar', path: '/basic-tables' },
+			{ name: 'Tillar', path: '/language' },
 			{ name: 'Davlatlar', path: '/countries' },
 			{ name: 'Resurs sohalari', path: '/basic-tables' },
 		],
