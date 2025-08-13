@@ -1,3 +1,4 @@
+const API_URL = 'https://e-libraryrest.samdu.uz'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
@@ -11,4 +12,15 @@ export const getLanguagePrefix = (pathname: string) => {
 		return `/${segments[1]}`
 	}
 	return ''
+}
+
+// pages/api/file/downloadimagefile/[fileid]/[quality].ts
+export const downloadImage = ({
+	id,
+	quality,
+}: {
+	id: string | null
+	quality: 'low' | 'middle' | 'original'
+}) => {
+	return `${API_URL}/api/file/downloadimagefile/${id}/${quality}`
 }

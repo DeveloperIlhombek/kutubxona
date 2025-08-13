@@ -1,6 +1,6 @@
 'use client'
 import { getAllStudents } from '@/lib/users/students'
-import { getLanguagePrefix } from '@/lib/utils'
+import { downloadImage, getLanguagePrefix } from '@/lib/utils'
 import { IUser, IUserResult } from '@/types'
 import {
 	BadgeCheck,
@@ -57,6 +57,12 @@ function StudentPage() {
 		}
 		setPageNumber(newPage)
 	}
+	console.log(
+		downloadImage({
+			id: '',
+			quality: 'middle',
+		})
+	)
 
 	const lan = getLanguagePrefix(pathname)
 
@@ -277,11 +283,13 @@ function StudentPage() {
 												<div className='flex items-center gap-3'>
 													<div className='w-12 h-12 overflow-hidden rounded-full ring-2 ring-indigo-200 dark:ring-indigo-800 group-hover:ring-indigo-300 dark:group-hover:ring-indigo-700 transition-all duration-300'>
 														<Image
-															width={48}
-															height={48}
-															src={'/images/user/user-01.jpg'}
+															src={downloadImage({
+																id: item.userPhotoId,
+																quality: 'low',
+															})}
 															alt={item.firstName}
-															className='w-full h-full object-cover'
+															width={200}
+															height={200}
 														/>
 													</div>
 												</div>

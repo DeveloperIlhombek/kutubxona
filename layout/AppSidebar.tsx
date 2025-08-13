@@ -55,7 +55,7 @@ const navItems: NavItem[] = [
 		name: 'Kitoblar',
 		icon: <Book />,
 		subItems: [
-			{ name: "Kitoblar ro'yxati ", path: '/basic-tables' },
+			{ name: "Kitoblar ro'yxati ", path: '/books' },
 			{ name: 'Resurslar turi', path: '/contenttype' },
 			{ name: 'Binolar', path: '/buildings' },
 			{ name: 'Tillar', path: '/language' },
