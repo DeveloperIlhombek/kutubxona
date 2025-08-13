@@ -134,3 +134,18 @@ export interface IContentType {
 	dissertation: boolean
 	monographs: boolean
 }
+//============Building Type interfaces=====================
+
+export interface IBuildingResult {
+	items: IBuilding[]
+	pageNumber: number
+	pageSize: number
+	totalCount: number
+	totalPages: number
+}
+
+export interface IBuilding {
+	id: string
+	name: string
+	location: string
+}
