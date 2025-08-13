@@ -31,21 +31,21 @@ export const getAllFields = async ({
 	}
 }
 
-export const createFields = async (data: { name: string }) => {
+export const createFields = async ({ name }: { name: string }) => {
 	try {
-		const response = await fetch(`${API_URL}/api/field`, {
+		const response = await fetch(`${API_URL}/api/field?name=${name}`, {
 			method: 'POST',
 			headers: {
 				Accept: '*/*',
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			},
-			body: JSON.stringify(data),
 		})
 		if (!response.ok) {
 			throw new Error(`API error: ${response.status} - ${response.statusText}`)
 		}
-		return await response.json()
+		const res = await response.json()
+		return res
 	} catch (error) {
 		console.error('Error updating country:', error)
 		return null
@@ -72,25 +72,25 @@ export const getFieldsbyId = async (countryId: string) => {
 		return null
 	}
 }
-export const updateFields = async (
-	countryId: string,
-	data: { name: string }
-) => {
+export const updateFields = async (countryId: string, name: string) => {
 	try {
-		const response = await fetch(`${API_URL}/api/field/${countryId}`, {
-			method: 'PUT',
-			headers: {
-				Accept: '*/*',
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${localStorage.getItem('token')}`,
-			},
-			body: JSON.stringify(data),
-		})
+		const response = await fetch(
+			`${API_URL}/api/field/${countryId}?name=${name}`,
+			{
+				method: 'PUT',
+				headers: {
+					Accept: '*/*',
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${localStorage.getItem('token')}`,
+				},
+			}
+		)
 
 		if (!response.ok) {
 			throw new Error(`API error: ${response.status} - ${response.statusText}`)
 		}
-		return await response.json()
+		const data = await response.json()
+		return data
 	} catch (error) {
 		console.error('Error updating country:', error)
 		return null

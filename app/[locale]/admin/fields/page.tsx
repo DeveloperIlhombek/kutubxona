@@ -164,7 +164,7 @@ function CountryPage() {
 									Birinchi Resurs sohalarini qo&apos;shish
 								</Button>
 							}
-							onCountryAdded={handleCountryAdded}
+							onFieldsAdded={handleCountryAdded}
 						/>
 					</div>
 				</div>
@@ -237,7 +237,7 @@ function CountryPage() {
 											Yangi Resurs sohalari
 										</Button>
 									}
-									onCountryAdded={handleCountryAdded}
+									onFieldsAdded={handleCountryAdded}
 								/>
 							</div>
 						</div>
@@ -254,17 +254,16 @@ function CountryPage() {
 									<TableRow>
 										<TableCell
 											isHeader
-											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-4 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm w-12'
 										>
 											#
 										</TableCell>
 										<TableCell
 											isHeader
-											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-2 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
 										>
 											Resurs sohalari nomi
 										</TableCell>
-
 										<TableCell
 											isHeader
 											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
@@ -281,15 +280,14 @@ function CountryPage() {
 											key={country.id}
 											className={`group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 dark:hover:from-indigo-950/50 dark:hover:to-purple-950/50 transition-all duration-300 animate-table-row`}
 										>
-											<TableCell className='px-6 py-4 text-slate-700 dark:text-slate-300 font-medium group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300'>
+											<TableCell className='px-4 py-4 text-slate-700 dark:text-slate-300 font-medium group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300 w-12'>
 												{pageNumber * pageSize + index + 1}
 											</TableCell>
-											<TableCell className='px-6 py-4'>
+											<TableCell className='px-2 py-4'>
 												<p className='font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300'>
 													{country.name}
 												</p>
 											</TableCell>
-
 											<TableCell className='px-6 py-4'>
 												<DropdownMenu>
 													<DropdownMenuTrigger asChild>

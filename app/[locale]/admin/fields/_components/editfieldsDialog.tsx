@@ -39,7 +39,7 @@ export function EditFieldsDialog({
 						})
 					}
 				} catch (error) {
-					toast.error(`Failed to load faculty data ${error}`)
+					toast.error(`Failed to load resurs data ${error}`)
 				} finally {
 					setLoading(false)
 				}
@@ -52,12 +52,12 @@ export function EditFieldsDialog({
 		e.preventDefault()
 		try {
 			setLoading(true)
-			await updateFields(countryId, formData)
-			toast.success('Country updated successfully')
+			await updateFields(countryId, formData.name)
+			toast.success('Resurs updated successfully')
 			onOpenChange(false)
 			onSuccess()
 		} catch (error) {
-			toast.error(`Failed to update country ${error}`)
+			toast.error(`Failed to update resurs ${error}`)
 		} finally {
 			setLoading(false)
 		}
@@ -69,7 +69,7 @@ export function EditFieldsDialog({
 				<DialogHeader className='space-y-3 pb-6 border-b border-slate-200/50'>
 					<DialogTitle className='text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-2'>
 						<PencilIcon className='w-6 h-6 text-indigo-600' />
-						Davlatlarni tahrirlash
+						Resurs sohasini tahrirlash
 					</DialogTitle>
 				</DialogHeader>
 

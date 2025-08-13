@@ -16,10 +16,10 @@ import { toast } from 'sonner'
 
 function CreateFiledsDialog({
 	trigger,
-	onCountryAdded,
+	onFieldsAdded,
 }: {
 	trigger: React.ReactNode
-	onCountryAdded?: () => void
+	onFieldsAdded?: () => void
 }) {
 	const [loading, setLoading] = useState(false)
 	const [formData, setFormData] = useState({
@@ -41,14 +41,14 @@ function CreateFiledsDialog({
 			})
 
 			if (response) {
-				toast.success(`${formData.name} davlati muvaffaqiyatli qo'shildi`)
-				if (onCountryAdded) onCountryAdded()
+				toast.success(`${formData.name} maydoni muvaffaqiyatli qo'shildi`)
+				if (onFieldsAdded) onFieldsAdded()
 				setFormData({ name: '' }) // Reset form
 			} else {
-				throw new Error("Davlat qo'shishda xatolik yuz berdi")
+				throw new Error('Resurs sohalari xatolik yuz berdi')
 			}
 		} catch (error) {
-			toast.error(`Davlat qo'shishda xatolik: ${error}`)
+			toast.error(`Resurs sohalari qo'shishda xatolik: ${error}`)
 		} finally {
 			setLoading(false)
 		}
@@ -64,10 +64,10 @@ function CreateFiledsDialog({
 			<DialogContent className='max-w-md z-999999 bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-800 dark:to-slate-900 border border-slate-200/60 dark:border-slate-700/60 shadow-2xl backdrop-blur-sm'>
 				<DialogHeader className='space-y-3 pb-6 border-b border-slate-200/50 dark:border-slate-700/50'>
 					<DialogTitle className='text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-						Yangi davlat qo&apos;shish
+						Yangi soha qo&apos;shish
 					</DialogTitle>
 					<DialogDescription className='text-slate-600 dark:text-slate-400 text-base leading-relaxed'>
-						Tizimga yangi davlat qo&apos;shish uchun quyidagi ma&apos;lumotlarni
+						Tizimga yangi soha qo&apos;shish uchun quyidagi ma&apos;lumotlarni
 						kiriting.
 					</DialogDescription>
 				</DialogHeader>
@@ -76,7 +76,7 @@ function CreateFiledsDialog({
 					<div className='space-y-4'>
 						<div className='space-y-2'>
 							<label className='text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2'>
-								Davlat nomi
+								Resurs sohasi nomi
 								<span className='text-red-500'>*</span>
 							</label>
 							<div className='relative group'>
@@ -86,7 +86,7 @@ function CreateFiledsDialog({
 										setFormData({ ...formData, name: e.target.value })
 									}
 									className='w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 group-hover:border-indigo-300 dark:group-hover:border-indigo-600 shadow-sm hover:shadow-md text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500'
-									placeholder='Davlat nomini kiriting...'
+									placeholder='Resurs sohasi nomini kiriting...'
 									required
 									disabled={loading}
 								/>
@@ -100,7 +100,7 @@ function CreateFiledsDialog({
 							{formData.name && (
 								<div className='bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/50 dark:to-purple-950/50 border border-indigo-200 dark:border-indigo-800 rounded-lg p-3'>
 									<p className='text-sm font-medium text-indigo-900 dark:text-indigo-300'>
-										Qo&apos;shiladigan davlat:
+										Qo&apos;shiladigan soha:
 									</p>
 									<p className='text-indigo-700 dark:text-indigo-400 font-semibold mt-1'>
 										{formData.name}

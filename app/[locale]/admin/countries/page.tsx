@@ -254,7 +254,7 @@ function CountryPage() {
 									<TableRow>
 										<TableCell
 											isHeader
-											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-4 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm w-12'
 										>
 											#
 										</TableCell>
@@ -286,19 +286,12 @@ function CountryPage() {
 											key={country.id}
 											className={`group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 dark:hover:from-indigo-950/50 dark:hover:to-purple-950/50 transition-all duration-300 animate-table-row`}
 										>
-											<TableCell className='px-6 py-4 text-slate-700 dark:text-slate-300 font-medium group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300'>
+											<TableCell className='px-4 py-4 text-slate-700 dark:text-slate-300 font-medium group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300 w-12'>
 												{pageNumber * pageSize + index + 1}
 											</TableCell>
 											<TableCell className='px-6 py-4'>
-												<div className='flex items-center gap-3'>
-													<div className='w-10 h-10 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 rounded-full flex items-center justify-center ring-2 ring-indigo-200 dark:ring-indigo-800 group-hover:ring-indigo-300 dark:group-hover:ring-indigo-700 transition-all duration-300'>
-														<Globe className='w-5 h-5 text-indigo-600 dark:text-indigo-400' />
-													</div>
-													<div>
-														<p className='font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300'>
-															{country.name}
-														</p>
-													</div>
+												<div className='font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300'>
+													{country.name}
 												</div>
 											</TableCell>
 											<TableCell className='px-6 py-4'>
