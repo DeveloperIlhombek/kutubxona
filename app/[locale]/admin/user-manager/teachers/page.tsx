@@ -1,5 +1,12 @@
 'use client'
-import { getAllGuests } from '@/lib/users/guests'
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHeader,
+	TableRow,
+} from '@/app/[locale]/components/ui/table'
+import { getAllTeachers } from '@/lib/users/teachers'
 import { getLanguagePrefix } from '@/lib/utils'
 import { IUser, IUserResult } from '@/types'
 import {
@@ -15,16 +22,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHeader,
-	TableRow,
-} from '../../components/ui/table'
-import Pagination from '../_components/pagination'
+import Pagination from '../../_components/pagination'
 
-function GuestsPage() {
+function TeachersPage() {
 	const [loading, setLoading] = useState(false)
 	const [allAdmins, setallAdmins] = useState<IUser[]>([])
 	const [alladminResponse, setAlladminResponse] = useState<IUserResult>()
@@ -35,7 +35,7 @@ function GuestsPage() {
 		const fetchAllSuperAdmin = async () => {
 			try {
 				setLoading(true)
-				const response = await getAllGuests({
+				const response = await getAllTeachers({
 					pageNumber,
 					pageSize,
 				})
@@ -69,7 +69,7 @@ function GuestsPage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Tashqi foydalanuvchilar ro&apos;yxati yuklanmoqda...
+							O&apos;qituvchilar ro&apos;yxati yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -109,7 +109,7 @@ function GuestsPage() {
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Tashqi foydalanuvchilar ro&apos;yxati
+							O&apos;qituvchilar ro&apos;yxati
 						</h1>
 					</div>
 				</div>
@@ -124,7 +124,7 @@ function GuestsPage() {
 							Foydalanuvchilar mavjud emas
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400'>
-							Hozircha tizimda Tashqi foydalanuvchilar ro&apos;yxati bo&apos;sh
+							Hozircha tizimda O&apos;qituvchilar ro&apos;yxati bo&apos;sh
 						</p>
 					</div>
 				</div>
@@ -154,7 +154,7 @@ function GuestsPage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
-						Tashqi foydalanuvchilar ro&apos;yxati
+						O&apos;qituvchilar ro&apos;yxati
 					</h1>
 					<p className='text-white/80 mt-2 text-lg'>
 						Tizim foydalanuvchilari boshqaruvi
@@ -174,7 +174,7 @@ function GuestsPage() {
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami tashqi foydalanuvchilar soni
+										Jami O&apos;qituvchilar soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxatdan o&apos;tgan
@@ -320,7 +320,9 @@ function GuestsPage() {
 												</div>
 											</TableCell>
 											<TableCell className='px-4 py-4 text-gray-700  text-theme-sm dark:text-gray-200 '>
-												<Link href={`${lan}/admin/guests/${item.id}`}>
+												<Link
+													href={`${lan}/admin/user-manager/teachers/${item.id}`}
+												>
 													<Eye className='w-5 h-5 text-center ml-auto' />
 												</Link>
 											</TableCell>
@@ -349,4 +351,4 @@ function GuestsPage() {
 	)
 }
 
-export default GuestsPage
+export default TeachersPage

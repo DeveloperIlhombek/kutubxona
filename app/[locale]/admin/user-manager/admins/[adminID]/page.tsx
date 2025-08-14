@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation'
 
 export default function UserDetailPage() {
 	const pathname = usePathname()
-	const userid = pathname.split('/')[4] // Extracting userId from the URL
+	const userid = pathname.split('/')[5]
 
 	return <UserIDpage userid={userid} />
 }

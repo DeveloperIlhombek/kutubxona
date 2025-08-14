@@ -1,5 +1,12 @@
 'use client'
-import { getAllTeachers } from '@/lib/users/teachers'
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHeader,
+	TableRow,
+} from '@/app/[locale]/components/ui/table'
+import { getAllsuperadmins } from '@/lib/users/superadmin'
 import { getLanguagePrefix } from '@/lib/utils'
 import { IUser, IUserResult } from '@/types'
 import {
@@ -15,19 +22,13 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHeader,
-	TableRow,
-} from '../../components/ui/table'
-import Pagination from '../_components/pagination'
+import Pagination from '../../_components/pagination'
 
-function TeachersPage() {
+function SuperAdminPage() {
 	const [loading, setLoading] = useState(false)
-	const [allAdmins, setallAdmins] = useState<IUser[]>([])
-	const [alladminResponse, setAlladminResponse] = useState<IUserResult>()
+	const [allsuperadmin, setAllsuperadmin] = useState<IUser[]>([])
+	const [allsuperadminResponse, setAllsuperadminResponse] =
+		useState<IUserResult>()
 	const [pageNumber, setPageNumber] = useState(0)
 	const [pageSize, setPageSize] = useState(10)
 	const pathname = usePathname()
@@ -35,12 +36,12 @@ function TeachersPage() {
 		const fetchAllSuperAdmin = async () => {
 			try {
 				setLoading(true)
-				const response = await getAllTeachers({
+				const response = await getAllsuperadmins({
 					pageNumber,
 					pageSize,
 				})
-				setallAdmins(response.result.items)
-				setAlladminResponse(response.result)
+				setAllsuperadmin(response.result.items)
+				setAllsuperadminResponse(response.result)
 			} catch (error) {
 				toast(`Guruhlarni yuklashda xatolik: ${error}`)
 			} finally {
@@ -56,6 +57,7 @@ function TeachersPage() {
 		}
 		setPageNumber(newPage)
 	}
+
 	const lan = getLanguagePrefix(pathname)
 
 	if (loading) {
@@ -69,7 +71,7 @@ function TeachersPage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							O&apos;qituvchilar ro&apos;yxati yuklanmoqda...
+							SuperAdmin ro&apos;yxati yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -94,7 +96,7 @@ function TeachersPage() {
 		)
 	}
 
-	if (alladminResponse?.totalCount === 0) {
+	if (allsuperadminResponse?.totalCount === 0) {
 		return (
 			<div className='min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900'>
 				{/* Hero Section */}
@@ -109,7 +111,7 @@ function TeachersPage() {
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							O&apos;qituvchilar ro&apos;yxati
+							SuperAdmin ro&apos;yxati
 						</h1>
 					</div>
 				</div>
@@ -124,7 +126,7 @@ function TeachersPage() {
 							Foydalanuvchilar mavjud emas
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400'>
-							Hozircha tizimda O&apos;qituvchilar ro&apos;yxati bo&apos;sh
+							Hozircha tizimda SuperAdmin ro&apos;yxati bo&apos;sh
 						</p>
 					</div>
 				</div>
@@ -154,7 +156,7 @@ function TeachersPage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
-						O&apos;qituvchilar ro&apos;yxati
+						SuperAdmin ro&apos;yxati
 					</h1>
 					<p className='text-white/80 mt-2 text-lg'>
 						Tizim foydalanuvchilari boshqaruvi
@@ -174,7 +176,7 @@ function TeachersPage() {
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami O&apos;qituvchilar soni
+										Jami superadmin soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxatdan o&apos;tgan
@@ -183,7 +185,7 @@ function TeachersPage() {
 							</div>
 							<div className='text-right'>
 								<p className='text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-									{alladminResponse?.totalCount || 0}
+									{allsuperadminResponse?.totalCount || 0}
 								</p>
 								<p className='text-sm text-slate-500 dark:text-slate-400'>
 									nafar
@@ -266,7 +268,7 @@ function TeachersPage() {
 								</TableHeader>
 
 								<TableBody className='divide-y divide-slate-200/50 dark:divide-slate-700/50'>
-									{allAdmins.map(item => (
+									{allsuperadmin.map(item => (
 										<TableRow
 											key={item.id}
 											className={`group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 dark:hover:from-indigo-950/50 dark:hover:to-purple-950/50 transition-all duration-300 animate-table-row`}
@@ -320,7 +322,9 @@ function TeachersPage() {
 												</div>
 											</TableCell>
 											<TableCell className='px-4 py-4 text-gray-700  text-theme-sm dark:text-gray-200 '>
-												<Link href={`${lan}/admin/teachers/${item.id}`}>
+												<Link
+													href={`${lan}/admin/user-manager/superadmins/${item.id}`}
+												>
 													<Eye className='w-5 h-5 text-center ml-auto' />
 												</Link>
 											</TableCell>
@@ -333,12 +337,12 @@ function TeachersPage() {
 				</div>
 
 				{/* Pagination */}
-				{alladminResponse && (
+				{allsuperadminResponse && (
 					<div className='mt-6 animate-slide-in-up'>
 						<Pagination
 							currentPage={pageNumber}
-							totalPages={alladminResponse.totalPages}
-							totalItems={alladminResponse.totalCount}
+							totalPages={allsuperadminResponse.totalPages}
+							totalItems={allsuperadminResponse.totalCount}
 							pageSize={pageSize}
 							onPageChange={handlePageChange}
 						/>
@@ -349,4 +353,4 @@ function TeachersPage() {
 	)
 }
 
-export default TeachersPage
+export default SuperAdminPage

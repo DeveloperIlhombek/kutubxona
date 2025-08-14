@@ -1,5 +1,12 @@
 'use client'
-import { getAllEmployees } from '@/lib/users/employees'
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHeader,
+	TableRow,
+} from '@/app/[locale]/components/ui/table'
+import { getAlladmins } from '@/lib/users/admin'
 import { getLanguagePrefix } from '@/lib/utils'
 import { IUser, IUserResult } from '@/types'
 import {
@@ -15,27 +22,21 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHeader,
-	TableRow,
-} from '../../components/ui/table'
-import Pagination from '../_components/pagination'
+import Pagination from '../../_components/pagination'
 
-function Employeespage() {
+function AdminPage() {
 	const [loading, setLoading] = useState(false)
 	const [allAdmins, setallAdmins] = useState<IUser[]>([])
 	const [alladminResponse, setAlladminResponse] = useState<IUserResult>()
 	const [pageNumber, setPageNumber] = useState(0)
 	const [pageSize, setPageSize] = useState(10)
 	const pathname = usePathname()
+
 	useEffect(() => {
 		const fetchAllSuperAdmin = async () => {
 			try {
 				setLoading(true)
-				const response = await getAllEmployees({
+				const response = await getAlladmins({
 					pageNumber,
 					pageSize,
 				})
@@ -56,6 +57,7 @@ function Employeespage() {
 		}
 		setPageNumber(newPage)
 	}
+
 	const lan = getLanguagePrefix(pathname)
 
 	if (loading) {
@@ -69,7 +71,7 @@ function Employeespage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Xosimlar ro&apos;yxati yuklanmoqda...
+							Adminlar ro&apos;yxati yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -109,7 +111,7 @@ function Employeespage() {
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Xodimlar ro&apos;yxati
+							Adminlar ro&apos;yxati
 						</h1>
 					</div>
 				</div>
@@ -124,7 +126,7 @@ function Employeespage() {
 							Foydalanuvchilar mavjud emas
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400'>
-							Hozircha tizimda xodimlar ro&apos;yxati bo&apos;sh
+							Hozircha tizimda adminlar ro&apos;yxati bo&apos;sh
 						</p>
 					</div>
 				</div>
@@ -154,7 +156,7 @@ function Employeespage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
-						Xodimlar ro&apos;yxati
+						Adminlar ro&apos;yxati
 					</h1>
 					<p className='text-white/80 mt-2 text-lg'>
 						Tizim foydalanuvchilari boshqaruvi
@@ -174,7 +176,7 @@ function Employeespage() {
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami xodimlar soni
+										Jami adminlar soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxatdan o&apos;tgan
@@ -320,7 +322,9 @@ function Employeespage() {
 												</div>
 											</TableCell>
 											<TableCell className='px-4 py-4 text-gray-700  text-theme-sm dark:text-gray-200 '>
-												<Link href={`${lan}/admin/employees/${item.id}`}>
+												<Link
+													href={`${lan}/admin/user-manager/admins/${item.id}`}
+												>
 													<Eye className='w-5 h-5 text-center ml-auto' />
 												</Link>
 											</TableCell>
@@ -349,4 +353,4 @@ function Employeespage() {
 	)
 }
 
-export default Employeespage
+export default AdminPage

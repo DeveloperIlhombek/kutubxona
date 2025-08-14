@@ -1,4 +1,11 @@
 'use client'
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHeader,
+	TableRow,
+} from '@/app/[locale]/components/ui/table'
 import { getAllStudents } from '@/lib/users/students'
 import { downloadImage, getLanguagePrefix } from '@/lib/utils'
 import { IUser, IUserResult } from '@/types'
@@ -15,14 +22,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHeader,
-	TableRow,
-} from '../../components/ui/table'
-import Pagination from '../_components/pagination'
+import Pagination from '../../_components/pagination'
 
 function StudentPage() {
 	const [loading, setLoading] = useState(false)
@@ -330,7 +330,9 @@ function StudentPage() {
 												</div>
 											</TableCell>
 											<TableCell className='px-4 py-4 text-gray-700  text-theme-sm dark:text-gray-200 '>
-												<Link href={`${lan}/admin/students/${item.id}`}>
+												<Link
+													href={`${lan}/admin/user-manager/students/${item.id}`}
+												>
 													<Eye className='w-5 h-5 text-center ml-auto' />
 												</Link>
 											</TableCell>

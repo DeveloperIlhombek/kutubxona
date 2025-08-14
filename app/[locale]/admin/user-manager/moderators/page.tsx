@@ -1,5 +1,12 @@
 'use client'
-import { getAllsuperadmins } from '@/lib/users/superadmin'
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHeader,
+	TableRow,
+} from '@/app/[locale]/components/ui/table'
+import { getAllModerator } from '@/lib/users/moderator'
 import { getLanguagePrefix } from '@/lib/utils'
 import { IUser, IUserResult } from '@/types'
 import {
@@ -15,40 +22,32 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHeader,
-	TableRow,
-} from '../../components/ui/table'
-import Pagination from '../_components/pagination'
+import Pagination from '../../_components/pagination'
 
-function SuperAdminPage() {
+function ModeratorPage() {
 	const [loading, setLoading] = useState(false)
-	const [allsuperadmin, setAllsuperadmin] = useState<IUser[]>([])
-	const [allsuperadminResponse, setAllsuperadminResponse] =
-		useState<IUserResult>()
+	const [allAdmins, setallAdmins] = useState<IUser[]>([])
+	const [alladminResponse, setAlladminResponse] = useState<IUserResult>()
 	const [pageNumber, setPageNumber] = useState(0)
 	const [pageSize, setPageSize] = useState(10)
 	const pathname = usePathname()
 	useEffect(() => {
-		const fetchAllSuperAdmin = async () => {
+		const fetchAllModerator = async () => {
 			try {
 				setLoading(true)
-				const response = await getAllsuperadmins({
+				const response = await getAllModerator({
 					pageNumber,
 					pageSize,
 				})
-				setAllsuperadmin(response.result.items)
-				setAllsuperadminResponse(response.result)
+				setallAdmins(response.result.items)
+				setAlladminResponse(response.result)
 			} catch (error) {
 				toast(`Guruhlarni yuklashda xatolik: ${error}`)
 			} finally {
 				setLoading(false)
 			}
 		}
-		fetchAllSuperAdmin()
+		fetchAllModerator()
 	}, [pageNumber, pageSize])
 
 	const handlePageChange = (newPage: number, newPageSize?: number) => {
@@ -57,7 +56,6 @@ function SuperAdminPage() {
 		}
 		setPageNumber(newPage)
 	}
-
 	const lan = getLanguagePrefix(pathname)
 
 	if (loading) {
@@ -71,7 +69,7 @@ function SuperAdminPage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							SuperAdmin ro&apos;yxati yuklanmoqda...
+							Moderatorlar ro&apos;yxati yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -96,7 +94,7 @@ function SuperAdminPage() {
 		)
 	}
 
-	if (allsuperadminResponse?.totalCount === 0) {
+	if (alladminResponse?.totalCount === 0) {
 		return (
 			<div className='min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900'>
 				{/* Hero Section */}
@@ -111,7 +109,7 @@ function SuperAdminPage() {
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							SuperAdmin ro&apos;yxati
+							Moderatorlar ro&apos;yxati
 						</h1>
 					</div>
 				</div>
@@ -126,7 +124,7 @@ function SuperAdminPage() {
 							Foydalanuvchilar mavjud emas
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400'>
-							Hozircha tizimda SuperAdmin ro&apos;yxati bo&apos;sh
+							Hozircha tizimda Moderatorlar ro&apos;yxati bo&apos;sh
 						</p>
 					</div>
 				</div>
@@ -156,7 +154,7 @@ function SuperAdminPage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
-						SuperAdmin ro&apos;yxati
+						Moderatorlar ro&apos;yxati
 					</h1>
 					<p className='text-white/80 mt-2 text-lg'>
 						Tizim foydalanuvchilari boshqaruvi
@@ -176,7 +174,7 @@ function SuperAdminPage() {
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami superadmin soni
+										Jami moderatorlar soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxatdan o&apos;tgan
@@ -185,7 +183,7 @@ function SuperAdminPage() {
 							</div>
 							<div className='text-right'>
 								<p className='text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-									{allsuperadminResponse?.totalCount || 0}
+									{alladminResponse?.totalCount || 0}
 								</p>
 								<p className='text-sm text-slate-500 dark:text-slate-400'>
 									nafar
@@ -268,7 +266,7 @@ function SuperAdminPage() {
 								</TableHeader>
 
 								<TableBody className='divide-y divide-slate-200/50 dark:divide-slate-700/50'>
-									{allsuperadmin.map(item => (
+									{allAdmins.map(item => (
 										<TableRow
 											key={item.id}
 											className={`group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 dark:hover:from-indigo-950/50 dark:hover:to-purple-950/50 transition-all duration-300 animate-table-row`}
@@ -322,7 +320,9 @@ function SuperAdminPage() {
 												</div>
 											</TableCell>
 											<TableCell className='px-4 py-4 text-gray-700  text-theme-sm dark:text-gray-200 '>
-												<Link href={`${lan}/admin/superadmins/${item.id}`}>
+												<Link
+													href={`${lan}/admin/user-manager/moderators/${item.id}`}
+												>
 													<Eye className='w-5 h-5 text-center ml-auto' />
 												</Link>
 											</TableCell>
@@ -335,12 +335,12 @@ function SuperAdminPage() {
 				</div>
 
 				{/* Pagination */}
-				{allsuperadminResponse && (
+				{alladminResponse && (
 					<div className='mt-6 animate-slide-in-up'>
 						<Pagination
 							currentPage={pageNumber}
-							totalPages={allsuperadminResponse.totalPages}
-							totalItems={allsuperadminResponse.totalCount}
+							totalPages={alladminResponse.totalPages}
+							totalItems={alladminResponse.totalCount}
 							pageSize={pageSize}
 							onPageChange={handlePageChange}
 						/>
@@ -351,4 +351,4 @@ function SuperAdminPage() {
 	)
 }
 
-export default SuperAdminPage
+export default ModeratorPage
