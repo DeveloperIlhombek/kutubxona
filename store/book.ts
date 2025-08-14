@@ -38,7 +38,7 @@ export const useBookStore = create<BookState>((set, get) => ({
 	books: [],
 	loading: false,
 	error: null,
-	pageNumber: 1,
+	pageNumber: 0,
 	pageSize: 10,
 	totalCount: 0,
 	totalPages: 0,
@@ -46,7 +46,7 @@ export const useBookStore = create<BookState>((set, get) => ({
 	currentCategory: BOOK_CATEGORIES.literature,
 
 	// Kitoblarni yuklash funksiyasi
-	fetchBooks: async (category, pageNumber = 1, pageSize = 10) => {
+	fetchBooks: async (category, pageNumber = 0, pageSize = 10) => {
 		set({ loading: true, error: null })
 		try {
 			const response = await getAllBooks({

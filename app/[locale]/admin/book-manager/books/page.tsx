@@ -1,4 +1,11 @@
 'use client'
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHeader,
+	TableRow,
+} from '@/app/[locale]/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { downloadImage } from '@/lib/utils'
 import { BOOK_CATEGORIES, useBookStore } from '@/store/book'
@@ -6,13 +13,6 @@ import { BookOpen, Building2, Search, Sparkles, TrendingUp } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHeader,
-	TableRow,
-} from '../../components/ui/table'
 import { BooksPagination } from './_components/books-pagination'
 
 export default function BooksPage() {
@@ -22,13 +22,9 @@ export default function BooksPage() {
 		loading,
 		error,
 		currentCategory,
-		pageNumber,
-		totalPages,
 		totalCount,
 		fetchBooks,
 		setCategory,
-		nextPage,
-		prevPage,
 	} = useBookStore()
 
 	// Komponent yuklanganda kitoblarni yuklab olamiz
@@ -347,7 +343,7 @@ export default function BooksPage() {
 
 								{/* Table Body */}
 								<TableBody className='divide-y divide-slate-200/50 dark:divide-slate-700/50'>
-									{books.map((book, index) => (
+									{books.map(book => (
 										<TableRow
 											key={book.id}
 											className='group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 dark:hover:from-indigo-950/50 dark:hover:to-purple-950/50 transition-all duration-300 cursor-pointer'
