@@ -11,7 +11,7 @@ export const getAllBooks = async ({
 }) => {
 	try {
 		const response = await fetch(
-			`${API_URL}/api/book?Category=${category}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
+			`${API_URL}/api/Book?Category=${category}&pageNumber=${pageNumber}&pageSize=${pageSize}`,
 			{
 				method: 'GET',
 				headers: {

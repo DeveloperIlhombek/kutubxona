@@ -138,7 +138,7 @@ export function BooksPagination() {
 		)
 
 		// Oxirgi sahifaga o'tish
-		if (pageNumber < totalPages - Math.floor(maxVisiblePages / 2)) {
+		if (pageNumber < totalPages) {
 			pages.push(
 				<Button
 					key='last'

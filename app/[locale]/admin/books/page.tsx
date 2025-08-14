@@ -379,10 +379,8 @@ export default function BooksPage() {
 												</Link>
 											</TableCell>
 											<TableCell className='px-6 py-4'>
-												<div className='inline-flex items-center bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950 dark:to-teal-950 px-3 py-1.5 rounded-full border border-emerald-200 dark:border-emerald-800'>
-													<span className='text-sm font-bold text-emerald-700 dark:text-emerald-300'>
-														{book.book_Copy_Count}
-													</span>
+												<div className='text-sm font-mono font-bold text-slate-700 dark:text-slate-300 group-hover:text-indigo-700 dark:group-hover:text-indigo-300'>
+													{book.book_Copy_Count}
 												</div>
 											</TableCell>
 											<TableCell className='px-6 py-4'>
