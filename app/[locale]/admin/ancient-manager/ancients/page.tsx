@@ -7,23 +7,18 @@ import {
 	TableRow,
 } from '@/app/[locale]/components/ui/table'
 import { Button } from '@/components/ui/button'
+import { getLanguagePrefix } from '@/lib/utils'
 import { useAncientStore } from '@/store/ancient'
-import {
-	Edit,
-	Globe,
-	PlusSquare,
-	Sparkles,
-	Trash2,
-	TrendingUp,
-} from 'lucide-react'
+import { Eye, Globe, PlusSquare, Sparkles, TrendingUp } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Pagination from '../../_components/pagination'
 import { DeleteAncientDialog } from './_components/deleteAncientDialog'
 
 function AncientPage() {
 	const router = useRouter()
+	const pathname = usePathname()
 	const {
 		ancient,
 		loading,
@@ -62,7 +57,7 @@ function AncientPage() {
 			}
 		}
 	}
-
+	const lang = getLanguagePrefix(pathname)
 	if (loading) {
 		return (
 			<div className='min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900'>
@@ -74,7 +69,7 @@ function AncientPage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Davlatlar ro&apos;yxati yuklanmoqda...
+							Qo&apos;lyozmalar ro&apos;yxati yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -132,10 +127,10 @@ function AncientPage() {
 							<Globe className='w-10 h-10 text-slate-400 dark:text-slate-500' />
 						</div>
 						<h3 className='text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3'>
-							Davlatlar mavjud emas
+							Qo&apos;lyozmalar mavjud emas
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400 mb-6'>
-							Hozircha tizimda davlatlar ro&apos;yxati bo&apos;sh
+							Hozircha tizimda Qo&apos;lyozmalar ro&apos;yxati bo&apos;sh
 						</p>
 						<Link href='/ancient/create'>
 							<Button className='bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105'>
@@ -171,10 +166,10 @@ function AncientPage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
-						Davlatlar ro&apos;yxati
+						Qo&apos;lyozmalar ro&apos;yxati
 					</h1>
 					<p className='text-white/80 mt-2 text-lg'>
-						Tizim davlatlari boshqaruvi
+						Tizim Qo&apos;lyozmalari boshqaruvi
 					</p>
 				</div>
 			</div>
@@ -191,7 +186,7 @@ function AncientPage() {
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami davlatlar soni
+										Jami Qo&apos;lyozmalar soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxatdan o&apos;tgan
@@ -204,7 +199,7 @@ function AncientPage() {
 										{totalCount || 0}
 									</p>
 									<p className='text-sm text-slate-500 dark:text-slate-400'>
-										davlat
+										qo&apos;lyozmalar
 									</p>
 								</div>
 								<Link href='/ancient/create'>
@@ -228,7 +223,7 @@ function AncientPage() {
 									<TableRow>
 										<TableCell
 											isHeader
-											className='px-4 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm w-12'
+											className='px-4 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
 										>
 											#
 										</TableCell>
@@ -236,50 +231,69 @@ function AncientPage() {
 											isHeader
 											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
 										>
-											Davlat nomi
+											Kitob nomi
 										</TableCell>
 										<TableCell
 											isHeader
 											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
 										>
-											Davlat kodi
+											Muallif
 										</TableCell>
 										<TableCell
 											isHeader
 											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
 										>
-											Amallar
+											Yozilgan vaqti
+										</TableCell>
+										<TableCell
+											isHeader
+											className='px-4 w-12 py-4 font-semibold text-slate-700 dark:text-slate-400 text-center text-sm'
+										>
+											<div className='flex justify-end'>Ko&apos;rish</div>
 										</TableCell>
 									</TableRow>
 								</TableHeader>
 
 								{/* Table Body */}
 								<TableBody className='divide-y divide-slate-200/50 dark:divide-slate-700/50'>
-									{ancient.map(item => (
+									{ancient.map((item, index) => (
 										<TableRow key={item.id}>
+											<TableCell className='px-4 py-4 text-slate-700 dark:text-slate-300 font-medium group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300 w-12'>
+												{pageNumber * pageSize + index + 1}
+											</TableCell>
 											{/* Table cells... */}
+
 											<TableCell className='px-6 py-4'>
-												<div className='flex items-center gap-2'>
+												<Link
+													href={`${lang}/admin/ancient-manager/ancient/${item.id}`}
+												>
+													<div className='font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300'>
+														{item.work_name}
+													</div>
+												</Link>
+												<span className='text-sky-500'>{item.arab_name}</span>
+											</TableCell>
+											<TableCell className='px-6 py-4'>
+												<div className='font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300'>
+													{item.author}
+												</div>
+											</TableCell>
+											<TableCell className='px-6 py-4'>
+												<div className='font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300'>
+													{item.date_write}
+												</div>
+											</TableCell>
+											<TableCell className='px-6 py-4 w-12'>
+												<div className='font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300 flex justify-end'>
 													<Button
-														size='sm'
-														variant='outline'
+														size={'icon'}
 														onClick={() =>
-															router.push(`/ancient/edit/${item.id}`)
+															router.push(
+																`${lang}/admin/ancient-manager/ancients/${item.id}`
+															)
 														}
 													>
-														<Edit className='w-4 h-4' />
-													</Button>
-													<Button
-														size='sm'
-														variant='destructive'
-														onClick={() =>
-															setDeletingAncient({
-																id: item.id,
-																work_name: item.work_name,
-															})
-														}
-													>
-														<Trash2 className='w-4 h-4' />
+														<Eye />
 													</Button>
 												</div>
 											</TableCell>
