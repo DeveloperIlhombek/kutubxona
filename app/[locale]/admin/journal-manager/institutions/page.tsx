@@ -7,21 +7,12 @@ import {
 	TableRow,
 } from '@/app/[locale]/components/ui/table'
 import { Button } from '@/components/ui/button'
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { getContentType } from '@/lib/books/content_type'
+import { getInstitution } from '@/lib/books/institution'
 import { IContentType, IContenttypeResult } from '@/types'
 import {
-	BadgeCheck,
-	BadgeX,
 	BookA,
 	Edit,
 	Globe,
-	MoreHorizontal,
 	PlusSquare,
 	Sparkles,
 	Trash2,
@@ -30,11 +21,11 @@ import {
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import Pagination from '../../_components/pagination'
-import CreateContentTypeDialog from './_components/createContent'
-import { DeleteContentDialog } from './_components/deleteContentDialog'
-import { EditContentDialog } from './_components/editContentDialog'
+import CreateinstitutionDiolog from './_components/createinstitutionDiolog'
+import { DeleteIntitutionDialog } from './_components/deleteDialog'
+import { UpdateInstitutionDialog } from './_components/updateDialog'
 
-function ContentTypepage() {
+function Intitutionpage() {
 	const [loading, setLoading] = useState(false)
 	const [content, setContent] = useState<IContentType[]>([])
 	const [contentResult, setContentResult] = useState<IContenttypeResult>()
@@ -50,7 +41,7 @@ function ContentTypepage() {
 	const fetchContentType = async () => {
 		try {
 			setLoading(true)
-			const response = await getContentType({ pageNumber, pageSize })
+			const response = await getInstitution({ pageNumber, pageSize })
 			if (response?.result) {
 				setContent(response.result.items)
 				setContentResult(response.result)
@@ -72,7 +63,7 @@ function ContentTypepage() {
 		setPageNumber(newPage)
 	}
 
-	const handleContentAdded = () => {
+	const handleInstitutionAdded = () => {
 		fetchContentType()
 	}
 	const handleEditSuccess = () => {
@@ -94,7 +85,7 @@ function ContentTypepage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Content turlari yuklanmoqda...
+							Muassasalar yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -134,7 +125,7 @@ function ContentTypepage() {
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Resurs turlari
+							Muassasalar
 						</h1>
 					</div>
 				</div>
@@ -146,19 +137,19 @@ function ContentTypepage() {
 							<BookA className='w-10 h-10 text-slate-400 dark:text-slate-500' />
 						</div>
 						<h3 className='text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3'>
-							Resurs turlari yaratilmagan
+							Muassasalar yaratilmagan
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400 mb-6'>
-							Hozircha tizimda resurs turlari bo&apos;sh
+							Hozircha tizimda Muassasalar bo&apos;sh
 						</p>
-						<CreateContentTypeDialog
+						<CreateinstitutionDiolog
 							trigger={
 								<Button className='bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105'>
 									<PlusSquare className='w-4 h-4 mr-2' />
-									Birinchi Resurs turini yarating
+									Birinchi Resurs sohalarini qo&apos;shish
 								</Button>
 							}
-							onSuccess={handleContentAdded}
+							oninstitutionAdded={handleInstitutionAdded}
 						/>
 					</div>
 				</div>
@@ -185,9 +176,11 @@ function ContentTypepage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
-						Resurs turlari
+						Muassasalar
 					</h1>
-					<p className='text-white/80 mt-2 text-lg'>Tizimdagi resurs turlari</p>
+					<p className='text-white/80 mt-2 text-lg'>
+						Tizimdagi Muassasalar turlari
+					</p>
 				</div>
 			</div>
 			{/* Main Content */}
@@ -202,7 +195,7 @@ function ContentTypepage() {
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami resurs turlari soni
+										Jami Muassasalar turlari soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxat olingan
@@ -215,17 +208,17 @@ function ContentTypepage() {
 										{contentResult?.totalCount || 0}
 									</p>
 									<p className='text-sm text-slate-500 dark:text-slate-400'>
-										resurs
+										Muassasalar
 									</p>
 								</div>
-								<CreateContentTypeDialog
+								<CreateinstitutionDiolog
 									trigger={
 										<Button className='bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105'>
 											<PlusSquare className='w-4 h-4 mr-2' />
 											Yaratish
 										</Button>
 									}
-									onSuccess={handleContentAdded}
+									oninstitutionAdded={handleInstitutionAdded}
 								/>
 							</div>
 						</div>
@@ -250,15 +243,9 @@ function ContentTypepage() {
 											isHeader
 											className='pl-1 pr-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
 										>
-											Resurs turi
+											Muassasalar
 										</TableCell>
 
-										<TableCell
-											isHeader
-											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
-										>
-											Turlar
-										</TableCell>
 										<TableCell
 											isHeader
 											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
@@ -292,73 +279,6 @@ function ContentTypepage() {
 														</p>
 													</div>
 												</div>
-											</TableCell>
-
-											<TableCell className='px-6 py-4'>
-												<DropdownMenu>
-													<DropdownMenuTrigger asChild>
-														<Button
-															variant='outline'
-															size='sm'
-															className='flex items-center gap-2 border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950 dark:hover:to-purple-950 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all duration-300 transform hover:scale-105'
-														>
-															<MoreHorizontal className='w-4 h-4' />
-														</Button>
-													</DropdownMenuTrigger>
-													<DropdownMenuContent
-														align='end'
-														className='w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xl'
-													>
-														<DropdownMenuItem>
-															<div className='flex items-center justify-between w-full'>
-																<p className='text-gray-700 font-semibold dark:text-gray-400'>
-																	Literature
-																</p>
-																{item.literature ? (
-																	<BadgeCheck className='text-green-500 ml-auto' />
-																) : (
-																	<BadgeX className='text-red-500 ml-auto' />
-																)}
-															</div>
-														</DropdownMenuItem>
-														<DropdownMenuItem>
-															<div className='flex items-center justify-between w-full'>
-																<p className='text-gray-700 font-semibold dark:text-gray-400'>
-																	Article
-																</p>
-																{item.article ? (
-																	<BadgeCheck className='text-green-500 ml-auto' />
-																) : (
-																	<BadgeX className='text-red-500 ml-auto' />
-																)}
-															</div>
-														</DropdownMenuItem>
-														<DropdownMenuItem>
-															<div className='flex items-center justify-between w-full'>
-																<p className='text-gray-700 font-semibold dark:text-gray-400'>
-																	Dissertation
-																</p>
-																{item.dissertation ? (
-																	<BadgeCheck className='text-green-500 ml-auto' />
-																) : (
-																	<BadgeX className='text-red-500 ml-auto' />
-																)}
-															</div>
-														</DropdownMenuItem>
-														<DropdownMenuItem>
-															<div className='flex items-center justify-between w-full'>
-																<p className='text-gray-700 font-semibold dark:text-gray-400'>
-																	Monographs
-																</p>
-																{item.monographs ? (
-																	<BadgeCheck className='text-green-500 ml-auto' />
-																) : (
-																	<BadgeX className='text-red-500 ml-auto' />
-																)}
-															</div>
-														</DropdownMenuItem>
-													</DropdownMenuContent>
-												</DropdownMenu>
 											</TableCell>
 											<TableCell className='px-6 py-4'>
 												<div className='flex items-center gap-3'>
@@ -426,8 +346,8 @@ function ContentTypepage() {
 			</div>
 			{/* Edit Country Dialog */}
 			{editingContentType && (
-				<EditContentDialog
-					contentId={editingContentType.id}
+				<UpdateInstitutionDialog
+					institutionId={editingContentType.id}
 					open={!!editingContentType}
 					onOpenChange={open => !open && setEditingContentType(null)}
 					onSuccess={handleEditSuccess}
@@ -436,9 +356,9 @@ function ContentTypepage() {
 
 			{/* Delete Country Dialog */}
 			{deletingContentType && (
-				<DeleteContentDialog
+				<DeleteIntitutionDialog
 					id={deletingContentType.id}
-					contentname={deletingContentType.name}
+					institutionname={deletingContentType.name}
 					open={!!deletingContentType}
 					onOpenChange={open => !open && setDeletingContentType(null)}
 					onSuccess={handleDeleteSuccess}
@@ -448,4 +368,4 @@ function ContentTypepage() {
 	)
 }
 
-export default ContentTypepage
+export default Intitutionpage

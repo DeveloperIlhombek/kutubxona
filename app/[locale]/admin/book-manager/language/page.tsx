@@ -1,4 +1,11 @@
 'use client'
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHeader,
+	TableRow,
+} from '@/app/[locale]/components/ui/table'
 import { Button } from '@/components/ui/button'
 import {
 	DropdownMenu,
@@ -19,14 +26,7 @@ import {
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHeader,
-	TableRow,
-} from '../../components/ui/table'
-import Pagination from '../_components/pagination'
+import Pagination from '../../_components/pagination'
 import CreateLanguageDialog from './_components/createLanguage'
 import { DeleteLanguageDialog } from './_components/deleteLanguage'
 import { EditLanguageDialog } from './_components/editLanguage'
