@@ -66,4 +66,8 @@ export interface IBookFile {
 	createdAt: string
 	fileUrl: string
 	originFileUrl: string
+	journal?: null
+	news?: null
+	post?: null
+	user?: null
 }

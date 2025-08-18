@@ -68,10 +68,6 @@ const navItems: NavItem[] = [
 		icon: <BookA />,
 		subItems: [
 			{ name: "Qo'lyozmalar ro'yxati", path: '/ancient-manager/ancients' },
-			{
-				name: "Qo'lyozmalar kategoriyalari",
-				path: '/ancient-manager/ancientCategories',
-			},
 		],
 	},
 	{
