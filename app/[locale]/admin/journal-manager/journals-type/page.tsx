@@ -7,7 +7,7 @@ import {
 	TableRow,
 } from '@/app/[locale]/components/ui/table'
 import { Button } from '@/components/ui/button'
-import { getInstitution } from '@/lib/books/institution'
+import { getJournalType } from '@/lib/books/journal-type'
 import { IInstitution, IInstitutionResult } from '@/types/journals-type'
 import {
 	BookA,
@@ -21,11 +21,11 @@ import {
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import Pagination from '../../_components/pagination'
-import CreateinstitutionDiolog from './_components/createinstitutionDiolog'
-import { DeleteIntitutionDialog } from './_components/deleteDialog'
-import { UpdateInstitutionDialog } from './_components/updateDialog'
+import CreateJournalTypeDiolog from './_components/createjournalType'
+import { DeleteJournalDialog } from './_components/deleteJournalType'
+import { UpdateJournalDialog } from './_components/updatejournalType'
 
-function Intitutionpage() {
+function JournalTypepage() {
 	const [loading, setLoading] = useState(false)
 	const [content, setContent] = useState<IInstitution[]>([])
 	const [contentResult, setContentResult] = useState<IInstitutionResult>()
@@ -41,7 +41,7 @@ function Intitutionpage() {
 	const fetchContentType = async () => {
 		try {
 			setLoading(true)
-			const response = await getInstitution({ pageNumber, pageSize })
+			const response = await getJournalType({ pageNumber, pageSize })
 			if (response?.result) {
 				setContent(response.result.items)
 				setContentResult(response.result)
@@ -85,7 +85,7 @@ function Intitutionpage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Muassasalar yuklanmoqda...
+							Jurnallar yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -125,7 +125,7 @@ function Intitutionpage() {
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Muassasalar
+							Jurnallar
 						</h1>
 					</div>
 				</div>
@@ -137,19 +137,19 @@ function Intitutionpage() {
 							<BookA className='w-10 h-10 text-slate-400 dark:text-slate-500' />
 						</div>
 						<h3 className='text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3'>
-							Muassasalar yaratilmagan
+							Jurnallar yaratilmagan
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400 mb-6'>
-							Hozircha tizimda Muassasalar bo&apos;sh
+							Hozircha tizimda Jurnallar bo&apos;sh
 						</p>
-						<CreateinstitutionDiolog
+						<CreateJournalTypeDiolog
 							trigger={
 								<Button className='bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105'>
 									<PlusSquare className='w-4 h-4 mr-2' />
 									Birinchi Resurs sohalarini qo&apos;shish
 								</Button>
 							}
-							oninstitutionAdded={handleInstitutionAdded}
+							onjournalAdded={handleInstitutionAdded}
 						/>
 					</div>
 				</div>
@@ -176,10 +176,10 @@ function Intitutionpage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
-						Muassasalar
+						Jurnallar
 					</h1>
 					<p className='text-white/80 mt-2 text-lg'>
-						Tizimdagi Muassasalar turlari
+						Tizimdagi Jurnallar turlari
 					</p>
 				</div>
 			</div>
@@ -195,7 +195,7 @@ function Intitutionpage() {
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami Muassasalar turlari soni
+										Jami Jurnallar turlari soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxat olingan
@@ -208,17 +208,17 @@ function Intitutionpage() {
 										{contentResult?.totalCount || 0}
 									</p>
 									<p className='text-sm text-slate-500 dark:text-slate-400'>
-										Muassasalar
+										Jurnallar
 									</p>
 								</div>
-								<CreateinstitutionDiolog
+								<CreateJournalTypeDiolog
 									trigger={
 										<Button className='bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105'>
 											<PlusSquare className='w-4 h-4 mr-2' />
 											Yaratish
 										</Button>
 									}
-									oninstitutionAdded={handleInstitutionAdded}
+									onjournalAdded={handleInstitutionAdded}
 								/>
 							</div>
 						</div>
@@ -243,7 +243,7 @@ function Intitutionpage() {
 											isHeader
 											className='pl-1 pr-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
 										>
-											Muassasalar
+											Jurnallar
 										</TableCell>
 
 										<TableCell
@@ -342,8 +342,8 @@ function Intitutionpage() {
 			</div>
 			{/* Edit Country Dialog */}
 			{editingContentType && (
-				<UpdateInstitutionDialog
-					institutionId={editingContentType.id}
+				<UpdateJournalDialog
+					journalId={editingContentType.id}
 					open={!!editingContentType}
 					onOpenChange={open => !open && setEditingContentType(null)}
 					onSuccess={handleEditSuccess}
@@ -352,9 +352,9 @@ function Intitutionpage() {
 
 			{/* Delete Country Dialog */}
 			{deletingContentType && (
-				<DeleteIntitutionDialog
+				<DeleteJournalDialog
 					id={deletingContentType.id}
-					institutionname={deletingContentType.name}
+					journalname={deletingContentType.name}
 					open={!!deletingContentType}
 					onOpenChange={open => !open && setDeletingContentType(null)}
 					onSuccess={handleDeleteSuccess}
@@ -364,4 +364,4 @@ function Intitutionpage() {
 	)
 }
 
-export default Intitutionpage
+export default JournalTypepage

@@ -63,19 +63,22 @@ const navItems: NavItem[] = [
 			{ name: 'Resurs sohalari', path: '/book-manager/fields' },
 		],
 	},
-	{
-		name: "Qo'lyozmalar",
-		icon: <BookA />,
-		subItems: [
-			{ name: "Qo'lyozmalar ro'yxati", path: '/ancient-manager/ancients' },
-		],
-	},
+	// {
+	// 	name: "Qo'lyozmalar",
+	// 	icon: <BookA />,
+	// 	subItems: [
+	// 		{ name: "Qo'lyozmalar ro'yxati", path: '/ancient-manager/ancients' },
+	// 	],
+	// },
 	{
 		name: 'Jurnallar',
 		icon: <BookA />,
 		subItems: [
 			{ name: "Jurnallar ro'yxati", path: '/journal-manager/journals' },
-			{ name: 'Jurnallar kategoriyalari', path: '/journal-manager/journals' },
+			{
+				name: 'Jurnallar kategoriyalari',
+				path: '/journal-manager/journals-type',
+			},
 			{ name: 'Muassasalar', path: '/journal-manager/institutions' },
 		],
 	},
