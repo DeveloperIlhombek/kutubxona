@@ -412,9 +412,3 @@
 // }
 
 // export default AncientPage
-
-function Page() {
-	return <div>Commentariyaga olingan Ancient Page</div>
-}
-
-export default Page
