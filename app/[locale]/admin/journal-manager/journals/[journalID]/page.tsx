@@ -543,22 +543,35 @@ export default function JournalDetailPage() {
 						{isEditing ? (
 							<div>
 								{previewImage ? (
-									<div className='relative group'>
-										<Image
-											src={previewImage}
-											alt='Uploaded preview'
-											width={400}
-											height={300}
-											className='rounded-lg object-cover w-full h-48 md:h-64 transition-transform duration-200 group-hover:scale-105'
-										/>
-										<Button
-											variant='destructive'
-											size='icon'
-											className='absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200'
-											onClick={handleRemoveImage}
-										>
-											<X className='w-4 h-4' />
-										</Button>
+									<div className='flex items-center justify-start gap-2'>
+										<div className='relative group w-32 h-48 overflow-hidden rounded-lg shadow-md ring-2 ring-slate-200 dark:ring-slate-700 group-hover:ring-indigo-300 dark:group-hover:ring-indigo-600 transition-all duration-300'>
+											<Image
+												src={previewImage}
+												alt='Uploaded preview'
+												width={64}
+												height={80}
+												className='rounded-lg object-cover w-full h-48 md:h-64 transition-transform duration-200 group-hover:scale-105'
+											/>
+											<Button
+												variant='destructive'
+												size='icon'
+												className='absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200'
+												onClick={handleRemoveImage}
+											>
+												<X className='w-4 h-4' />
+											</Button>
+										</div>
+										<div className='gap-2 flex flex-col '>
+											<div className='text-gray-800 dark:text-gray-200'>
+												{currentjournal?.image.filename}
+											</div>
+											<div className='text-gray-800 dark:text-gray-200'>
+												Format:{currentjournal?.image.mimeType}
+											</div>
+											<div className='text-gray-800 dark:text-gray-200'>
+												Yuklangan file hajmi:{currentjournal?.image.size}
+											</div>
+										</div>
 									</div>
 								) : (
 									<div
@@ -587,18 +600,30 @@ export default function JournalDetailPage() {
 						) : (
 							<div>
 								{currentjournal?.image ? (
-									<div className='group relative'>
-										<Image
-											src={downloadImage({
-												id: currentjournal.image.id,
-												quality: 'low',
-											})}
-											alt='Journal cover'
-											width={400}
-											height={300}
-											className='rounded-lg object-cover w-full h-48 md:h-64 transition-transform duration-200 group-hover:scale-105'
-										/>
-										<div className='absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 rounded-lg'></div>
+									<div className='flex gap-2 justify-start items-center'>
+										<div className='w-32 h-48 overflow-hidden rounded-lg shadow-md ring-2 ring-slate-200 dark:ring-slate-700 group-hover:ring-indigo-300 dark:group-hover:ring-indigo-600 transition-all duration-300'>
+											<Image
+												src={downloadImage({
+													id: currentjournal.image.id,
+													quality: 'low',
+												})}
+												alt='Journal cover'
+												width={64}
+												height={80}
+												className='w-full h-full rounded-lg object-cover md:h-64 transition-transform duration-200 group-hover:scale-105'
+											/>
+										</div>
+										<div className='gap-2 flex flex-col '>
+											<div className='text-gray-800 dark:text-gray-200'>
+												{currentjournal?.image.filename}
+											</div>
+											<div className='text-gray-800 dark:text-gray-200'>
+												Format:{currentjournal?.image.mimeType}
+											</div>
+											<div className='text-gray-800 dark:text-gray-200'>
+												Yuklangan file hajmi:{currentjournal?.image.size}
+											</div>
+										</div>
 									</div>
 								) : (
 									<div className='bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 rounded-lg p-6 md:p-8 text-center h-48 md:h-64 flex flex-col items-center justify-center'>
