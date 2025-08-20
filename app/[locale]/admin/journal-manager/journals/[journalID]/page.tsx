@@ -1,8 +1,11 @@
 'use client'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { getAllCountries } from '@/lib/books/countries'
+import { getAllFields } from '@/lib/books/fields'
+import { getInstitution } from '@/lib/books/institution'
+import { getJournalType } from '@/lib/books/journal-type'
 import { downloadImage } from '@/lib/utils'
 import { useJournalStore } from '@/store/journal'
 import {
@@ -21,7 +24,13 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { toast } from 'sonner'
-import { DeleteJournalDialog } from '../_components/deleteJournal'
+import CountrySelect from '../_components/itemSelect'
+
+// Types for dropdown options
+interface DropdownOption {
+	id: string
+	name: string
+}
 
 export default function JournalDetailPage() {
 	const pathname = usePathname()
@@ -34,13 +43,72 @@ export default function JournalDetailPage() {
 	const [formData, setFormData] = useState({
 		name: '',
 		issn: '',
+		fieldId: '',
+		journalTypeId: '',
+		countryId: '',
+		institutionId: '',
 	})
 	const [previewImage, setPreviewImage] = useState<string | null>(null)
 	const [uploading, setUploading] = useState(false)
-	const [deletingAncient, setDeletingAncient] = useState<{
+	const [deletingJournal, setDeletingJournal] = useState<{
 		id: string
 		name: string
 	} | null>(null)
+
+	// State for dropdown options
+	const [countries, setCountries] = useState<DropdownOption[]>([])
+	const [fields, setFields] = useState<DropdownOption[]>([])
+	const [journalTypes, setJournalTypes] = useState<DropdownOption[]>([])
+	const [institutions, setInstitutions] = useState<DropdownOption[]>([])
+
+	// Fetch dropdown data
+	useEffect(() => {
+		const fetchDropdownData = async () => {
+			try {
+				// Fetch countries
+				const countriesResponse = await getAllCountries({
+					pageNumber: 0,
+					pageSize: 1000,
+				})
+				if (countriesResponse) {
+					setCountries(countriesResponse?.result.items || [])
+				}
+
+				// Fetch fields
+				const fieldsResponse = await getAllFields({
+					pageNumber: 0,
+					pageSize: 1000,
+				})
+				if (fieldsResponse) {
+					setFields(fieldsResponse.result.items || [])
+				}
+
+				// Fetch journal types
+				const journalTypesResponse = await getJournalType({
+					pageNumber: 0,
+					pageSize: 1000,
+				})
+				if (journalTypesResponse) {
+					setJournalTypes(journalTypesResponse.result.items || [])
+				}
+
+				// Fetch institutions
+				const institutionsResponse = await getInstitution({
+					pageNumber: 0,
+					pageSize: 1000,
+				})
+				if (institutionsResponse) {
+					setInstitutions(institutionsResponse.result.items || [])
+				}
+			} catch (error) {
+				console.error('Error fetching dropdown data:', error)
+				toast.error("Dropdown ma'lumotlarini yuklashda xatolik yuz berdi")
+			}
+		}
+
+		fetchDropdownData()
+	}, [])
+
 	useEffect(() => {
 		if (id) {
 			fetchJournalId(id as string)
@@ -50,8 +118,12 @@ export default function JournalDetailPage() {
 	useEffect(() => {
 		if (currentjournal) {
 			setFormData({
-				name: currentjournal.name,
-				issn: currentjournal.issn,
+				name: currentjournal.name || '',
+				issn: currentjournal.issn || '',
+				fieldId: currentjournal.fieldId || '',
+				journalTypeId: currentjournal.journalTypeId || '',
+				countryId: currentjournal.countryId || '',
+				institutionId: currentjournal.institutionId || '',
 			})
 
 			if (currentjournal.image) {
@@ -95,7 +167,7 @@ export default function JournalDetailPage() {
 			try {
 				const updatedData = {
 					...formData,
-					coverImage: previewImage,
+					// You'll need to handle image upload separately if needed
 				}
 
 				const success = await updateJournal(id as string, updatedData)
@@ -117,6 +189,13 @@ export default function JournalDetailPage() {
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => {
 		const { name, value } = e.target
+		setFormData(prev => ({
+			...prev,
+			[name]: value,
+		}))
+	}
+
+	const handleSelectChange = (name: string, value: string) => {
 		setFormData(prev => ({
 			...prev,
 			[name]: value,
@@ -182,7 +261,7 @@ export default function JournalDetailPage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-2xl md:text-4xl font-bold text-white drop-shadow-lg'>
-						{isEditing ? "Qo'lyozmani tahrirlash" : "Qo'lyozma tafsilotlari"}
+						{isEditing ? 'Jurnalni tahrirlash' : 'Jurnal tafsilotlari'}
 					</h1>
 					<p className='text-white/80 mt-2 text-sm md:text-lg'>
 						{currentjournal?.name}
@@ -256,7 +335,7 @@ export default function JournalDetailPage() {
 								{currentjournal && (
 									<Button
 										onClick={() =>
-											setDeletingAncient({
+											setDeletingJournal({
 												id: currentjournal?.id,
 												name: currentjournal?.name,
 											})
@@ -272,8 +351,9 @@ export default function JournalDetailPage() {
 					</div>
 				</div>
 
-				<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 overflow-hidden animate-slide-in-up'>
-					<div className='bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 rounded-xl border border-slate-200/60 dark:border-slate-700/60 p-4 md:p-6 shadow-lg animate-slide-in-up'>
+				<div className='space-y-1'>
+					{/* Journal Name */}
+					<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 p-3'>
 						<div className='group'>
 							<Label className='text-slate-600 dark:text-slate-400 text-sm font-medium'>
 								Jurnal nomi
@@ -284,17 +364,14 @@ export default function JournalDetailPage() {
 									value={formData.name}
 									onChange={handleInputChange}
 									className='mt-2 focus:ring-2 dark:text-white focus:ring-indigo-500 dark:focus:ring-indigo-400'
-									placeholder='Mavzularni vergul bilan ajrating'
+									placeholder='Jurnal nomini kiriting'
 								/>
 							) : (
-								<div className='mt-2 flex flex-wrap gap-2'>
+								<div className='mt-2'>
 									{currentjournal?.name ? (
-										<Badge
-											variant='secondary'
-											className='bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 text-indigo-800 dark:text-indigo-200'
-										>
+										<p className='text-lg font-medium text-slate-800 dark:text-slate-200'>
 											{currentjournal.name}
-										</Badge>
+										</p>
 									) : (
 										<p className='text-slate-500 dark:text-slate-400 italic'>
 											Ma&apos;lumot kiritilmagan
@@ -304,28 +381,27 @@ export default function JournalDetailPage() {
 							)}
 						</div>
 					</div>
-					<div className='bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 rounded-xl border border-slate-200/60 dark:border-slate-700/60 p-4 md:p-6 shadow-lg animate-slide-in-up'>
+
+					{/* ISSN */}
+					<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 p-3'>
 						<div className='group'>
-							<Label className='text-slate-600 dark:text-slate-400 text-sm font-medium'>
-								issn
+							<Label className='text-slate-600 dark:text-slate-400 text-sm'>
+								ISSN
 							</Label>
 							{isEditing ? (
 								<Input
 									name='issn'
 									value={formData.issn}
 									onChange={handleInputChange}
-									className='mt-2 focus:ring-2 dark:text-white focus:ring-indigo-500 dark:focus:ring-indigo-400'
-									placeholder='issn kiriting'
+									className='mt-1 focus:ring-2 dark:text-white focus:ring-indigo-500 dark:focus:ring-indigo-400'
+									placeholder='ISSN kiriting'
 								/>
 							) : (
-								<div className='mt-2 flex flex-wrap gap-2'>
+								<div className='mt-1'>
 									{currentjournal?.issn ? (
-										<Badge
-											variant='secondary'
-											className='bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 text-indigo-800 dark:text-indigo-200'
-										>
+										<p className='text-lg font-medium text-slate-800 dark:text-slate-200'>
 											{currentjournal.issn}
-										</Badge>
+										</p>
 									) : (
 										<p className='text-slate-500 dark:text-slate-400 italic'>
 											Ma&apos;lumot kiritilmagan
@@ -336,97 +412,218 @@ export default function JournalDetailPage() {
 						</div>
 					</div>
 
-					<div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-						<div className='bg-gradient-to-br from-slate-50 to-white dark:from-slate-900 dark:to-slate-800 rounded-xl border border-slate-200/60 dark:border-slate-700/60 p-4 md:p-6 shadow-lg animate-slide-in-up'>
-							<h2 className='text-lg md:text-xl font-semibold mb-4 flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-								<ImageIcon className='w-5 h-5 text-indigo-600 dark:text-indigo-400' />
-								Muqova rasmi
-							</h2>
+					{/* Field */}
+					<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 p-3'>
+						<div className='group'>
+							<Label className='text-slate-600 dark:text-slate-400 text-sm font-medium'>
+								Soha
+							</Label>
 							{isEditing ? (
-								<div>
-									{previewImage ? (
-										<div className='relative group'>
-											<Image
-												src={previewImage}
-												alt='Uploaded preview'
-												width={400}
-												height={300}
-												className='rounded-lg object-cover w-full h-48 md:h-64 transition-transform duration-200 group-hover:scale-105'
-											/>
-											<Button
-												variant='destructive'
-												size='icon'
-												className='absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200'
-												onClick={handleRemoveImage}
-											>
-												<X className='w-4 h-4' />
-											</Button>
-										</div>
-									) : (
-										<div
-											{...getRootProps()}
-											className={`border-2 border-dashed rounded-lg p-6 md:p-8 text-center cursor-pointer transition-all duration-200 ${
-												isDragActive
-													? 'border-indigo-500 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950 dark:to-purple-950 scale-105'
-													: 'border-slate-300 dark:border-slate-600 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950 dark:hover:to-purple-950'
-											}`}
-										>
-											<input {...getInputProps()} />
-											<div className='w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 rounded-full flex items-center justify-center'>
-												<Upload className='w-8 h-8 text-indigo-600 dark:text-indigo-400' />
-											</div>
-											<p className='text-sm md:text-base text-slate-600 dark:text-slate-300 font-medium'>
-												{isDragActive
-													? 'Rasmni shu yerga tashlang'
-													: 'Rasmni sudrab keling yoki bosing'}
-											</p>
-											<p className='text-xs md:text-sm text-slate-400 dark:text-slate-500 mt-2'>
-												Faqat JPG, JPEG, PNG (maks. 5MB)
-											</p>
-										</div>
-									)}
-								</div>
+								<CountrySelect
+									countries={fields}
+									value={formData.fieldId}
+									onChange={value => handleSelectChange('fieldId', value)}
+									placeholder='Sohani tanlang'
+								/>
 							) : (
-								<div>
-									{currentjournal?.image ? (
-										<div className='group relative'>
-											<Image
-												src={downloadImage({
-													id: currentjournal.image.id,
-													quality: 'low',
-												})}
-												alt='Ancient cover'
-												width={400}
-												height={300}
-												className='rounded-lg object-cover w-full h-48 md:h-64 transition-transform duration-200 group-hover:scale-105'
-											/>
-											<div className='absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 rounded-lg'></div>
-										</div>
+								<div className='mt-2'>
+									{currentjournal?.fieldId ? (
+										<p className='text-lg font-medium text-slate-800 dark:text-slate-200'>
+											{fields.find(c => c.id === currentjournal.fieldId)
+												?.name || "Noma'lum"}
+										</p>
 									) : (
-										<div className='bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 rounded-lg p-6 md:p-8 text-center h-48 md:h-64 flex flex-col items-center justify-center'>
-											<div className='w-16 h-16 mx-auto mb-4 bg-slate-200 dark:bg-slate-600 rounded-full flex items-center justify-center'>
-												<ImageIcon className='w-8 h-8 text-slate-400 dark:text-slate-500' />
-											</div>
-											<p className='text-slate-500 dark:text-slate-400'>
-												Rasm yuklanmagan
-											</p>
-										</div>
+										<p className='text-slate-500 dark:text-slate-400 italic'>
+											Ma&apos;lumot kiritilmagan
+										</p>
 									)}
 								</div>
 							)}
 						</div>
 					</div>
 
-					<DeleteJournalDialog
-						ancientId={deletingAncient?.id || ''}
-						ancientName={deletingAncient?.name || ''}
-						open={!!deletingAncient}
-						onOpenChange={open => !open && setDeletingAncient(null)}
-						onSuccess={() => {
-							router.push('/ancient')
-						}}
-					/>
+					{/* JournalTypes */}
+					<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 p-3'>
+						<div className='group'>
+							<Label className='text-slate-600 dark:text-slate-400 text-sm font-medium'>
+								Jurnal turi
+							</Label>
+							{isEditing ? (
+								<CountrySelect
+									countries={journalTypes}
+									value={formData.journalTypeId}
+									onChange={value => handleSelectChange('journalTypeId', value)}
+									placeholder='Jurnal turlarini tanlang'
+								/>
+							) : (
+								<div className='mt-2'>
+									{currentjournal?.journalTypeId ? (
+										<p className='text-lg font-medium text-slate-800 dark:text-slate-200'>
+											{journalTypes.find(
+												c => c.id === currentjournal.journalTypeId
+											)?.name || "Noma'lum"}
+										</p>
+									) : (
+										<p className='text-slate-500 dark:text-slate-400 italic'>
+											Ma&apos;lumot kiritilmagan
+										</p>
+									)}
+								</div>
+							)}
+						</div>
+					</div>
+
+					{/* Country */}
+					<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 p-3'>
+						<div className='group'>
+							<Label className='text-slate-600 dark:text-slate-400 text-sm font-medium'>
+								Mamlakat
+							</Label>
+							{isEditing ? (
+								<CountrySelect
+									countries={countries}
+									value={formData.countryId}
+									onChange={value => handleSelectChange('countryId', value)}
+									placeholder='Mamlakatni tanlang'
+								/>
+							) : (
+								<div className='mt-2'>
+									{currentjournal?.countryId ? (
+										<p className='text-lg font-medium text-slate-800 dark:text-slate-200'>
+											{countries.find(c => c.id === currentjournal.countryId)
+												?.name || "Noma'lum"}
+										</p>
+									) : (
+										<p className='text-slate-500 dark:text-slate-400 italic'>
+											Ma&apos;lumot kiritilmagan
+										</p>
+									)}
+								</div>
+							)}
+						</div>
+					</div>
+					{/* Institution */}
+					<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 p-3'>
+						<div className='group'>
+							<Label className='text-slate-600 dark:text-slate-400 text-sm font-medium'>
+								Muassasa
+							</Label>
+							{isEditing ? (
+								<CountrySelect
+									countries={institutions}
+									value={formData.institutionId}
+									onChange={value => handleSelectChange('institutionId', value)}
+									placeholder='Muassasa tanlang'
+								/>
+							) : (
+								<div className='mt-2'>
+									{currentjournal?.institutionId ? (
+										<p className='text-lg font-medium text-slate-800 dark:text-slate-200'>
+											{institutions.find(
+												c => c.id === currentjournal.institutionId
+											)?.name || "Noma'lum"}
+										</p>
+									) : (
+										<p className='text-slate-500 dark:text-slate-400 italic'>
+											Ma&apos;lumot kiritilmagan
+										</p>
+									)}
+								</div>
+							)}
+						</div>
+					</div>
 				</div>
+
+				<div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mt-1'>
+					<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 p-6'>
+						<h2 className='text-lg md:text-xl font-semibold mb-4 flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
+							<ImageIcon className='w-5 h-5 text-indigo-600 dark:text-indigo-400' />
+							Muqova rasmi
+						</h2>
+						{isEditing ? (
+							<div>
+								{previewImage ? (
+									<div className='relative group'>
+										<Image
+											src={previewImage}
+											alt='Uploaded preview'
+											width={400}
+											height={300}
+											className='rounded-lg object-cover w-full h-48 md:h-64 transition-transform duration-200 group-hover:scale-105'
+										/>
+										<Button
+											variant='destructive'
+											size='icon'
+											className='absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200'
+											onClick={handleRemoveImage}
+										>
+											<X className='w-4 h-4' />
+										</Button>
+									</div>
+								) : (
+									<div
+										{...getRootProps()}
+										className={`border-2 border-dashed rounded-lg p-6 md:p-8 text-center cursor-pointer transition-all duration-200 ${
+											isDragActive
+												? 'border-indigo-500 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950 dark:to-purple-950 scale-105'
+												: 'border-slate-300 dark:border-slate-600 hover:border-indigo-400 dark:hover:border-indigo-500 hover:bg-gradient-to-br hover:from-indigo-50 hover:to-purple-50 dark:hover:from-indigo-950 dark:hover:to-purple-950'
+										}`}
+									>
+										<input {...getInputProps()} />
+										<div className='w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 rounded-full flex items-center justify-center'>
+											<Upload className='w-8 h-8 text-indigo-600 dark:text-indigo-400' />
+										</div>
+										<p className='text-sm md:text-base text-slate-600 dark:text-slate-300 font-medium'>
+											{isDragActive
+												? 'Rasmni shu yerga tashlang'
+												: 'Rasmni sudrab keling yoki bosing'}
+										</p>
+										<p className='text-xs md:text-sm text-slate-400 dark:text-slate-500 mt-2'>
+											Faqat JPG, JPEG, PNG (maks. 5MB)
+										</p>
+									</div>
+								)}
+							</div>
+						) : (
+							<div>
+								{currentjournal?.image ? (
+									<div className='group relative'>
+										<Image
+											src={downloadImage({
+												id: currentjournal.image.id,
+												quality: 'low',
+											})}
+											alt='Journal cover'
+											width={400}
+											height={300}
+											className='rounded-lg object-cover w-full h-48 md:h-64 transition-transform duration-200 group-hover:scale-105'
+										/>
+										<div className='absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 rounded-lg'></div>
+									</div>
+								) : (
+									<div className='bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 rounded-lg p-6 md:p-8 text-center h-48 md:h-64 flex flex-col items-center justify-center'>
+										<div className='w-16 h-16 mx-auto mb-4 bg-slate-200 dark:bg-slate-600 rounded-full flex items-center justify-center'>
+											<ImageIcon className='w-8 h-8 text-slate-400 dark:text-slate-500' />
+										</div>
+										<p className='text-slate-500 dark:text-slate-400'>
+											Rasm yuklanmagan
+										</p>
+									</div>
+								)}
+							</div>
+						)}
+					</div>
+				</div>
+
+				{/* <DeleteJournalDialog
+					journalId={deletingJournal?.id || ''}
+					journalName={deletingJournal?.name || ''}
+					open={!!deletingJournal}
+					onOpenChange={open => !open && setDeletingJournal(null)}
+					onSuccess={() => {
+						router.push('/journal')
+					}}
+				/> */}
 			</div>
 
 			{/* Custom Styles */}

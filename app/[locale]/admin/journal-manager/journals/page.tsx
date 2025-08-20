@@ -15,7 +15,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import Pagination from '../../_components/pagination'
 
-function AncientPage() {
+function JournalPage() {
 	const pathname = usePathname()
 	const {
 		journal,
@@ -132,7 +132,7 @@ function AncientPage() {
 						<Link href='/ancient/create'>
 							<Button className='bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105'>
 								<PlusSquare className='w-4 h-4 mr-2' />
-								Birinchi jurnalni qo&apso;shish
+								Birinchi jurnalni qo&apo;shish
 							</Button>
 						</Link>
 					</div>
@@ -364,4 +364,4 @@ function AncientPage() {
 	)
 }
 
-export default AncientPage
+export default JournalPage

@@ -1,4 +1,11 @@
 'use client'
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHeader,
+	TableRow,
+} from '@/app/[locale]/components/ui/table'
 import { Button } from '@/components/ui/button'
 import { getFaculties } from '@/lib/faculty/faculty'
 import { IFaculty, IFacultyResult } from '@/types'
@@ -13,14 +20,7 @@ import {
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHeader,
-	TableRow,
-} from '../../components/ui/table'
-import Pagination from '../_components/pagination'
+import Pagination from '../../_components/pagination'
 import { EditFacultyDialog } from './_components/EditFacultyDialog'
 import CreateFaculty from './_components/createfaculty'
 import { DeleteFacultyDialog } from './_components/deleteFaculty'
