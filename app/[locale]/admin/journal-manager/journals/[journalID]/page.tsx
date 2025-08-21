@@ -6,7 +6,7 @@ import { getAllCountries } from '@/lib/books/countries'
 import { getAllFields } from '@/lib/books/fields'
 import { getInstitution } from '@/lib/books/institution'
 import { getJournalType } from '@/lib/books/journal-type'
-import { downloadImage } from '@/lib/utils'
+import { downloadImage, getLanguagePrefix } from '@/lib/utils'
 import { useJournalStore } from '@/store/journal'
 import {
 	ArrowLeft,
@@ -24,6 +24,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { toast } from 'sonner'
+import { DeleteJournalDialog } from '../_components/deleteJournal'
 import CountrySelect from '../_components/itemSelect'
 
 // Types for dropdown options
@@ -113,7 +114,15 @@ export default function JournalDetailPage() {
 		if (id) {
 			fetchJournalId(id as string)
 		}
-	}, [id])
+	}, [id, fetchJournalId])
+
+	// Tahrirlash rejimidan chiqganda ma'lumotlarni yangilash
+	useEffect(() => {
+		if (isEditing === false && id) {
+			// Faqat tahrirlash rejimidan chiqganda yangilash
+			fetchJournalId(id as string)
+		}
+	}, [isEditing, id, fetchJournalId])
 
 	useEffect(() => {
 		if (currentjournal) {
@@ -130,6 +139,8 @@ export default function JournalDetailPage() {
 				setPreviewImage(
 					downloadImage({ id: currentjournal.image.id, quality: 'low' })
 				)
+			} else {
+				setPreviewImage(null)
 			}
 		}
 	}, [currentjournal])
@@ -174,6 +185,8 @@ export default function JournalDetailPage() {
 				if (success) {
 					toast.success('Jurnal muvaffaqiyatli yangilandi')
 					setIsEditing(false)
+					// Ma'lumotlarni qayta yuklash
+					fetchJournalId(id as string)
 				} else {
 					toast.error('Yangilashda xatolik yuz berdi')
 				}
@@ -290,7 +303,7 @@ export default function JournalDetailPage() {
 							{/* Action Buttons */}
 							<div className='flex gap-2 shrink-0'>
 								{isEditing ? (
-									<div>
+									<div className='flex gap-2'>
 										<Button
 											variant='outline'
 											onClick={() => setIsEditing(false)}
@@ -640,15 +653,17 @@ export default function JournalDetailPage() {
 					</div>
 				</div>
 
-				{/* <DeleteJournalDialog
+				<DeleteJournalDialog
 					journalId={deletingJournal?.id || ''}
 					journalName={deletingJournal?.name || ''}
 					open={!!deletingJournal}
 					onOpenChange={open => !open && setDeletingJournal(null)}
 					onSuccess={() => {
-						router.push('/journal')
+						router.push(
+							`${getLanguagePrefix(pathname)}/admin/journal-manager/journals`
+						)
 					}}
-				/> */}
+				/>
 			</div>
 
 			{/* Custom Styles */}

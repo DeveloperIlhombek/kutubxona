@@ -6,6 +6,7 @@ import {
 	updateJournal,
 } from '@/lib/journal/journal'
 import { IJournal } from '@/types/journals-type'
+import { toast } from 'sonner'
 import { create } from 'zustand'
 
 interface IJournalState {
@@ -19,7 +20,7 @@ interface IJournalState {
 	totalPages: number
 	fetchJournals: (pageNumber: number, pageSize: number) => Promise<void>
 	fetchJournalId: (id: string) => Promise<void>
-	createJournal: (data: Omit<IJournal, 'id'>) => Promise<boolean>
+	createJournal: (data: object) => Promise<boolean>
 	updateJournal: (id: string, data: Partial<IJournal>) => Promise<boolean>
 	deletejournal: (id: string) => Promise<boolean>
 	setPageNumber: (page: number) => void
@@ -79,7 +80,7 @@ export const useJournalStore = create<IJournalState>((set, get) => ({
 	},
 
 	// Create new Journals
-	createJournal: async data => {
+	createJournal: async (data: object) => {
 		set({ loading: true, error: null })
 		try {
 			const response = await createJournal(data)
@@ -89,10 +90,10 @@ export const useJournalStore = create<IJournalState>((set, get) => ({
 			}
 			return false
 		} catch (error) {
-			set({
-				error: error instanceof Error ? error.message : "Noma'lum xatolik",
-				loading: false,
-			})
+			const errorMessage =
+				error instanceof Error ? error.message : "Noma'lum xatolik"
+			set({ error: errorMessage, loading: false })
+			toast.error(errorMessage)
 			return false
 		} finally {
 			set({ loading: false })
@@ -105,6 +106,8 @@ export const useJournalStore = create<IJournalState>((set, get) => ({
 		try {
 			const response = await updateJournal(id, data)
 			if (response?.isSuccess) {
+				// Yangilangan ma'lumotlarni qayta fetch qilish
+				await get().fetchJournalId(id)
 				await get().fetchJournals(get().pageNumber, get().pageSize)
 				return true
 			}

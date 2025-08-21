@@ -30,11 +30,6 @@ function JournalPage() {
 		fetchJournals,
 	} = useJournalStore()
 
-	// const [deletingAncient, setDeletingAncient] = useState<{
-	// 	id: string
-	// 	work_name: string
-	// } | null>(null)
-
 	useEffect(() => {
 		fetchJournals(pageNumber, pageSize)
 	}, [pageNumber, pageSize])
@@ -45,16 +40,6 @@ function JournalPage() {
 		}
 		setPageNumber(newPage)
 	}
-
-	// const handleDelete = async () => {
-	// 	if (deletingAncient) {
-	// 		const success = await deleteExistingAncient(deletingAncient.id)
-	// 		if (success) {
-	// 			setDeletingAncient(null)
-	// 		}
-	// 	}
-	// }
-	const lang = getLanguagePrefix(pathname)
 	if (loading) {
 		return (
 			<div className='min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900'>
@@ -199,7 +184,11 @@ function JournalPage() {
 										Jurnallar
 									</p>
 								</div>
-								<Link href='/ancient/create'>
+								<Link
+									href={`${getLanguagePrefix(
+										pathname
+									)}/admin/journal-manager/journals/create`}
+								>
 									<Button className='bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105'>
 										<PlusSquare className='w-4 h-4 mr-2' />
 										Yaratish
@@ -243,7 +232,9 @@ function JournalPage() {
 
 											<TableCell className='px-6 py-4'>
 												<Link
-													href={`${lang}/admin/journal-manager/journals/${item.id}`}
+													href={`${getLanguagePrefix(
+														pathname
+													)}/admin/journal-manager/journals/${item.id}`}
 												>
 													<div className=' text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300'>
 														{item.name}
@@ -273,15 +264,6 @@ function JournalPage() {
 					</div>
 				)}
 			</div>
-
-			{/* Delete Country Dialog */}
-			{/* <DeleteAncientDialog
-				open={!!deletingAncient}
-				onOpenChange={open => !open && setDeletingAncient(null)}
-				coutryId={deletingAncient?.id || ''}
-				coutryName={deletingAncient?.work_name || ''}
-				onSuccess={handleDelete}
-			/> */}
 
 			{/* Custom Styles */}
 			<style jsx>{`

@@ -53,19 +53,26 @@ export const createJournal = async (body: object) => {
 		const response = await fetch(`${API_URL}/api/journal`, {
 			method: 'POST',
 			headers: {
-				Accept: '*/*',
 				'Content-Type': 'application/json',
+				Accept: '*/*',
 				Authorization: `Bearer ${localStorage.getItem('token')}`,
 			},
 			body: JSON.stringify(body),
 		})
+
 		if (!response.ok) {
-			throw new Error(`API error: ${response.status} - ${response.statusText}`)
+			const errorData = await response.json().catch(() => null)
+			throw new Error(
+				`API error: ${response.status} - ${response.statusText}. ${
+					errorData?.message || ''
+				}`
+			)
 		}
+
 		return await response.json()
 	} catch (error) {
 		console.error('Error creating Journal:', error)
-		return null
+		throw error
 	}
 }
 
@@ -107,5 +114,31 @@ export const deleteJournal = async (id: string) => {
 	} catch (error) {
 		console.error('Error deleting Journal:', error)
 		return null
+	}
+}
+//Upload journal images
+
+export const uploadImage = async (file: File): Promise<string> => {
+	try {
+		const formData = new FormData()
+		formData.append('file', file)
+
+		const response = await fetch(`${API_URL}/api/journal/uploadjournalcover`, {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('token')}`,
+			},
+			body: formData,
+		})
+
+		if (!response.ok) {
+			throw new Error('Rasm yuklashda xatolik')
+		}
+
+		const result = await response.json()
+		return result.result.id
+	} catch (error) {
+		console.error('Rasm yuklashda xatolik:', error)
+		throw error
 	}
 }

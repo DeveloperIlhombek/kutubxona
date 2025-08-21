@@ -6,21 +6,21 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/ui/dialog'
-import { deleteAncient } from '@/lib/ancient/ancient'
+import { deleteJournal } from '@/lib/journal/journal'
 import { useAncientStore } from '@/store/ancient'
 import { AlertTriangle, Loader2, Trash2, X } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
 export function DeleteJournalDialog({
-	ancientId,
-	ancientName,
+	journalId,
+	journalName,
 	open,
 	onOpenChange,
 	onSuccess,
 }: {
-	ancientId: string
-	ancientName: string
+	journalId: string
+	journalName: string
 	open: boolean
 	onOpenChange: (open: boolean) => void
 	onSuccess: () => void
@@ -31,10 +31,10 @@ export function DeleteJournalDialog({
 	const handleDelete = async () => {
 		try {
 			setLoading(true)
-			const response = await deleteAncient(ancientId)
+			const response = await deleteJournal(journalId)
 
 			if (response?.isSuccess) {
-				toast.success(`"${ancientName}" qo'lyozmasi muvaffaqiyatli o'chirildi`)
+				toast.success(`"${journalName}" qo'lyozmasi muvaffaqiyatli o'chirildi`)
 				onOpenChange(false)
 				onSuccess()
 				// Refresh the ancient list after deletion
@@ -76,7 +76,7 @@ export function DeleteJournalDialog({
 							</p>
 							<div className='bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border border-red-200 dark:border-red-800/60 rounded-lg p-4'>
 								<p className='text-red-800 dark:text-red-300 font-medium text-center'>
-									&quot;{ancientName}&quot;
+									&quot;{journalName}&quot;
 								</p>
 								<p className='text-sm text-red-600 dark:text-red-400 mt-2 text-center'>
 									Bu amalni bekor qilib bo&apos;lmaydi
