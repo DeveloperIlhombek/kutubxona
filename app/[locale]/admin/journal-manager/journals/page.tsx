@@ -7,9 +7,16 @@ import {
 	TableRow,
 } from '@/app/[locale]/components/ui/table'
 import { Button } from '@/components/ui/button'
-import { getLanguagePrefix } from '@/lib/utils'
+import { downloadImage, getLanguagePrefix } from '@/lib/utils'
 import { useJournalStore } from '@/store/journal'
-import { Globe, PlusSquare, Sparkles, TrendingUp } from 'lucide-react'
+import {
+	Globe,
+	ImageIcon,
+	PlusSquare,
+	Sparkles,
+	TrendingUp,
+} from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
@@ -209,13 +216,19 @@ function JournalPage() {
 									<TableRow>
 										<TableCell
 											isHeader
-											className='px-4 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-2 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
 										>
 											#
 										</TableCell>
 										<TableCell
 											isHeader
-											className='px-6 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+											className='px-2 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
+										>
+											Rasm
+										</TableCell>
+										<TableCell
+											isHeader
+											className='px-2 py-4 font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-start text-sm'
 										>
 											Jurnal nomi
 										</TableCell>
@@ -229,8 +242,27 @@ function JournalPage() {
 											<TableCell className='px-4 py-4 text-slate-700 dark:text-slate-300 font-medium group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300 w-12'>
 												{pageNumber * pageSize + index + 1}
 											</TableCell>
-
-											<TableCell className='px-6 py-4'>
+											<TableCell className='px-2 py-4'>
+												<div className='w-16 h-20 overflow-hidden rounded-lg shadow-md ring-2 ring-slate-200 dark:ring-slate-700 group-hover:ring-indigo-300 dark:group-hover:ring-indigo-600 transition-all duration-300'>
+													{item.imageId ? (
+														<Image
+															src={downloadImage({
+																id: item.imageId,
+																quality: 'low',
+															})}
+															alt={item.name}
+															width={64}
+															height={80}
+															className='w-full h-full object-cover'
+														/>
+													) : (
+														<div>
+															<ImageIcon className='w-full h-full p-4 text-slate-400 dark:text-slate-600' />
+														</div>
+													)}
+												</div>
+											</TableCell>
+											<TableCell className='px-2 py-4'>
 												<Link
 													href={`${getLanguagePrefix(
 														pathname
