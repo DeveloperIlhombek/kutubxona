@@ -90,7 +90,7 @@ const navItems: NavItem[] = [
 	{
 		name: 'Yangiliklar',
 		icon: <Newspaper />,
-		subItems: [{ name: "Yangiliklar ro'yxati", path: 'news-manager/news' }],
+		subItems: [{ name: "Yangiliklar ro'yxati", path: '/news-manager/news' }],
 	},
 ]
 
