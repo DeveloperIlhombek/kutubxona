@@ -101,7 +101,7 @@ export function LanguageSwitcher() {
 			<AnimatePresence>
 				{isOpen && (
 					<motion.div
-						className='absolute right-0 mt-2 w-48 rounded-md bg-popover shadow-lg ring-1 ring-black ring-opacity-5 z-50'
+						className='absolute dark:bg-slate-800 bg-white text-black right-0 mt-2 w-48 rounded-md bg-popover shadow-lg ring-1 z-50'
 						initial={{ opacity: 0, y: -10 }}
 						animate={{ opacity: 1, y: 0 }}
 						exit={{ opacity: 0, y: -10 }}
@@ -130,7 +130,7 @@ export function LanguageSwitcher() {
 										{language.name}
 									</span>
 									{selectedLanguage.code === language.code && (
-										<Check className='h-4 w-4 text-primary' />
+										<Check className='h-4 w-4 text-sky-500 dark:text-gray-200' />
 									)}
 								</motion.button>
 							))}
