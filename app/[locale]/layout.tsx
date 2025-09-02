@@ -8,6 +8,8 @@ import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { Outfit } from 'next/font/google'
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
+
 import './globals.css'
 const outfit = Outfit({
 	subsets: ['latin', 'latin-ext'],
@@ -45,12 +47,14 @@ export default async function RootLayout({
 	return (
 		<html lang='en' suppressHydrationWarning>
 			<body className={`${outfit.className} antialiased dark:bg-gray-900 `}>
-				<NextIntlClientProvider messages={messages}>
-					<ThemeProvider>
-						<Toaster />
-						<SidebarProvider>{children}</SidebarProvider>
-					</ThemeProvider>
-				</NextIntlClientProvider>
+				<Suspense fallback={<div>Loading...</div>}>
+					<NextIntlClientProvider messages={messages}>
+						<ThemeProvider>
+							<Toaster />
+							<SidebarProvider>{children}</SidebarProvider>
+						</ThemeProvider>
+					</NextIntlClientProvider>
+				</Suspense>
 			</body>
 		</html>
 	)

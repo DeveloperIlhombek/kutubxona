@@ -73,7 +73,7 @@ export function LoginDialog({ trigger }: { trigger: React.ReactNode }) {
 						onChange={e => setEmail(e.target.value)}
 						required
 					/>
-					<div className='relative'>
+					<div className='relative bg-gray-500'>
 						<Input
 							type={showPassword ? 'text' : 'password'}
 							placeholder='Parol'
