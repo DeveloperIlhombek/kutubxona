@@ -7,15 +7,17 @@ import {
 	TableRow,
 } from '@/app/[locale]/components/ui/table'
 import { Button } from '@/components/ui/button'
-import { downloadImage } from '@/lib/utils'
+import { downloadImage, getLanguagePrefix } from '@/lib/utils'
 import { BOOK_CATEGORIES, useBookStore } from '@/store/book'
 import { BookOpen, Building2, Search, Sparkles, TrendingUp } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import { BooksPagination } from './_components/books-pagination'
 
 export default function BooksPage() {
+	const pathname = usePathname()
 	// Store dan kerakli narsalarni olamiz
 	const {
 		books,
@@ -360,7 +362,12 @@ export default function BooksPage() {
 												</div>
 											</TableCell>
 											<TableCell className='px-6 py-4'>
-												<Link href={`/books/${book.id}`} className='block'>
+												<Link
+													href={`${getLanguagePrefix(
+														pathname
+													)}/admin/book-manager/books/${book.id}`}
+													className='block'
+												>
 													<div className='font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300 line-clamp-2'>
 														{book.title}
 													</div>
