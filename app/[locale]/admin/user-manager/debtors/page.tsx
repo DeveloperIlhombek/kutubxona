@@ -1,5 +1,5 @@
-function Debtorspage() {
-	return <div>Debtorspage</div>
+function Debitorspage() {
+	return <div>Debitorspage</div>
 }
 
-export default Debtorspage
+export default Debitorspage

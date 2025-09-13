@@ -209,9 +209,6 @@ export default function BooksPage() {
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
 										Jami kitoblar soni
 									</h3>
-									<p className='text-slate-600 dark:text-slate-400'>
-										Ushbu kategoriyada
-									</p>
 								</div>
 								<div className='text-right'>
 									<p className='text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
