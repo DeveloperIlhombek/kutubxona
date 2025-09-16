@@ -7,9 +7,11 @@ import {
 	TableRow,
 } from '@/app/[locale]/components/ui/table'
 import { getDebitors } from '@/lib/users/debitors'
+import { getLanguagePrefix } from '@/lib/utils'
 import { IDebitor, IDebitorResult } from '@/types/debitors-type'
 import { Check, Sparkles, TrendingUp, UniversityIcon, X } from 'lucide-react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import Pagination from '../../_components/pagination'
@@ -20,7 +22,7 @@ function Debitorspage() {
 	const [faculty, setFaculty] = useState<IDebitor[]>([])
 	const [pageNumber, setPageNumber] = useState(0)
 	const [pageSize, setPageSize] = useState(10)
-
+	const pathname = usePathname()
 	useEffect(() => {
 		fetchDebitors()
 	}, [pageNumber, pageSize])
@@ -32,7 +34,7 @@ function Debitorspage() {
 			setFacultyResponse(response.result)
 			setFaculty(response?.result.items)
 		} catch (error) {
-			toast(`Fakultetlarni yuklashda xatolik: ${error}`)
+			toast(`Qarzdorlarni yuklashda xatolik: ${error}`)
 		} finally {
 			setLoading(false)
 		}
@@ -56,7 +58,7 @@ function Debitorspage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Fakultetlar ro&apos;yxati yuklanmoqda...
+							Qarzdorlar ro&apos;yxati yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -96,7 +98,7 @@ function Debitorspage() {
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Fakultetlar ro&apos;yxati
+							Qarzdorlar ro&apos;yxati
 						</h1>
 					</div>
 				</div>
@@ -108,10 +110,10 @@ function Debitorspage() {
 							<UniversityIcon className='w-10 h-10 text-slate-400 dark:text-slate-500' />
 						</div>
 						<h3 className='text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3'>
-							Fakultetlar mavjud emas
+							Qarzdorlar mavjud emas
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400 mb-6'>
-							Hozircha tizimda fakultetlar ro&apos;yxati bo&apos;sh
+							Hozircha tizimda qarzdorlar ro&apos;yxati bo&apos;sh
 						</p>
 					</div>
 				</div>
@@ -161,7 +163,7 @@ function Debitorspage() {
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami fakultetlar soni
+										Jami qarzdorlar soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxatdan o&apos;tgan
@@ -174,7 +176,7 @@ function Debitorspage() {
 										{facultyResponse?.totalCount || 0}
 									</p>
 									<p className='text-sm text-slate-500 dark:text-slate-400'>
-										fakultet
+										Jami qarzdorlar soni
 									</p>
 								</div>
 							</div>
@@ -237,10 +239,10 @@ function Debitorspage() {
 											<TableCell className='px-2 py-4 text-slate-700 dark:text-slate-300 font-medium group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300'>
 												{pageNumber * pageSize + index + 1}
 											</TableCell>
-											<TableCell className='px-2 py-4'>
+											<TableCell className='px-2 py-4 w-2/5'>
 												<div className='flex items-center gap-3'>
 													<div>
-														<p className=' text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300'>
+														<p className=' text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300 '>
 															{item.bookCard.book.title}
 														</p>
 													</div>
@@ -249,8 +251,11 @@ function Debitorspage() {
 											<TableCell className='px-2 py-4'>
 												<Link
 													href={
-														`/uz/admin/user-manager/students/${item.userCard.user.id}` ||
-														'#'
+														`${getLanguagePrefix(
+															pathname
+														)}/admin/user-manager/students/${
+															item.userCard.user.id
+														}` || '#'
 													}
 													className='flex items-center gap-2'
 												>
