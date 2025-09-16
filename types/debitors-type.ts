@@ -13,6 +13,11 @@ export interface IDebitor {
 			id: string
 			firstName: string
 			lastName: string
+			email: string
+			phone: string
+			facultyId: string | null
+			group: string | null
+			course: number | null
 		}
 	}
 	bookId: string
@@ -21,6 +26,7 @@ export interface IDebitor {
 		book: {
 			id: string
 			title: string
+			invertoryNumber: string
 		}
 	}
 	bookingDate: Date
