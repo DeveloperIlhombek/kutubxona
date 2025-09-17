@@ -8,8 +8,10 @@ import {
 } from '@/app/[locale]/components/ui/table'
 import Filter, { FilterOption, FilterValues } from '@/components/shared/filters'
 import { Button } from '@/components/ui/button'
+import { getFaculties } from '@/lib/faculty/faculty'
 import { getDebitors, GetDebitorsParams } from '@/lib/users/debitors'
 import { getLanguagePrefix } from '@/lib/utils'
+import { IFaculty } from '@/types'
 import { IDebitor, IDebitorResult } from '@/types/debitors-type'
 import {
 	AlertCircle,
@@ -36,10 +38,13 @@ function DebitorsPage() {
 	const [pageSize, setPageSize] = useState(10)
 	const [filters, setFilters] = useState<FilterValues>({})
 	const [error, setError] = useState<string | null>(null)
+	const [faculties, setFaculties] = useState<IFaculty[]>([])
+	const [facultiesLoading, setFacultiesLoading] = useState(false)
 	const pathname = usePathname()
 
 	useEffect(() => {
 		fetchDebitors()
+		fetchFaculties()
 	}, [pageNumber, pageSize, filters])
 
 	const fetchDebitors = async () => {
@@ -80,6 +85,25 @@ function DebitorsPage() {
 		}
 	}
 
+	// Facultetlarni olish funksiyasi
+	const fetchFaculties = async () => {
+		try {
+			setFacultiesLoading(true)
+			const response = await getFaculties({
+				pageSize: 100, //Katta son berildi, BArchasini olishim uchun
+				pageNumber: 0,
+			})
+			if (response && response.result) {
+				setFaculties(response.result.items)
+			}
+		} catch (error) {
+			console.error('Facultetlarni yuklashda xatolik:', error)
+			toast.error("Facultetlar ro'yxati yuklanmadi")
+		} finally {
+			setFacultiesLoading(false)
+		}
+	}
+
 	const handleFilterChange = (newFilters: FilterValues) => {
 		// Sahifani boshiga qaytish va yangi filterlarni qo'llash
 		setPageNumber(0)
@@ -98,25 +122,24 @@ function DebitorsPage() {
 	// Ma'lumotlarni CSV formatiga o'tkazish
 	const convertToCSV = (debtors: IDebitor[]): string => {
 		const headers = [
-			'User ID',
-			'User name',
+			'Foydalanuchi ID',
+			'Foydalanuvchi ismi',
 			'Fakultet',
 			'Guruh',
 			'Kurs',
-			'Kitob title',
-			'book id',
+			'Kitob nomi',
+			'Kitob ID',
 			'Berilgan Vaqti',
 			'Qaytarish Vaqti',
 			'Qaytarilganmi',
 		]
 
 		const rows = debtors.map(debtor => {
-			// const pickupDate = new Date(debtor.pickupDate)
-			// const currentDate = new Date()
-
 			return [
 				debtor.id,
-				debtor.userCard?.user?.firstName || '',
+				debtor.userCard?.user?.firstName +
+					' ' +
+					debtor.userCard.user.lastName || '',
 				debtor.userCard?.user.facultyId || '',
 				debtor.userCard?.user?.group || '',
 				debtor.userCard?.user?.course || '',
@@ -148,6 +171,40 @@ function DebitorsPage() {
 		link.click()
 		document.body.removeChild(link)
 		URL.revokeObjectURL(url)
+	}
+
+	// Excel faylga export qilish funksiyasi
+	const exportToExcel = async () => {
+		try {
+			setExportLoading(true)
+
+			// Barcha debitorlarni sahifalab yuklab olish
+			const allDebtors = await fetchAllDebitors(filters)
+
+			if (allDebtors.length === 0) {
+				toast.info("Eksport qilish uchun ma'lumot mavjud emas")
+				return
+			}
+
+			// CSV formatiga o'tkazish
+			const csvContent = convertToCSV(allDebtors)
+
+			// CSV faylni yuklab olish
+			downloadCSV(
+				csvContent,
+				`qarzdorlar_${new Date().toISOString().split('T')[0]}.csv`
+			)
+
+			toast.success(
+				`${allDebtors.length} ta yozuv Excel fayl sifatida yuklab olindi`
+			)
+		} catch (error) {
+			const errorMessage =
+				error instanceof Error ? error.message : 'Export qilishda xatolik'
+			toast.error(`Eksport qilishda xatolik: ${errorMessage}`)
+		} finally {
+			setExportLoading(false)
+		}
 	}
 
 	// Barcha debitorlarni sahifalab yuklab olish (cheklov bo'lsa)
@@ -186,44 +243,21 @@ function DebitorsPage() {
 		return allDebitors
 	}
 
-	// Excel faylga export qilish funksiyasi (hamma debitorlarni yuklab olish uchun)
-	const exportToExcel = async () => {
-		try {
-			setExportLoading(true)
-
-			// Barcha debitorlarni sahifalab yuklab olish
-			const allDebtors = await fetchAllDebitors(filters)
-
-			if (allDebtors.length === 0) {
-				toast.info("Eksport qilish uchun ma'lumot mavjud emas")
-				return
-			}
-
-			// CSV formatiga o'tkazish
-			const csvContent = convertToCSV(allDebtors)
-
-			// CSV faylni yuklab olish
-			downloadCSV(
-				csvContent,
-				`qarzdorlar_${new Date().toISOString().split('T')[0]}.csv`
-			)
-
-			toast.success(
-				`${allDebtors.length} ta yozuv Excel fayl sifatida yuklab olindi`
-			)
-		} catch (error) {
-			const errorMessage =
-				error instanceof Error ? error.message : 'Export qilishda xatolik'
-			toast.error(`Eksport qilishda xatolik: ${errorMessage}`)
-		} finally {
-			setExportLoading(false)
-		}
-	}
+	// Facultetlarni filter optionlariga aylantirish
+	const facultyOptions = faculties.map(faculty => ({
+		value: faculty.id,
+		label: faculty.name,
+	}))
 
 	const debtorFilterOptions: FilterOption[] = [
 		{
 			key: 'user_search',
-			label: 'Foydalanuvchi Qidiruvi',
+			label: 'Foydalanuvchi ismi',
+			type: 'text',
+		},
+		{
+			key: 'book_title',
+			label: 'Kitob Nomi',
 			type: 'text',
 		},
 		{
@@ -240,17 +274,19 @@ function DebitorsPage() {
 			key: 'facultyId',
 			label: 'Fakultet',
 			type: 'select',
-			options: [
-				{ value: 'b9cac17e-643d-3ae8-1749-4bbe7af10b59', label: 'Resurs turf' },
-				{ value: '4027', label: 'TIB' },
-				// Boshqa fakultetlar...
-			],
+			options: facultiesLoading
+				? [{ value: 'loading', label: 'Yuklanmoqda...' }]
+				: facultyOptions.length > 0
+				? facultyOptions
+				: [{ value: '', label: 'Facultetlar mavjud emas' }],
 		},
 		{
 			key: 'course',
 			label: 'Kurs',
 			type: 'select',
 			options: [
+				{ value: '5', label: 'Magister 1' },
+				{ value: '6', label: 'Magister 2' },
 				{ value: '11', label: '1-kurs' },
 				{ value: '12', label: '2-kurs' },
 				{ value: '13', label: '3-kurs' },
@@ -263,16 +299,7 @@ function DebitorsPage() {
 			label: 'Guruh',
 			type: 'text',
 		},
-		{
-			key: 'book_title',
-			label: 'Kitob Nomi',
-			type: 'text',
-		},
-		{
-			key: 'inventorNum',
-			label: 'Inventar Raqami',
-			type: 'text',
-		},
+
 		{
 			key: 'isReturn',
 			label: 'Kitob Qaytarilganmi',

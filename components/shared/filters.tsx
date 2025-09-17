@@ -233,7 +233,7 @@ export default function Filter({
 								>
 									<div className='flex items-center gap-2'>
 										<AlertCircle className='w-4 h-4 text-red-600 dark:text-red-400' />
-										Yoq
+										Yo&apos;q
 									</div>
 								</SelectItem>
 							</SelectContent>
@@ -267,7 +267,7 @@ export default function Filter({
 				{triggerButton || (
 					<Button
 						variant='outline'
-						className='flex items-center gap-2 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200 relative'
+						className='flex items-center gap-2 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200 relative '
 					>
 						<FilterIcon className='h-4 w-4' />
 						Filter
