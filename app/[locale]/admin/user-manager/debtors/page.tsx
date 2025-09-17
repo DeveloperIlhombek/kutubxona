@@ -307,15 +307,15 @@ function DebitorsPage() {
 		},
 	]
 
-	// Kechikish kunlarini hisoblash
-	const calculateOverdueDays = (pickupDate: string, isReturn: boolean) => {
-		if (isReturn) return 0
-		const pickup = new Date(pickupDate)
-		const current = new Date()
-		const diffTime = current.getTime() - pickup.getTime()
-		const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
-		return Math.max(0, diffDays)
-	}
+	// // Kechikish kunlarini hisoblash
+	// const calculateOverdueDays = (pickupDate: string, isReturn: boolean) => {
+	// 	if (isReturn) return 0
+	// 	const pickup = new Date(pickupDate)
+	// 	const current = new Date()
+	// 	const diffTime = current.getTime() - pickup.getTime()
+	// 	const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+	// 	return Math.max(0, diffDays)
+	// }
 
 	if (loading) {
 		return (
@@ -611,83 +611,76 @@ function DebitorsPage() {
 
 								{/* Table Body */}
 								<TableBody className='divide-y divide-slate-200/50 dark:divide-slate-700/50'>
-									{debtors?.map((item, index) => {
-										const overdueDays = calculateOverdueDays(
-											item.pickupDate instanceof Date
-												? item.pickupDate.toISOString()
-												: item.pickupDate,
-											item.isReturn
-										)
-										const isOverdue = overdueDays > 0
-
-										return (
-											<TableRow
-												key={item.id}
-												className={`group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 dark:hover:from-indigo-950/50 dark:hover:to-purple-950/50 transition-all duration-300 animate-table-row ${
-													isOverdue && !item.isReturn
-														? 'bg-red-50/30 dark:bg-red-950/20'
-														: ''
-												}`}
-											>
-												<TableCell className='px-2 py-2 text-slate-700 dark:text-slate-300 font-medium group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300'>
-													{pageNumber * pageSize + index + 1}
-												</TableCell>
-												<TableCell className='px-2 py-2 w-1/2'>
-													<div className='flex items-center gap-3'>
-														<div>
-															<p className='font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300 line-clamp-1'>
-																{item.bookCard?.book?.title}
-															</p>
-														</div>
+									{debtors?.map((item, index) => (
+										<TableRow
+											key={item.id}
+											className={`group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 dark:hover:from-indigo-950/50 dark:hover:to-purple-950/50 transition-all duration-300 animate-table-row`}
+										>
+											<TableCell className='px-2 py-2 text-slate-700 dark:text-slate-300 font-medium group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300'>
+												{pageNumber * pageSize + index + 1}
+											</TableCell>
+											<TableCell className='px-2 py-2 w-1/2'>
+												<Link
+													href={
+														`${getLanguagePrefix(
+															pathname
+														)}/admin/book-manager/books/${
+															item.bookCard?.book.id
+														}` || '#'
+													}
+													className='flex items-center gap-3'
+												>
+													<p className='font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors duration-300 line-clamp-1'>
+														{item.bookCard?.book?.title}
+													</p>
+												</Link>
+											</TableCell>
+											<TableCell className='px-2 py-2'>
+												<Link
+													href={
+														`${getLanguagePrefix(
+															pathname
+														)}/admin/user-manager/students/${
+															item.userCard?.user?.id
+														}` || '#'
+													}
+													className='flex items-center gap-3 hover:bg-gradient-to-r hover:from-slate-50 hover:to-indigo-50 dark:hover:from-slate-800 dark:hover:to-indigo-950 p-2 rounded-lg transition-all duration-200'
+												>
+													<div>
+														<p className=' text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300'>
+															{item.userCard?.user?.firstName}{' '}
+															{item.userCard?.user?.lastName}
+														</p>
 													</div>
-												</TableCell>
-												<TableCell className='px-2 py-2'>
-													<Link
-														href={
-															`${getLanguagePrefix(
-																pathname
-															)}/admin/user-manager/students/${
-																item.userCard?.user?.id
-															}` || '#'
-														}
-														className='flex items-center gap-3 hover:bg-gradient-to-r hover:from-slate-50 hover:to-indigo-50 dark:hover:from-slate-800 dark:hover:to-indigo-950 p-2 rounded-lg transition-all duration-200'
-													>
-														<div>
-															<p className=' text-slate-800 dark:text-slate-200 group-hover:text-indigo-800 dark:group-hover:text-indigo-300'>
-																{item.userCard?.user?.firstName}{' '}
-																{item.userCard?.user?.lastName}
-															</p>
-														</div>
-													</Link>
-												</TableCell>
-												<TableCell className='px-2 py-2'>
-													<div className='flex items-center gap-2'>
-														<span className='text-sm text-slate-700 dark:text-slate-300 group-hover:text-indigo-700 dark:group-hover:text-indigo-300'>
-															{new Date(item.bookingDate).toLocaleDateString(
-																'uz-UZ'
-															)}
-														</span>
-													</div>
-												</TableCell>
-												<TableCell className='px-2 py-2'>
-													<div className='flex items-center gap-2'>
-														<span className='text-sm text-slate-700 dark:text-slate-300 group-hover:text-indigo-700 dark:group-hover:text-indigo-300'>
-															{new Date(item.pickupDate).toLocaleDateString(
-																'uz-UZ'
-															)}
-														</span>
-													</div>
-												</TableCell>
-												<TableCell className='px-2 py-2'>
-													{item.isReturn ? (
-														<CheckCircle2 className='w-5 h-5 text-green-600 dark:text-green-400' />
-													) : (
-														<XCircleIcon className='w-5 h-5 text-red-600 dark:text-red-400' />
-													)}
-												</TableCell>
-											</TableRow>
-										)
-									})}
+												</Link>
+											</TableCell>
+											<TableCell className='px-2 py-2'>
+												<div className='flex items-center gap-2'>
+													<span className='text-sm text-slate-700 dark:text-slate-300 group-hover:text-indigo-700 dark:group-hover:text-indigo-300'>
+														{new Date(item.bookingDate).toLocaleDateString(
+															'uz-UZ'
+														)}
+													</span>
+												</div>
+											</TableCell>
+											<TableCell className='px-2 py-2'>
+												<div className='flex items-center gap-2'>
+													<span className='text-sm text-slate-700 dark:text-slate-300 group-hover:text-indigo-700 dark:group-hover:text-indigo-300'>
+														{new Date(item.pickupDate).toLocaleDateString(
+															'uz-UZ'
+														)}
+													</span>
+												</div>
+											</TableCell>
+											<TableCell className='px-2 py-2'>
+												{item.isReturn ? (
+													<CheckCircle2 className='w-5 h-5 text-green-600 dark:text-green-400' />
+												) : (
+													<XCircleIcon className='w-5 h-5 text-red-600 dark:text-red-400' />
+												)}
+											</TableCell>
+										</TableRow>
+									))}
 								</TableBody>
 							</Table>
 						</div>
