@@ -1,15 +1,44 @@
 const API_URL = 'https://e-libraryrest.samdu.uz'
-export const getAllModerator = async ({
-	pageSize,
-	pageNumber,
-}: {
+
+export interface GetUserParams {
 	pageSize: number
 	pageNumber: number
-}) => {
+	search?: string
+	userCardId?: string
+	hemisId?: string
+	email?: string
+	phone?: string
+	facultyId?: string
+	course?: string
+	group?: string
+	isActive?: boolean
+	createBy?: string
+	updateBy?: string
+}
+export const getAllModerator = async (params: GetUserParams) => {
 	try {
-		const response = await fetch(
-			`${API_URL}/api/user/getallmoderators?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+		// Query parametrlarini yaratish
+		const queryParams = new URLSearchParams()
+		// Asosiy pagination parametrlari
+		queryParams.append('pageSize', params.pageSize.toString())
+		queryParams.append('pageNumber', params.pageNumber.toString())
 
+		// Filter parametrlarni qo'shish (faqat berilganlar)
+		if (params.search) queryParams.append('search', params.search)
+		if (params.userCardId) queryParams.append('userCardId', params.userCardId)
+		if (params.hemisId) queryParams.append('hemisId', params.hemisId)
+		if (params.email) queryParams.append('email', params.email)
+		if (params.phone) queryParams.append('phone', params.phone)
+		if (params.facultyId) queryParams.append('facultyId', params.facultyId)
+		if (params.course) queryParams.append('course', params.course)
+		if (params.group) queryParams.append('group', params.group)
+		if (params.isActive !== undefined)
+			queryParams.append('isActive', params.isActive.toString())
+		if (params.createBy) queryParams.append('createBy', params.createBy)
+		if (params.updateBy) queryParams.append('updateBy', params.updateBy)
+
+		const response = await fetch(
+			`${API_URL}/api/user/getallmoderators?${queryParams}`,
 			{
 				method: 'GET',
 				headers: {
@@ -25,11 +54,9 @@ export const getAllModerator = async ({
 		}
 
 		const data = await response.json()
-		//console.log(data.result)
-
 		return data
 	} catch (error) {
-		console.error('Error fetching tests:', error)
+		console.error('Error fetching admins:', error)
 		return null
 	}
 }

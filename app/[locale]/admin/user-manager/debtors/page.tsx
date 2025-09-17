@@ -307,16 +307,6 @@ function DebitorsPage() {
 		},
 	]
 
-	// // Kechikish kunlarini hisoblash
-	// const calculateOverdueDays = (pickupDate: string, isReturn: boolean) => {
-	// 	if (isReturn) return 0
-	// 	const pickup = new Date(pickupDate)
-	// 	const current = new Date()
-	// 	const diffTime = current.getTime() - pickup.getTime()
-	// 	const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
-	// 	return Math.max(0, diffDays)
-	// }
-
 	if (loading) {
 		return (
 			<div className='min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900'>

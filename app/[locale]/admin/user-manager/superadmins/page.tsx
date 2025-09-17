@@ -6,13 +6,18 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/app/[locale]/components/ui/table'
-import { getAllsuperadmins } from '@/lib/users/superadmin'
+import Filter, { FilterOption, FilterValues } from '@/components/shared/filters'
+import { Button } from '@/components/ui/button'
+import { getFaculties } from '@/lib/faculty/faculty'
+import { getAllsuperadmins, GetUserParams } from '@/lib/users/superadmin'
 import { getLanguagePrefix } from '@/lib/utils'
-import { IUser, IUserResult } from '@/types'
+import { IFaculty, IUser, IUserResult } from '@/types'
 import {
 	BadgeCheck,
 	BadgeX,
+	Download,
 	Eye,
+	FilterIcon,
 	Sparkles,
 	TrendingUp,
 	Users,
@@ -26,39 +31,289 @@ import Pagination from '../../_components/pagination'
 
 function SuperAdminPage() {
 	const [loading, setLoading] = useState(false)
-	const [allsuperadmin, setAllsuperadmin] = useState<IUser[]>([])
-	const [allsuperadminResponse, setAllsuperadminResponse] =
-		useState<IUserResult>()
+	const [exportLoading, setExportLoading] = useState(false)
+	const [facultiesLoading, setFacultiesLoading] = useState(false)
+	const [users, setUsers] = useState<IUser[]>([])
+	const [userResponse, setUserResponse] = useState<IUserResult>()
+	const [faculties, setFaculties] = useState<IFaculty[]>([])
 	const [pageNumber, setPageNumber] = useState(0)
 	const [pageSize, setPageSize] = useState(10)
+	const [filters, setFilters] = useState<FilterValues>({})
 	const pathname = usePathname()
+
 	useEffect(() => {
-		const fetchAllSuperAdmin = async () => {
-			try {
-				setLoading(true)
-				const response = await getAllsuperadmins({
-					pageNumber,
-					pageSize,
-				})
-				setAllsuperadmin(response.result.items)
-				setAllsuperadminResponse(response.result)
-			} catch (error) {
-				toast(`Guruhlarni yuklashda xatolik: ${error}`)
-			} finally {
-				setLoading(false)
+		fetchAllAdmins()
+		fetchFaculties()
+	}, [pageNumber, pageSize, filters])
+
+	// Facultetlarni olish funksiyasi
+	const fetchFaculties = async () => {
+		try {
+			setFacultiesLoading(true)
+			const response = await getFaculties({
+				pageSize: 100,
+				pageNumber: 0,
+			})
+
+			if (response && response.result) {
+				setFaculties(response.result.items || [])
 			}
+		} catch (error) {
+			console.error('Facultetlarni yuklashda xatolik:', error)
+			toast.error("Facultetlar ro'yxati yuklanmadi")
+		} finally {
+			setFacultiesLoading(false)
 		}
-		fetchAllSuperAdmin()
-	}, [pageNumber, pageSize])
+	}
+
+	const fetchAllAdmins = async () => {
+		try {
+			setLoading(true)
+
+			// API parametrlarini tayyorlash
+			const params: GetUserParams = {
+				pageNumber,
+				pageSize,
+			}
+
+			// Filterlarni API parametrlariga qo'shish
+			Object.entries(filters).forEach(([key, value]) => {
+				if (value !== undefined && value !== null && value !== '') {
+					// Boolean qiymatlarni to'g'ri formatga o'tkazish
+					if (key === 'isActive') {
+						params[key] = value === 'true' || value === true
+					}
+					// Boshqa qiymatlarni to'g'ridan-to'g'ri o'tkazish
+					else {
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						params[key] = value
+					}
+				}
+			})
+
+			const response = await getAllsuperadmins(params)
+			if (response && response.result) {
+				setUsers(response.result.items)
+				setUserResponse(response.result)
+			} else {
+				throw new Error("Ma'lumotlarni yuklashda xatolik")
+			}
+		} catch (error) {
+			toast.error(`Adminlarni yuklashda xatolik: ${error}`)
+		} finally {
+			setLoading(false)
+		}
+	}
 
 	const handlePageChange = (newPage: number, newPageSize?: number) => {
 		if (newPageSize && newPageSize !== pageSize) {
 			setPageSize(newPageSize)
+			setPageNumber(0)
+		} else {
+			setPageNumber(newPage)
 		}
-		setPageNumber(newPage)
+	}
+
+	const handleFilterChange = (newFilters: FilterValues) => {
+		setPageNumber(0)
+		setFilters(newFilters)
+	}
+
+	// Excel faylga export qilish funksiyasi
+	const exportToExcel = async () => {
+		try {
+			setExportLoading(true)
+
+			// Barcha adminlarni sahifalab yuklab olish
+			const allAdmins = await fetchAllAdminsWithFilters(filters)
+
+			if (allAdmins.length === 0) {
+				toast.info("Eksport qilish uchun ma'lumot mavjud emas")
+				return
+			}
+
+			// CSV formatiga o'tkazish
+			const csvContent = convertToCSV(allAdmins)
+
+			// CSV faylni yuklab olish
+			downloadCSV(
+				csvContent,
+				`adminlar_${new Date().toISOString().split('T')[0]}.csv`
+			)
+
+			toast.success(
+				`${allAdmins.length} ta yozuv Excel fayl sifatida yuklab olindi`
+			)
+		} catch (error) {
+			const errorMessage =
+				error instanceof Error ? error.message : 'Export qilishda xatolik'
+			toast.error(`Eksport qilishda xatolik: ${errorMessage}`)
+		} finally {
+			setExportLoading(false)
+		}
+	}
+
+	// Barcha adminlarni sahifalab yuklab olish
+	const fetchAllAdminsWithFilters = async (
+		filters: FilterValues
+	): Promise<IUser[]> => {
+		let allAdmins: IUser[] = []
+		let page = 0
+		const size = 500
+		let totalPages = 1
+
+		do {
+			const params: GetUserParams = {
+				pageNumber: page,
+				pageSize: size,
+			}
+
+			// Filterlarni API parametrlariga qo'shish
+			Object.entries(filters).forEach(([key, value]) => {
+				if (value !== undefined && value !== null && value !== '') {
+					// Boolean qiymatlarni to'g'ri formatga o'tkazish
+					if (key === 'isActive') {
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						params[key] = value === 'true' || value === true
+					}
+					// Boshqa qiymatlarni to'g'ridan-to'g'ri o'tkazish
+					else {
+						// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+						// @ts-ignore
+						params[key] = value
+					}
+				}
+			})
+
+			const response = await getAllsuperadmins(params)
+			if (response && response.result) {
+				const result = response.result
+				allAdmins = allAdmins.concat(result.items || [])
+				totalPages = result.totalPages
+			} else {
+				throw new Error("Ma'lumotlarni yuklashda xatolik")
+			}
+			page++
+		} while (page < totalPages)
+
+		return allAdmins
+	}
+
+	// Ma'lumotlarni CSV formatiga o'tkazish
+	const convertToCSV = (users: IUser[]): string => {
+		const headers = [
+			'ID',
+			'Ism',
+			'Familiya',
+			'Otasining ismi',
+			'Email',
+			'HEMIS ID',
+			'Telefon',
+			'Fakultet',
+			'Kurs',
+			'Guruh',
+			'Faol',
+			'Roli',
+		]
+
+		const rows = users.map(user => [
+			user.id,
+			user.firstName,
+			user.lastName,
+			user.thirdName || '',
+			user.email,
+			user.hemisId || '',
+			user.phone || '',
+			user.faculty?.name || '',
+			user.course || '',
+			user.group || '',
+			user.isActive ? 'Ha' : "Yo'q",
+			user.role.toString(),
+		])
+
+		return [headers.join(','), ...rows.map(row => row.join(','))].join('\n')
+	}
+
+	// CSV faylni yuklab olish
+	const downloadCSV = (csvContent: string, filename: string) => {
+		const BOM = '\uFEFF'
+		const blob = new Blob([BOM + csvContent], {
+			type: 'text/csv;charset=utf-8',
+		})
+		const link = document.createElement('a')
+		const url = URL.createObjectURL(blob)
+
+		link.setAttribute('href', url)
+		link.setAttribute('download', filename)
+		link.style.visibility = 'hidden'
+
+		document.body.appendChild(link)
+		link.click()
+		document.body.removeChild(link)
+		URL.revokeObjectURL(url)
 	}
 
 	const lan = getLanguagePrefix(pathname)
+
+	// Facultetlarni filter optionlariga aylantirish
+	const facultyOptions = faculties.map(faculty => ({
+		value: faculty.id,
+		label: faculty.name,
+	}))
+
+	const userFilterOptions: FilterOption[] = [
+		{
+			key: 'search',
+			label: 'Foydalanuvchi ismi',
+			type: 'text',
+		},
+		{
+			key: 'email',
+			label: 'Email',
+			type: 'text',
+		},
+		{
+			key: 'hemisId',
+			label: 'HEMIS ID',
+			type: 'text',
+		},
+		{
+			key: 'facultyId',
+			label: 'Fakultet',
+			type: 'select',
+			options: facultiesLoading
+				? [{ value: 'loading', label: 'Yuklanmoqda...' }]
+				: facultyOptions.length > 0
+				? facultyOptions
+				: [{ value: '', label: 'Facultetlar mavjud emas' }],
+		},
+		{
+			key: 'course',
+			label: 'Kurs',
+			type: 'select',
+			options: [
+				{ value: '5', label: 'Magister 1' },
+				{ value: '6', label: 'Magister 2' },
+				{ value: '11', label: '1-kurs' },
+				{ value: '12', label: '2-kurs' },
+				{ value: '13', label: '3-kurs' },
+				{ value: '14', label: '4-kurs' },
+				{ value: '15', label: '5-kurs' },
+			],
+		},
+		{
+			key: 'group',
+			label: 'Guruh',
+			type: 'text',
+		},
+		{
+			key: 'isActive',
+			label: 'Faol',
+			type: 'boolean',
+		},
+	]
 
 	if (loading) {
 		return (
@@ -71,7 +326,7 @@ function SuperAdminPage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							SuperAdmin ro&apos;yxati yuklanmoqda...
+							Adminlar ro&apos;yxati yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -96,7 +351,7 @@ function SuperAdminPage() {
 		)
 	}
 
-	if (allsuperadminResponse?.totalCount === 0) {
+	if (userResponse?.totalCount === 0 && Object.keys(filters).length === 0) {
 		return (
 			<div className='min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900'>
 				{/* Hero Section */}
@@ -111,7 +366,7 @@ function SuperAdminPage() {
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							SuperAdmin ro&apos;yxati
+							Adminlar ro&apos;yxati
 						</h1>
 					</div>
 				</div>
@@ -126,7 +381,7 @@ function SuperAdminPage() {
 							Foydalanuvchilar mavjud emas
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400'>
-							Hozircha tizimda SuperAdmin ro&apos;yxati bo&apos;sh
+							Hozircha tizimda adminlar ro&apos;yxati bo&apos;sh
 						</p>
 					</div>
 				</div>
@@ -156,7 +411,7 @@ function SuperAdminPage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
-						SuperAdmin ro&apos;yxati
+						Adminlar ro&apos;yxati
 					</h1>
 					<p className='text-white/80 mt-2 text-lg'>
 						Tizim foydalanuvchilari boshqaruvi
@@ -166,38 +421,92 @@ function SuperAdminPage() {
 
 			{/* Main Content */}
 			<div className='w-full p-6 -mt-8 relative z-10'>
-				{/* Statistics Card */}
+				{/* Statistics, Filter and Export Buttons */}
 				<div className='mb-6 animate-slide-in-up'>
 					<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 p-6'>
-						<div className='flex items-center justify-between'>
+						<div className='flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6'>
+							{/* Statistics */}
 							<div className='flex items-center gap-4'>
 								<div className='w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900 dark:to-purple-900 rounded-full flex items-center justify-center'>
 									<TrendingUp className='w-6 h-6 text-indigo-600 dark:text-indigo-400' />
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami superadmin soni
+										Jami adminlar soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxatdan o&apos;tgan
 									</p>
 								</div>
+								<div className='text-right'>
+									<p className='text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
+										{userResponse?.totalCount || 0}
+									</p>
+									<p className='text-sm text-slate-500 dark:text-slate-400'>
+										nafar
+									</p>
+								</div>
 							</div>
-							<div className='text-right'>
-								<p className='text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-									{allsuperadminResponse?.totalCount || 0}
-								</p>
-								<p className='text-sm text-slate-500 dark:text-slate-400'>
-									nafar
-								</p>
+
+							{/* Filter and Export Buttons */}
+							<div className='flex flex-col sm:flex-row gap-3'>
+								<Filter
+									filterOptions={userFilterOptions}
+									onFilterChange={handleFilterChange}
+									initialFilters={filters}
+									triggerButton={
+										<Button className='bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105'>
+											<FilterIcon className='mr-2 h-5 w-5' />
+											Filter
+										</Button>
+									}
+								/>
+
+								<Button
+									onClick={exportToExcel}
+									disabled={
+										exportLoading || (userResponse?.totalCount || 0) === 0
+									}
+									className='bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:from-slate-400 disabled:to-slate-500 dark:disabled:from-slate-600 dark:disabled:to-slate-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100'
+								>
+									{exportLoading ? (
+										<div className='flex items-center'>
+											<div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2'></div>
+											Yuklanmoqda...
+										</div>
+									) : (
+										<div className='flex items-center'>
+											<Download className='mr-2 h-5 w-5' />
+											Excel ga yuklab olish
+										</div>
+									)}
+								</Button>
 							</div>
 						</div>
 					</div>
 				</div>
 
+				{/* Results info */}
+				{Object.keys(filters).length > 0 && (
+					<div className='mb-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 animate-fade-in'>
+						<p className='text-blue-700 dark:text-blue-300 text-sm'>
+							<span className='font-medium'>
+								{userResponse?.totalCount || 0} ta natija
+							</span>{' '}
+							topildi.
+							<button
+								onClick={() => setFilters({})}
+								className='ml-2 text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-200'
+							>
+								Filterlarni tozalash
+							</button>
+						</p>
+					</div>
+				)}
+
 				{/* Table Container */}
 				<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-xl border border-slate-200/60 dark:border-slate-700/60 overflow-hidden animate-slide-in-up'>
-					<div className=' overflow-x-auto'>
+					<div className='overflow-x-auto'>
 						<div className='min-w-[1132px]'>
 							<Table>
 								<TableHeader className='bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950 dark:to-purple-950 border-b border-indigo-200/50 dark:border-indigo-800/50'>
@@ -268,7 +577,7 @@ function SuperAdminPage() {
 								</TableHeader>
 
 								<TableBody className='divide-y divide-slate-200/50 dark:divide-slate-700/50'>
-									{allsuperadmin.map(item => (
+									{users.map(item => (
 										<TableRow
 											key={item.id}
 											className={`group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 dark:hover:from-indigo-950/50 dark:hover:to-purple-950/50 transition-all duration-300 animate-table-row`}
@@ -323,7 +632,7 @@ function SuperAdminPage() {
 											</TableCell>
 											<TableCell className='px-4 py-4 text-gray-700  text-theme-sm dark:text-gray-200 '>
 												<Link
-													href={`${lan}/admin/user-manager/superadmins/${item.id}`}
+													href={`${lan}/admin/user-manager/admins/${item.id}`}
 												>
 													<Eye className='w-5 h-5 text-center ml-auto' />
 												</Link>
@@ -337,12 +646,12 @@ function SuperAdminPage() {
 				</div>
 
 				{/* Pagination */}
-				{allsuperadminResponse && (
+				{userResponse && (
 					<div className='mt-6 animate-slide-in-up'>
 						<Pagination
 							currentPage={pageNumber}
-							totalPages={allsuperadminResponse.totalPages}
-							totalItems={allsuperadminResponse.totalCount}
+							totalPages={userResponse.totalPages}
+							totalItems={userResponse.totalCount}
 							pageSize={pageSize}
 							onPageChange={handlePageChange}
 						/>
