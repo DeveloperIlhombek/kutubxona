@@ -282,7 +282,7 @@ export default function Filter({
 
 			<SheetContent
 				side='left'
-				className='w-full sm:max-w-md overflow-y-auto bg-gradient-to-b from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900 border-r border-slate-200 dark:border-slate-700'
+				className='w-full sm:max-w-md overflow-y-auto bg-gradient-to-b from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900 border-r border-slate-200 dark:border-slate-700 z-99999'
 			>
 				{/* Header */}
 				<SheetHeader className='pb-6 border-b border-slate-200 dark:border-slate-700'>
@@ -401,10 +401,10 @@ export default function Filter({
 				)}
 
 				{/* Action Buttons */}
-				<div className='mt-8 flex flex-col gap-3 sticky bottom-0 bg-gradient-to-t from-slate-50 to-transparent dark:from-slate-900 dark:to-transparent pt-6 pb-2'>
+				<div className='mt-8 flex flex-col justify-center items-center gap-3 sticky bottom-0 bg-gradient-to-t from-slate-50 to-transparent dark:from-slate-900 dark:to-transparent pt-6 pb-2'>
 					<Button
 						onClick={applyFilters}
-						className='w-1/2  bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105'
+						className='w-1/2  bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 '
 					>
 						<FilterIcon className='w-4 h-4 mr-2' />
 						Filterlarni Qo&apos;llash
