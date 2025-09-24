@@ -16,7 +16,7 @@ interface IBaseUser {
 	lastName: string
 	password: string
 	email: string
-	phone: string
+	phone?: string
 	userPhotoId?: string | undefined
 }
 
@@ -27,9 +27,9 @@ interface IStudent extends IBaseUser {
 	group: string
 }
 
-interface ITeacher extends IBaseUser {
-	hemisId: number
-	facultyId: string
+export interface ITeacher extends IBaseUser {
+	hemisId?: number
+	facultyId?: string
 }
 
 export interface IAdmin extends IBaseUser {

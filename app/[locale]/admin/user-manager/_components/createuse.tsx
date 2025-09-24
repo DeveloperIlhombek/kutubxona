@@ -15,7 +15,9 @@ import {
 	API_URL,
 	createAdmin,
 	createStudent,
+	createTeacher,
 	IAdmin,
+	ITeacher,
 	StudentCreateDTO,
 } from '@/lib/users/createUser'
 import { IBuilding, IFaculty } from '@/types'
@@ -321,6 +323,21 @@ function CreateUserDialog({
 					}
 					response = await createAdmin(adminData)
 					break
+				//TEacher yaratish
+				case 'teacher':
+					const teacherData: ITeacher = {
+						firstName: formData.firstName.trim(),
+						lastName: formData.lastName.trim(),
+						email: formData.email.trim(),
+						password: formData.password,
+						phone: formData.phone.trim() || undefined,
+						hemisId: formData.hemisId ? parseInt(formData.hemisId) : undefined,
+						facultyId: formData.facultyId || undefined,
+						userPhotoId: formData.userPhotoId || undefined,
+					}
+					response = await createTeacher(teacherData)
+					break
+
 				default:
 					throw new Error("Noto'g'ri foydalanuvchi turi")
 			}
