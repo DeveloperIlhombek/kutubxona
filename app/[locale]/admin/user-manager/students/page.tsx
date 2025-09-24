@@ -18,6 +18,7 @@ import {
 	Download,
 	Eye,
 	FilterIcon,
+	PlusSquareIcon,
 	Sparkles,
 	TrendingUp,
 	UserIcon,
@@ -29,6 +30,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import Pagination from '../../_components/pagination'
+import CreateUserDialog from '../_components/createuse'
 
 function AdminPage() {
 	const [loading, setLoading] = useState(false)
@@ -482,6 +484,17 @@ function AdminPage() {
 										</div>
 									)}
 								</Button>
+
+								<CreateUserDialog
+									trigger={
+										<Button className='bg-amber-400'>
+											<PlusSquareIcon className='mr-2 h-4 w-4 ' />
+											Yangi Student
+										</Button>
+									}
+									userType='student'
+									onUserAdded={() => console.log('Student yaratildi')}
+								/>
 							</div>
 						</div>
 					</div>

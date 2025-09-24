@@ -49,14 +49,14 @@ export function LoginDialog() {
 
 	return (
 		<form className='space-y-4' onSubmit={handleLogin}>
-			<Input
-				type='text'
-				placeholder='Email'
-				value={email}
-				onChange={e => setEmail(e.target.value)}
-				required
-			/>
 			<div className='relative bg-gray-500'>
+				<Input
+					type='text'
+					placeholder='Email'
+					value={email}
+					onChange={e => setEmail(e.target.value)}
+					required
+				/>
 				<Input
 					type={showPassword ? 'text' : 'password'}
 					placeholder='Parol'
