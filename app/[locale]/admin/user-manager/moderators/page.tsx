@@ -18,6 +18,7 @@ import {
 	Download,
 	Eye,
 	FilterIcon,
+	PlusSquareIcon,
 	Sparkles,
 	TrendingUp,
 	UserIcon,
@@ -29,6 +30,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import Pagination from '../../_components/pagination'
+import CreateUserDialog from '../_components/createuse'
 
 function ModeratorPage() {
 	const [loading, setLoading] = useState(false)
@@ -101,7 +103,7 @@ function ModeratorPage() {
 				throw new Error("Ma'lumotlarni yuklashda xatolik")
 			}
 		} catch (error) {
-			toast.error(`Adminlarni yuklashda xatolik: ${error}`)
+			toast.error(`Moderatorlar yuklashda xatolik: ${error}`)
 		} finally {
 			setLoading(false)
 		}
@@ -126,7 +128,7 @@ function ModeratorPage() {
 		try {
 			setExportLoading(true)
 
-			// Barcha adminlarni sahifalab yuklab olish
+			// Barcha Moderatorlar sahifalab yuklab olish
 			const allAdmins = await fetchAllAdminsWithFilters(filters)
 
 			if (allAdmins.length === 0) {
@@ -140,7 +142,7 @@ function ModeratorPage() {
 			// CSV faylni yuklab olish
 			downloadCSV(
 				csvContent,
-				`adminlar_${new Date().toISOString().split('T')[0]}.csv`
+				`moderatorlar_${new Date().toISOString().split('T')[0]}.csv`
 			)
 
 			toast.success(
@@ -212,9 +214,6 @@ function ModeratorPage() {
 			'Email',
 			'HEMIS ID',
 			'Telefon',
-			'Fakultet',
-			'Kurs',
-			'Guruh',
 			'Faol',
 			'Roli',
 		]
@@ -227,9 +226,6 @@ function ModeratorPage() {
 			user.email,
 			user.hemisId || '',
 			user.phone || '',
-			user.faculty?.name || '',
-			user.course || '',
-			user.group || '',
 			user.isActive ? 'Ha' : "Yo'q",
 			user.role.toString(),
 		])
@@ -327,7 +323,7 @@ function ModeratorPage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Adminlar ro&apos;yxati yuklanmoqda...
+							Moderatorlar ro&apos;yxati yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -367,7 +363,7 @@ function ModeratorPage() {
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Adminlar ro&apos;yxati
+							Moderatorlar ro&apos;yxati
 						</h1>
 					</div>
 				</div>
@@ -382,7 +378,7 @@ function ModeratorPage() {
 							Foydalanuvchilar mavjud emas
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400'>
-							Hozircha tizimda adminlar ro&apos;yxati bo&apos;sh
+							Hozircha tizimda moderatorlar ro&apos;yxati bo&apos;sh
 						</p>
 					</div>
 				</div>
@@ -412,7 +408,7 @@ function ModeratorPage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
-						Adminlar ro&apos;yxati
+						Moderatorlar ro&apos;yxati
 					</h1>
 					<p className='text-white/80 mt-2 text-lg'>
 						Tizim foydalanuvchilari boshqaruvi
@@ -433,7 +429,7 @@ function ModeratorPage() {
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami adminlar soni
+										Jami moderatorlar soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxatdan o&apos;tgan
@@ -482,6 +478,16 @@ function ModeratorPage() {
 										</div>
 									)}
 								</Button>
+								<CreateUserDialog
+									trigger={
+										<Button className='bg-amber-400'>
+											<PlusSquareIcon className='mr-2 h-4 w-4 ' />
+											Yangi Moderator
+										</Button>
+									}
+									userType='moderator'
+									onUserAdded={() => console.log('Moderator yaratildi')}
+								/>
 							</div>
 						</div>
 					</div>
@@ -530,24 +536,7 @@ function ModeratorPage() {
 										>
 											Familiya
 										</TableCell>
-										<TableCell
-											isHeader
-											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
-										>
-											Fakultet
-										</TableCell>
-										<TableCell
-											isHeader
-											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
-										>
-											Guruh
-										</TableCell>
-										<TableCell
-											isHeader
-											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
-										>
-											Kurs
-										</TableCell>
+
 										<TableCell
 											isHeader
 											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
@@ -608,15 +597,7 @@ function ModeratorPage() {
 											<TableCell className='px-2 py-4 truncate group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300 text-gray-700 text-start text-sm dark:text-gray-300'>
 												{item.lastName}
 											</TableCell>
-											<TableCell className='px-2 py-4 w-1/12 truncate text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
-												{item.faculty?.name || '-'}
-											</TableCell>
-											<TableCell className='px-2 py-4 w-1/5 truncate text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
-												{item.group || '-'}
-											</TableCell>
-											<TableCell className='px-2 truncate py-4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
-												{item.course || '-'}
-											</TableCell>
+
 											<TableCell className='px-2 py-4 w-1/4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
 												<div
 													className='max-w-[200px] truncate'
@@ -639,7 +620,7 @@ function ModeratorPage() {
 											</TableCell>
 											<TableCell className='px-4 py-4 text-gray-700  text-theme-sm dark:text-gray-200 '>
 												<Link
-													href={`${lan}/admin/user-manager/students/${item.id}`}
+													href={`${lan}/admin/user-manager/moderators/${item.id}`}
 												>
 													<Eye className='w-5 h-5 text-center ml-auto' />
 												</Link>

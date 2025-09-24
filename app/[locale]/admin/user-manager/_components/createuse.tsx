@@ -15,10 +15,12 @@ import {
 	API_URL,
 	createAdmin,
 	createGuest,
+	createModerator,
 	createStudent,
 	createTeacher,
 	IAdmin,
 	IGuest,
+	IModerator,
 	ITeacher,
 	StudentCreateDTO,
 } from '@/lib/users/createUser'
@@ -353,6 +355,18 @@ function CreateUserDialog({
 					}
 					response = await createGuest(guestData)
 					break
+				case 'moderator':
+					const moderatorData: IModerator = {
+						firstName: formData.firstName.trim(),
+						lastName: formData.lastName.trim(),
+						email: formData.email.trim(),
+						password: formData.password,
+						phone: formData.phone.trim() || undefined,
+						userPhotoId: formData.userPhotoId || undefined,
+						buildingId: formData.buildingId || null,
+					}
+					response = await createModerator(moderatorData)
+					break
 
 				default:
 					throw new Error("Noto'g'ri foydalanuvchi turi")
@@ -588,7 +602,7 @@ function CreateUserDialog({
 									</div>
 								</div>
 
-								{/* Phone dan keyingi qo'shing */}
+								{/* Photo */}
 								<div className='space-y-2 group lg:col-span-2'>
 									<label className='text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2'>
 										<User className='w-4 h-4 text-slate-500' />
@@ -654,6 +668,7 @@ function CreateUserDialog({
 						{/* Additional Information Section */}
 						{(userType === 'student' ||
 							userType === 'teacher' ||
+							userType === 'moderator' ||
 							userType === 'admin') && (
 							<div className='space-y-6'>
 								<div className='flex items-center gap-3 mb-4'>
@@ -782,38 +797,39 @@ function CreateUserDialog({
 									)}
 
 									{/* Building - Admin only */}
-									{userType === 'admin' && (
-										<div className='space-y-2 group lg:col-span-2'>
-											<label className='text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2'>
-												<Building2 className='w-4 h-4 text-slate-500' />
-												Bino
-											</label>
-											<div className='relative'>
-												<select
-													value={formData.buildingId}
-													onChange={e =>
-														handleInputChange('buildingId', e.target.value)
-													}
-													className='w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 group-hover:border-indigo-300 dark:group-hover:border-indigo-600 shadow-sm hover:shadow-md text-slate-900 dark:text-slate-100'
-													disabled={loading || buildingsLoading}
-												>
-													<option value=''>
-														{buildingsLoading
-															? 'Yuklanmoqda...'
-															: 'Binoni tanlang'}
-													</option>
-													{buildings.map(building => (
-														<option key={building.id} value={building.id}>
-															{building.name}
+									{userType === 'admin' ||
+										(userType === 'moderator' && (
+											<div className='space-y-2 group lg:col-span-2'>
+												<label className='text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2'>
+													<Building2 className='w-4 h-4 text-slate-500' />
+													Bino
+												</label>
+												<div className='relative'>
+													<select
+														value={formData.buildingId}
+														onChange={e =>
+															handleInputChange('buildingId', e.target.value)
+														}
+														className='w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 group-hover:border-indigo-300 dark:group-hover:border-indigo-600 shadow-sm hover:shadow-md text-slate-900 dark:text-slate-100'
+														disabled={loading || buildingsLoading}
+													>
+														<option value=''>
+															{buildingsLoading
+																? 'Yuklanmoqda...'
+																: 'Binoni tanlang'}
 														</option>
-													))}
-												</select>
-												{formData.buildingId && (
-													<CheckCircle className='absolute right-8 top-1/2 transform -translate-y-1/2 w-5 h-5 text-green-500' />
-												)}
+														{buildings.map(building => (
+															<option key={building.id} value={building.id}>
+																{building.name}
+															</option>
+														))}
+													</select>
+													{formData.buildingId && (
+														<CheckCircle className='absolute right-8 top-1/2 transform -translate-y-1/2 w-5 h-5 text-green-500' />
+													)}
+												</div>
 											</div>
-										</div>
-									)}
+										))}
 								</div>
 							</div>
 						)}

@@ -36,7 +36,7 @@ export interface IAdmin extends IBaseUser {
 	buildingId?: string | undefined
 }
 
-interface IModerator extends IBaseUser {
+export interface IModerator extends IBaseUser {
 	buildingId: string | null
 }
 
@@ -136,7 +136,6 @@ export const createAdmin = async (data: IAdmin) => {
 		return null
 	}
 }
-
 // Guest yaratish
 export const createGuest = async (data: IGuest) => {
 	try {
