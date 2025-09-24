@@ -37,6 +37,7 @@ export interface IUser {
 	faculty: IFaculty | null
 	building: string | null
 	studentStatusCode: string | null
+	info: string | null
 }
 
 export interface IUserPhoto {

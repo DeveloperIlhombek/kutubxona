@@ -1,5 +1,4 @@
 'use client'
-
 import { Button } from '@/components/ui/button'
 import {
 	Dialog,
@@ -9,14 +8,17 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog'
+import { Textarea } from '@/components/ui/textarea'
 import { getAllBuildings } from '@/lib/books/building'
 import { getFaculties } from '@/lib/faculty/faculty'
 import {
 	API_URL,
 	createAdmin,
+	createGuest,
 	createStudent,
 	createTeacher,
 	IAdmin,
+	IGuest,
 	ITeacher,
 	StudentCreateDTO,
 } from '@/lib/users/createUser'
@@ -70,6 +72,7 @@ interface UserFormData {
 	buildingId?: string
 	course?: string
 	group?: string
+	info?: string
 }
 
 function CreateUserDialog({
@@ -98,6 +101,7 @@ function CreateUserDialog({
 		buildingId: '',
 		course: '',
 		group: '',
+		info: '',
 	})
 
 	// User type nomlari
@@ -337,6 +341,18 @@ function CreateUserDialog({
 					}
 					response = await createTeacher(teacherData)
 					break
+				case 'guest':
+					const guestData: IGuest = {
+						firstName: formData.firstName.trim(),
+						lastName: formData.lastName.trim(),
+						email: formData.email.trim(),
+						password: formData.password,
+						phone: formData.phone.trim() || undefined,
+						userPhotoId: formData.userPhotoId || undefined,
+						info: formData.info?.trim() || '',
+					}
+					response = await createGuest(guestData)
+					break
 
 				default:
 					throw new Error("Noto'g'ri foydalanuvchi turi")
@@ -419,31 +435,6 @@ function CreateUserDialog({
 							</DialogDescription>
 						</div>
 					</div>
-
-					{/* Progress indicator
-					<div className='flex items-center gap-2'>
-						<div className='flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden'>
-							<div
-								className='h-full bg-gradient-to-r from-indigo-600 to-purple-600 transition-all duration-500 ease-out'
-								style={{
-									width: `${Math.min(
-										100,
-										(Object.values(formData).filter(v => v).length /
-											Object.keys(formData).length) *
-											100
-									)}%`,
-								}}
-							/>
-						</div>
-						<span className='text-xs font-medium text-slate-500 dark:text-slate-400 min-w-[3rem]'>
-							{Math.round(
-								(Object.values(formData).filter(v => v).length /
-									Object.keys(formData).length) *
-									100
-							)}
-							%
-						</span>
-					</div> */}
 				</DialogHeader>
 
 				{/* Form Content */}
@@ -822,6 +813,27 @@ function CreateUserDialog({
 												)}
 											</div>
 										</div>
+									)}
+								</div>
+							</div>
+						)}
+						{userType === 'guest' && (
+							<div className='space-y-2 group'>
+								<label className='text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2'>
+									<Hash className='w-4 h-4 text-slate-500' />
+									Qo&apos;shimcha ma&apos;lumotlar
+								</label>
+								<div className='relative'>
+									<Textarea
+										rows={3}
+										value={formData.info}
+										onChange={e => handleInputChange('info', e.target.value)}
+										className='w-full px-4 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 group-hover:border-indigo-300 dark:group-hover:border-indigo-600 shadow-sm hover:shadow-md text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500'
+										placeholder="Qo'shimcha ma'lumotlarni kiriting..."
+										disabled={loading}
+									/>
+									{formData.hemisId && (
+										<CheckCircle className='absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-green-500' />
 									)}
 								</div>
 							</div>

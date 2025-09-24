@@ -18,6 +18,7 @@ import {
 	Download,
 	Eye,
 	FilterIcon,
+	PlusSquareIcon,
 	Sparkles,
 	TrendingUp,
 	UserIcon,
@@ -29,8 +30,9 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import Pagination from '../../_components/pagination'
+import CreateUserDialog from '../_components/createuse'
 
-function AdminPage() {
+function GuestsPage() {
 	const [loading, setLoading] = useState(false)
 	const [exportLoading, setExportLoading] = useState(false)
 	const [facultiesLoading, setFacultiesLoading] = useState(false)
@@ -140,7 +142,7 @@ function AdminPage() {
 			// CSV faylni yuklab olish
 			downloadCSV(
 				csvContent,
-				`adminlar_${new Date().toISOString().split('T')[0]}.csv`
+				`guests_${new Date().toISOString().split('T')[0]}.csv`
 			)
 
 			toast.success(
@@ -212,11 +214,9 @@ function AdminPage() {
 			'Email',
 			'HEMIS ID',
 			'Telefon',
-			'Fakultet',
-			'Kurs',
-			'Guruh',
 			'Faol',
 			'Roli',
+			'Info',
 		]
 
 		const rows = users.map(user => [
@@ -227,11 +227,9 @@ function AdminPage() {
 			user.email,
 			user.hemisId || '',
 			user.phone || '',
-			user.faculty?.name || '',
-			user.course || '',
-			user.group || '',
 			user.isActive ? 'Ha' : "Yo'q",
 			user.role.toString(),
+			user.info || '',
 		])
 
 		return [headers.join(','), ...rows.map(row => row.join(','))].join('\n')
@@ -327,7 +325,7 @@ function AdminPage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Adminlar ro&apos;yxati yuklanmoqda...
+							Foydalanuvchilar ro&apos;yxati yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -367,7 +365,7 @@ function AdminPage() {
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Adminlar ro&apos;yxati
+							Foydalanuvchilar ro&apos;yxati
 						</h1>
 					</div>
 				</div>
@@ -382,7 +380,7 @@ function AdminPage() {
 							Foydalanuvchilar mavjud emas
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400'>
-							Hozircha tizimda adminlar ro&apos;yxati bo&apos;sh
+							Hozircha tizimda foydalanuvchilar ro&apos;yxati bo&apos;sh
 						</p>
 					</div>
 				</div>
@@ -412,7 +410,7 @@ function AdminPage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
-						Adminlar ro&apos;yxati
+						Foydalanuvchilar ro&apos;yxati
 					</h1>
 					<p className='text-white/80 mt-2 text-lg'>
 						Tizim foydalanuvchilari boshqaruvi
@@ -433,7 +431,7 @@ function AdminPage() {
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami adminlar soni
+										Jami foydalanuvchilar soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxatdan o&apos;tgan
@@ -482,6 +480,19 @@ function AdminPage() {
 										</div>
 									)}
 								</Button>
+
+								<CreateUserDialog
+									trigger={
+										<Button className='bg-amber-400'>
+											<PlusSquareIcon className='mr-2 h-4 w-4 ' />
+											Yangi foydalanuvchi
+										</Button>
+									}
+									userType='guest'
+									onUserAdded={() =>
+										console.log('Tashqi foydalanuvchi yaratildi')
+									}
+								/>
 							</div>
 						</div>
 					</div>
@@ -540,18 +551,6 @@ function AdminPage() {
 											isHeader
 											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
 										>
-											Guruh
-										</TableCell>
-										<TableCell
-											isHeader
-											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
-										>
-											Kurs
-										</TableCell>
-										<TableCell
-											isHeader
-											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
-										>
 											Email
 										</TableCell>
 										<TableCell
@@ -584,7 +583,7 @@ function AdminPage() {
 											className={`group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 dark:hover:from-indigo-950/50 dark:hover:to-purple-950/50 transition-all duration-300 animate-table-row`}
 										>
 											<TableCell className='px-4 py-4'>
-												<div className='flex items-center gap-3'>
+												<div className='flex w-12 items-center gap-3'>
 													{item.userPhotoId ? (
 														<Image
 															src={downloadImage({
@@ -609,12 +608,6 @@ function AdminPage() {
 											<TableCell className='px-2 py-4 w-1/12 truncate text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
 												{item.faculty?.name || '-'}
 											</TableCell>
-											<TableCell className='px-2 py-4 w-1/5 truncate text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
-												{item.group || '-'}
-											</TableCell>
-											<TableCell className='px-2 truncate py-4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
-												{item.course || '-'}
-											</TableCell>
 											<TableCell className='px-2 py-4 w-1/4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
 												<div
 													className='max-w-[200px] truncate'
@@ -637,7 +630,7 @@ function AdminPage() {
 											</TableCell>
 											<TableCell className='px-4 py-4 text-gray-700  text-theme-sm dark:text-gray-200 '>
 												<Link
-													href={`${lan}/admin/user-manager/students/${item.id}`}
+													href={`${lan}/admin/user-manager/guests/${item.id}`}
 												>
 													<Eye className='w-5 h-5 text-center ml-auto' />
 												</Link>
@@ -667,4 +660,4 @@ function AdminPage() {
 	)
 }
 
-export default AdminPage
+export default GuestsPage

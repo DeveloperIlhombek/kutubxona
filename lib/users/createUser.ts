@@ -44,7 +44,7 @@ interface IEmployee extends IBaseUser {
 	buildingId: string | null
 }
 
-interface IGuest extends IBaseUser {
+export interface IGuest extends IBaseUser {
 	info: string
 }
 
@@ -55,8 +55,6 @@ export type ICreateUser =
 	| IModerator
 	| IEmployee
 	| IGuest
-
-//Student yaratish
 
 export const createSuperAdmin = async (data: IStudent) => {
 	try {
@@ -74,6 +72,7 @@ export const createSuperAdmin = async (data: IStudent) => {
 		return null
 	}
 }
+//Student yaratish
 export const createStudent = async (data: {
 	firstName: string
 	lastName: string
@@ -103,9 +102,7 @@ export const createStudent = async (data: {
 		return null
 	}
 }
-
 // Teacher yaratish
-
 export const createTeacher = async (data: ITeacher) => {
 	try {
 		const response = await fetch(`${API_URL}/api/user/createteacher`, {
@@ -122,7 +119,6 @@ export const createTeacher = async (data: ITeacher) => {
 		return null
 	}
 }
-
 // Admin yaratish
 export const createAdmin = async (data: IAdmin) => {
 	try {
