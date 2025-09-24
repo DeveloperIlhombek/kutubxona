@@ -13,7 +13,9 @@ import { getAllBuildings } from '@/lib/books/building'
 import { getFaculties } from '@/lib/faculty/faculty'
 import {
 	API_URL,
+	createAdmin,
 	createStudent,
+	IAdmin,
 	StudentCreateDTO,
 } from '@/lib/users/createUser'
 import { IBuilding, IFaculty } from '@/types'
@@ -293,24 +295,32 @@ function CreateUserDialog({
 			switch (userType) {
 				case 'student':
 					const studentData: StudentCreateDTO = {
-						studentCreateDTO: {
-							firstName: formData.firstName.trim(),
-							lastName: formData.lastName.trim(),
-							email: formData.email.trim(),
-							password: formData.password,
-							phone: formData.phone.trim() || undefined,
-							hemisId: formData.hemisId
-								? parseInt(formData.hemisId)
-								: undefined,
-							facultyId: formData.facultyId || undefined,
-							course: formData.course ? parseInt(formData.course) : undefined,
-							group: formData.group || undefined,
-							userPhotoId: formData.userPhotoId || undefined,
-						},
+						firstName: formData.firstName.trim(),
+						lastName: formData.lastName.trim(),
+						email: formData.email.trim(),
+						password: formData.password,
+						phone: formData.phone.trim() || undefined,
+						hemisId: formData.hemisId ? parseInt(formData.hemisId) : undefined,
+						facultyId: formData.facultyId || undefined,
+						course: formData.course ? parseInt(formData.course) : undefined,
+						group: formData.group || undefined,
+						userPhotoId: formData.userPhotoId || undefined,
 					}
 					response = await createStudent(studentData)
 					break
-
+				// ADmin yaratish
+				case 'admin':
+					const adminData: IAdmin = {
+						email: formData.email.trim(),
+						firstName: formData.firstName.trim(),
+						lastName: formData.lastName.trim(),
+						password: formData.password,
+						phone: formData.phone.trim(),
+						userPhotoId: formData.userPhotoId || undefined,
+						buildingId: formData.buildingId || undefined,
+					}
+					response = await createAdmin(adminData)
+					break
 				default:
 					throw new Error("Noto'g'ri foydalanuvchi turi")
 			}
@@ -373,7 +383,7 @@ function CreateUserDialog({
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>{trigger}</DialogTrigger>
-			<DialogContent className='max-w-4xl max-h-[95vh] overflow-hidden bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-800 dark:to-slate-900 border border-slate-200/60 dark:border-slate-700/60 shadow-2xl backdrop-blur-sm'>
+			<DialogContent className='max-w-4xl max-h-[95vh] overflow-hidden bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-800 dark:to-slate-900 border border-slate-200/60 dark:border-slate-700/60 shadow-2xl backdrop-blur-sm z-999999'>
 				{/* Header */}
 				<DialogHeader className='space-y-4 pb-6 border-b border-slate-200/50 dark:border-slate-700/50'>
 					<div className='flex items-center gap-4'>
@@ -393,8 +403,8 @@ function CreateUserDialog({
 						</div>
 					</div>
 
-					{/* Progress indicator */}
-					{/* <div className='flex items-center gap-2'>
+					{/* Progress indicator
+					<div className='flex items-center gap-2'>
 						<div className='flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden'>
 							<div
 								className='h-full bg-gradient-to-r from-indigo-600 to-purple-600 transition-all duration-500 ease-out'
@@ -421,7 +431,7 @@ function CreateUserDialog({
 
 				{/* Form Content */}
 				<div className='max-h-[60vh] overflow-y-auto custom-scrollbar'>
-					<form onSubmit={handleSubmit} className='space-y-8 p-1'>
+					<form onSubmit={handleSubmit} className='space-y-2 p-1'>
 						{/* Basic Information Section */}
 						<div className='space-y-6'>
 							<div className='flex items-center gap-3 mb-4'>
@@ -803,67 +813,37 @@ function CreateUserDialog({
 				</div>
 
 				{/* Footer */}
-				<div className='flex flex-col gap-4 pt-6 border-t border-slate-200/50 dark:border-slate-700/50'>
-					{/* Preview */}
-					{isFormValid && (
-						<div className='bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/50 dark:to-purple-950/50 border border-indigo-200 dark:border-indigo-800 rounded-xl p-4 animate-fade-in'>
-							<div className='flex items-center gap-3'>
-								<div
-									className={`w-10 h-10 bg-gradient-to-br ${userTypeColors[userType]} rounded-full flex items-center justify-center`}
-								>
-									<IconComponent className='w-5 h-5 text-indigo-600 dark:text-indigo-400' />
-								</div>
-								<div className='flex-1'>
-									<p className='text-sm font-medium text-indigo-900 dark:text-indigo-300'>
-										Qo&apos;shiladigan {userTypeTitles[userType].toLowerCase()}:
-									</p>
-									<p className='text-indigo-700 dark:text-indigo-400 font-semibold'>
-										{formData.firstName} {formData.lastName}
-									</p>
-									{formData.email && (
-										<p className='text-indigo-600 dark:text-indigo-300 text-sm'>
-											{formData.email}
-										</p>
-									)}
-								</div>
-								{isEmailValid && isPasswordValid && (
-									<CheckCircle className='w-6 h-6 text-green-500' />
-								)}
-							</div>
-						</div>
-					)}
-
-					{/* Action Buttons */}
-					<div className='flex flex-col sm:flex-row justify-end gap-3'>
-						<Button
-							type='button'
-							variant='outline'
-							onClick={handleReset}
-							disabled={loading}
-							className='px-6 py-2.5 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-400 dark:hover:border-slate-500 transition-all duration-200 rounded-lg font-medium'
-						>
-							Tozalash
-						</Button>
-						<Button
-							onClick={handleSubmit}
-							disabled={
-								loading || !isFormValid || !isEmailValid || !isPasswordValid
-							}
-							className='min-w-[160px] bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-400 disabled:to-slate-500 dark:disabled:from-slate-600 dark:disabled:to-slate-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 text-white rounded-lg font-medium px-6 py-2.5'
-						>
-							{loading ? (
-								<>
-									<Loader2 className='w-4 h-4 mr-2 animate-spin' />
-									Yaratilmoqda...
-								</>
-							) : (
-								<>
-									Yaratish
-									<PlusSquareIcon className='w-4 h-4 ml-2' />
-								</>
-							)}
-						</Button>
-					</div>
+				{/* Action Buttons */}
+				<div className='flex flex-col sm:flex-row justify-end gap-3'>
+					<Button
+						type='button'
+						variant='outline'
+						onClick={handleReset}
+						disabled={loading}
+						className='px-6 py-2.5 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-400 dark:hover:border-slate-500 transition-all duration-200 rounded-lg font-medium'
+					>
+						Tozalash
+					</Button>
+					<Button
+						onClick={handleSubmit}
+						disabled={
+							loading || !isFormValid || !isEmailValid || !isPasswordValid
+						}
+						type='submit'
+						className='min-w-[160px] bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-slate-400 disabled:to-slate-500 dark:disabled:from-slate-600 dark:disabled:to-slate-700 shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 text-white rounded-lg font-medium px-6 py-2.5'
+					>
+						{loading ? (
+							<>
+								<Loader2 className='w-4 h-4 mr-2 animate-spin' />
+								Yaratilmoqda...
+							</>
+						) : (
+							<>
+								Yaratish
+								<PlusSquareIcon className='w-4 h-4 ml-2' />
+							</>
+						)}
+					</Button>
 				</div>
 
 				{/* Custom Styles */}

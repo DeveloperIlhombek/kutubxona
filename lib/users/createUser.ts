@@ -1,17 +1,15 @@
 export const API_URL = 'https://e-libraryrest.samdu.uz'
 export interface StudentCreateDTO {
-	studentCreateDTO: {
-		firstName: string
-		lastName: string
-		email: string
-		password: string
-		phone?: string
-		hemisId?: number
-		facultyId?: string
-		course?: number // Number tipida bo'lishi kerak
-		group?: string
-		userPhotoId?: string
-	}
+	firstName: string
+	lastName: string
+	email: string
+	password: string
+	phone?: string
+	hemisId?: number
+	facultyId?: string
+	course?: number
+	group?: string
+	userPhotoId?: string
 }
 interface IBaseUser {
 	firstName: string
@@ -19,7 +17,7 @@ interface IBaseUser {
 	password: string
 	email: string
 	phone: string
-	userPhotoId: string | null
+	userPhotoId?: string | undefined
 }
 
 interface IStudent extends IBaseUser {
@@ -34,8 +32,8 @@ interface ITeacher extends IBaseUser {
 	facultyId: string
 }
 
-interface IAdmin extends IBaseUser {
-	buildingId: string | null
+export interface IAdmin extends IBaseUser {
+	buildingId?: string | undefined
 }
 
 interface IModerator extends IBaseUser {
@@ -76,7 +74,18 @@ export const createSuperAdmin = async (data: IStudent) => {
 		return null
 	}
 }
-export const createStudent = async (data: StudentCreateDTO) => {
+export const createStudent = async (data: {
+	firstName: string
+	lastName: string
+	email: string
+	password: string
+	phone?: string
+	hemisId?: number
+	facultyId?: string
+	course?: number
+	group?: string
+	userPhotoId?: string
+}) => {
 	try {
 		const response = await fetch(`${API_URL}/api/user/createstudent`, {
 			method: 'POST',
