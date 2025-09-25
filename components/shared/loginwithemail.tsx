@@ -60,7 +60,7 @@ export function LoginDialog({ trigger }: { trigger: React.ReactNode }) {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>{trigger}</DialogTrigger>
-			<DialogContent>
+			<DialogContent className='bg-gray-500'>
 				<DialogHeader>
 					<DialogTitle>Tizimga kirish</DialogTitle>
 					<DialogDescription>Login va parolni kiriting</DialogDescription>
