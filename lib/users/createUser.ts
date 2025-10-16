@@ -40,7 +40,7 @@ export interface IModerator extends IBaseUser {
 	buildingId: string | null
 }
 
-interface IEmployee extends IBaseUser {
+export interface IEmployee extends IBaseUser {
 	buildingId: string | null
 }
 
@@ -56,22 +56,6 @@ export type ICreateUser =
 	| IEmployee
 	| IGuest
 
-export const createSuperAdmin = async (data: IStudent) => {
-	try {
-		const response = await fetch(`${API_URL}/api/user/createstudent`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${localStorage.getItem('token')}`,
-			},
-			body: JSON.stringify(data),
-		})
-		return await response.json()
-	} catch (error) {
-		console.error('Error creating student:', error)
-		return null
-	}
-}
 //Student yaratish
 export const createStudent = async (data: {
 	firstName: string

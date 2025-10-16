@@ -10,7 +10,7 @@ import Filter, { FilterOption, FilterValues } from '@/components/shared/filters'
 import { Button } from '@/components/ui/button'
 import { getFaculties } from '@/lib/faculty/faculty'
 import { getAllsuperadmins, GetUserParams } from '@/lib/users/superadmin'
-import { getLanguagePrefix } from '@/lib/utils'
+import { downloadImage, getLanguagePrefix } from '@/lib/utils'
 import { IFaculty, IUser, IUserResult } from '@/types'
 import {
 	BadgeCheck,
@@ -20,6 +20,7 @@ import {
 	FilterIcon,
 	Sparkles,
 	TrendingUp,
+	UserIcon,
 	Users,
 } from 'lucide-react'
 import Image from 'next/image'
@@ -60,7 +61,7 @@ function SuperAdminPage() {
 			}
 		} catch (error) {
 			console.error('Facultetlarni yuklashda xatolik:', error)
-			toast.error("Facultetlar ro'yxati yuklanmadi")
+			toast.error("Superadminlar ro'yxati yuklanmadi")
 		} finally {
 			setFacultiesLoading(false)
 		}
@@ -100,7 +101,7 @@ function SuperAdminPage() {
 				throw new Error("Ma'lumotlarni yuklashda xatolik")
 			}
 		} catch (error) {
-			toast.error(`Adminlarni yuklashda xatolik: ${error}`)
+			toast.error(`SuperAdminlarni yuklashda xatolik: ${error}`)
 		} finally {
 			setLoading(false)
 		}
@@ -139,7 +140,7 @@ function SuperAdminPage() {
 			// CSV faylni yuklab olish
 			downloadCSV(
 				csvContent,
-				`adminlar_${new Date().toISOString().split('T')[0]}.csv`
+				`superadminlar_${new Date().toISOString().split('T')[0]}.csv`
 			)
 
 			toast.success(
@@ -326,7 +327,7 @@ function SuperAdminPage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Adminlar ro&apos;yxati yuklanmoqda...
+							SuperAdminlar ro&apos;yxati yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -366,7 +367,7 @@ function SuperAdminPage() {
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Adminlar ro&apos;yxati
+							SuperAdminlar ro&apos;yxati
 						</h1>
 					</div>
 				</div>
@@ -381,7 +382,7 @@ function SuperAdminPage() {
 							Foydalanuvchilar mavjud emas
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400'>
-							Hozircha tizimda adminlar ro&apos;yxati bo&apos;sh
+							Hozircha tizimda Superadminlar ro&apos;yxati bo&apos;sh
 						</p>
 					</div>
 				</div>
@@ -411,7 +412,7 @@ function SuperAdminPage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
-						Adminlar ro&apos;yxati
+						Superadminlar ro&apos;yxati
 					</h1>
 					<p className='text-white/80 mt-2 text-lg'>
 						Tizim foydalanuvchilari boshqaruvi
@@ -432,7 +433,7 @@ function SuperAdminPage() {
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami adminlar soni
+										Jami Superadminlar soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxatdan o&apos;tgan
@@ -584,15 +585,19 @@ function SuperAdminPage() {
 										>
 											<TableCell className='px-4 py-4'>
 												<div className='flex items-center gap-3'>
-													<div className='w-12 h-12 overflow-hidden rounded-full ring-2 ring-indigo-200 dark:ring-indigo-800 group-hover:ring-indigo-300 dark:group-hover:ring-indigo-700 transition-all duration-300'>
+													{item.userPhotoId ? (
 														<Image
-															width={48}
-															height={48}
-															src={'/images/user/user-01.jpg'}
+															src={downloadImage({
+																id: item.userPhotoId,
+																quality: 'low',
+															})}
 															alt={item.firstName}
-															className='w-full h-full object-cover'
+															width={400}
+															height={300}
 														/>
-													</div>
+													) : (
+														<UserIcon className='w-full h-full text-gray-500' />
+													)}
 												</div>
 											</TableCell>
 											<TableCell className='px-2 py-4 text-sm text-slate-700  dark:text-slate-300 group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors duration-300 text-start'>

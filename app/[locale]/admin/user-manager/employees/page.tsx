@@ -18,6 +18,7 @@ import {
 	Download,
 	Eye,
 	FilterIcon,
+	PlusSquareIcon,
 	Sparkles,
 	TrendingUp,
 	UserIcon,
@@ -29,8 +30,9 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import Pagination from '../../_components/pagination'
+import CreateUserDialog from '../_components/createuse'
 
-function AdminPage() {
+function EmployeesPage() {
 	const [loading, setLoading] = useState(false)
 	const [exportLoading, setExportLoading] = useState(false)
 	const [facultiesLoading, setFacultiesLoading] = useState(false)
@@ -140,7 +142,7 @@ function AdminPage() {
 			// CSV faylni yuklab olish
 			downloadCSV(
 				csvContent,
-				`adminlar_${new Date().toISOString().split('T')[0]}.csv`
+				`employee_${new Date().toISOString().split('T')[0]}.csv`
 			)
 
 			toast.success(
@@ -327,7 +329,7 @@ function AdminPage() {
 							<Sparkles className='w-8 h-8 text-white' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Adminlar ro&apos;yxati yuklanmoqda...
+							Xodimlar ro&apos;yxati yuklanmoqda...
 						</h1>
 					</div>
 				</div>
@@ -367,7 +369,7 @@ function AdminPage() {
 							<Sparkles className='w-8 h-8 text-white animate-pulse' />
 						</div>
 						<h1 className='text-3xl font-bold text-white drop-shadow-lg'>
-							Adminlar ro&apos;yxati
+							Xodimlar ro&apos;yxati
 						</h1>
 					</div>
 				</div>
@@ -382,7 +384,7 @@ function AdminPage() {
 							Foydalanuvchilar mavjud emas
 						</h3>
 						<p className='text-slate-500 dark:text-slate-400'>
-							Hozircha tizimda adminlar ro&apos;yxati bo&apos;sh
+							Hozircha tizimda Xodimlar ro&apos;yxati bo&apos;sh
 						</p>
 					</div>
 				</div>
@@ -412,7 +414,7 @@ function AdminPage() {
 						<Sparkles className='w-8 h-8 text-white animate-pulse' />
 					</div>
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg'>
-						Adminlar ro&apos;yxati
+						Xodimlar ro&apos;yxati
 					</h1>
 					<p className='text-white/80 mt-2 text-lg'>
 						Tizim foydalanuvchilari boshqaruvi
@@ -433,7 +435,7 @@ function AdminPage() {
 								</div>
 								<div>
 									<h3 className='text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										Jami adminlar soni
+										Jami Xodimlar soni
 									</h3>
 									<p className='text-slate-600 dark:text-slate-400'>
 										Tizimda ro&apos;yxatdan o&apos;tgan
@@ -482,6 +484,17 @@ function AdminPage() {
 										</div>
 									)}
 								</Button>
+
+								<CreateUserDialog
+									trigger={
+										<Button className='bg-amber-400 hover:scale-105 hover:bg-amber-500 shadow-lg hover:shadow-xl transition-all duration-200 transform flex items-center'>
+											<PlusSquareIcon className='mr-2 h-4 w-4 ' />
+											Yangi xodim
+										</Button>
+									}
+									userType='employee'
+									onUserAdded={() => console.log('Xodim yaratildi')}
+								/>
 							</div>
 						</div>
 					</div>
@@ -536,18 +549,7 @@ function AdminPage() {
 										>
 											Fakultet
 										</TableCell>
-										<TableCell
-											isHeader
-											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
-										>
-											Guruh
-										</TableCell>
-										<TableCell
-											isHeader
-											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
-										>
-											Kurs
-										</TableCell>
+
 										<TableCell
 											isHeader
 											className='px-2 py-4  font-semibold text-slate-700 dark:text-slate-400 text-start text-sm'
@@ -611,12 +613,7 @@ function AdminPage() {
 											<TableCell className='px-2 py-4 w-1/12 truncate text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
 												{item.faculty?.name || '-'}
 											</TableCell>
-											<TableCell className='px-2 py-4 w-1/5 truncate text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
-												{item.group || '-'}
-											</TableCell>
-											<TableCell className='px-2 truncate py-4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
-												{item.course || '-'}
-											</TableCell>
+
 											<TableCell className='px-2 py-4 w-1/4 text-sm text-slate-600 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-300 text-start'>
 												<div
 													className='max-w-[200px] truncate'
@@ -639,7 +636,7 @@ function AdminPage() {
 											</TableCell>
 											<TableCell className='px-4 py-4 text-gray-700  text-theme-sm dark:text-gray-200 '>
 												<Link
-													href={`${lan}/admin/user-manager/students/${item.id}`}
+													href={`${lan}/admin/user-manager/employees/${item.id}`}
 												>
 													<Eye className='w-5 h-5 text-center ml-auto' />
 												</Link>
@@ -669,4 +666,4 @@ function AdminPage() {
 	)
 }
 
-export default AdminPage
+export default EmployeesPage

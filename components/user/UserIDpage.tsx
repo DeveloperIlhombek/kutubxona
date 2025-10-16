@@ -1,6 +1,7 @@
 'use client'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { getUserById } from '@/lib/users/userId'
+import { downloadImage } from '@/lib/utils'
 import { IUser } from '@/types'
 import {
 	ActivitySquare,
@@ -153,15 +154,23 @@ const UserIDpage: React.FC<UserIDpageProps> = ({ userid }) => {
 
 				{/* Content */}
 				<div className='relative z-10 text-center animate-fade-in-up'>
-					<div className='w-24 h-24 mx-auto mb-4 overflow-hidden rounded-full border-4 border-white/30 shadow-2xl ring-4 ring-white/20'>
-						<Image
-							width={96}
-							height={96}
-							src={'/images/user/user-01.jpg'}
-							alt={`${user.firstName}`}
-							className='w-full h-full object-cover'
-						/>
+					<div className='w-32 h-32 mx-auto mb-1 overflow-hidden rounded-full border-4 border-white/30 shadow-2xl ring-4 ring-white/20 '>
+						{user.userPhotoId && user.userPhotoId !== '' ? (
+							<Image
+								width={96}
+								height={96}
+								src={downloadImage({
+									id: user.userPhotoId,
+									quality: 'low',
+								})}
+								alt={`${user.firstName}`}
+								className='w-full h-full object-cover hover:scale-105'
+							/>
+						) : (
+							<User className='w-full h-full text-white/50 bg-white/10' />
+						)}
 					</div>
+
 					<h1 className='text-4xl font-bold text-white drop-shadow-lg mb-0'>
 						{user.firstName} {user.lastName}
 					</h1>

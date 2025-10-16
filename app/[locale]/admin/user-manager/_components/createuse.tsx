@@ -14,11 +14,13 @@ import { getFaculties } from '@/lib/faculty/faculty'
 import {
 	API_URL,
 	createAdmin,
+	createEmployee,
 	createGuest,
 	createModerator,
 	createStudent,
 	createTeacher,
 	IAdmin,
+	IEmployee,
 	IGuest,
 	IModerator,
 	ITeacher,
@@ -366,6 +368,18 @@ function CreateUserDialog({
 						buildingId: formData.buildingId || null,
 					}
 					response = await createModerator(moderatorData)
+					break
+				case 'employee':
+					const employeeData: IEmployee = {
+						firstName: formData.firstName.trim(),
+						lastName: formData.lastName.trim(),
+						email: formData.email.trim(),
+						password: formData.password,
+						phone: formData.phone.trim() || undefined,
+						userPhotoId: formData.userPhotoId || undefined,
+						buildingId: formData.buildingId || null,
+					}
+					response = await createEmployee(employeeData)
 					break
 
 				default:
