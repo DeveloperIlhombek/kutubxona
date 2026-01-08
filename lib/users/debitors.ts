@@ -1,4 +1,4 @@
-const API_URL = 'https://e-libraryrest.samdu.uz'
+const API_URL = 'https://e-libraryrests.samdu.uz'
 
 // lib/users/debitors.ts faylida
 export interface GetDebitorsParams {

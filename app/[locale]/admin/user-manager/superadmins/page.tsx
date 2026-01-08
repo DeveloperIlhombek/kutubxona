@@ -441,7 +441,7 @@ function SuperAdminPage() {
 								</div>
 								<div className='text-right'>
 									<p className='text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										{userResponse?.totalCount || 0}
+										34
 									</p>
 									<p className='text-sm text-slate-500 dark:text-slate-400'>
 										nafar

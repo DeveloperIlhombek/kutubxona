@@ -1,4 +1,4 @@
-const API_URL = 'https://e-libraryrest.samdu.uz'
+const API_URL = 'https://e-libraryrests.samdu.uz'
 import { IUser } from '@/types'
 
 export const getUserById = async (id: string) => {

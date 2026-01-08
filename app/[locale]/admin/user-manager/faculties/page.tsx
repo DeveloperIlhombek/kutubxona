@@ -7,8 +7,7 @@ import {
 	TableRow,
 } from '@/app/[locale]/components/ui/table'
 import { Button } from '@/components/ui/button'
-import { getFaculties } from '@/lib/faculty/faculty'
-import { IFaculty, IFacultyResult } from '@/types'
+import { faculty } from '@/constant'
 import {
 	Building2Icon,
 	PencilIcon,
@@ -27,8 +26,8 @@ import { DeleteFacultyDialog } from './_components/deleteFaculty'
 
 function Faculties() {
 	const [loading, setLoading] = useState(false)
-	const [facultyResponse, setFacultyResponse] = useState<IFacultyResult>()
-	const [faculty, setFaculty] = useState<IFaculty[]>([])
+	// const [facultyResponse, setFacultyResponse] = useState<IFacultyResult>()
+	// const [faculty, setFaculty] = useState<IFaculty[]>([])
 	const [pageNumber, setPageNumber] = useState(0)
 	const [pageSize, setPageSize] = useState(10)
 	const [editDialog, setEditDialog] = useState({
@@ -48,9 +47,9 @@ function Faculties() {
 	const fetchFaculties = async () => {
 		try {
 			setLoading(true)
-			const response = await getFaculties({ pageNumber, pageSize })
-			setFacultyResponse(response.result)
-			setFaculty(response?.result.items)
+			// const response = await getFaculties({ pageNumber, pageSize })
+			// setFacultyResponse(response.result)
+			// setFaculty(response?.result.items)
 		} catch (error) {
 			toast(`Fakultetlarni yuklashda xatolik: ${error}`)
 		} finally {
@@ -130,7 +129,7 @@ function Faculties() {
 		)
 	}
 
-	if (facultyResponse?.totalCount === 0) {
+	if (0) {
 		return (
 			<div className='min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900'>
 				{/* Hero Section */}
@@ -229,7 +228,7 @@ function Faculties() {
 							<div className='flex items-center gap-4'>
 								<div className='text-right'>
 									<p className='text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										{facultyResponse?.totalCount || 0}
+										{20}
 									</p>
 									<p className='text-sm text-slate-500 dark:text-slate-400'>
 										fakultet
@@ -359,15 +358,13 @@ function Faculties() {
 				onSuccess={handleFacultyDeleted}
 			/>
 
-			{facultyResponse && (
-				<Pagination
-					currentPage={pageNumber}
-					totalPages={facultyResponse.totalPages}
-					totalItems={facultyResponse.totalCount}
-					pageSize={pageSize}
-					onPageChange={handlePageChange}
-				/>
-			)}
+			<Pagination
+				currentPage={pageNumber}
+				totalPages={20}
+				totalItems={50}
+				pageSize={pageSize}
+				onPageChange={handlePageChange}
+			/>
 		</div>
 	)
 }

@@ -1,4 +1,4 @@
-export const API_URL = 'https://e-libraryrest.samdu.uz'
+export const API_URL = 'https://e-libraryrests.samdu.uz'
 export interface StudentCreateDTO {
 	firstName: string
 	lastName: string

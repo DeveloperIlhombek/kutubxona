@@ -8,9 +8,10 @@ import {
 } from '@/app/[locale]/components/ui/table'
 import Filter, { FilterOption, FilterValues } from '@/components/shared/filters'
 import { Button } from '@/components/ui/button'
+import { users } from '@/constant'
 import { getFaculties } from '@/lib/faculty/faculty'
 import { getAllStudents, GetUserParams } from '@/lib/users/students'
-import { downloadImage, getLanguagePrefix } from '@/lib/utils'
+import { getLanguagePrefix } from '@/lib/utils'
 import { IFaculty, IUser, IUserResult } from '@/types'
 import {
 	BadgeCheck,
@@ -36,7 +37,7 @@ function AdminPage() {
 	const [loading, setLoading] = useState(false)
 	const [exportLoading, setExportLoading] = useState(false)
 	const [facultiesLoading, setFacultiesLoading] = useState(false)
-	const [users, setUsers] = useState<IUser[]>([])
+	// const [users, setUsers] = useState<IUser[]>([])
 	const [userResponse, setUserResponse] = useState<IUserResult>()
 	const [faculties, setFaculties] = useState<IFaculty[]>([])
 	const [pageNumber, setPageNumber] = useState(0)
@@ -97,7 +98,7 @@ function AdminPage() {
 
 			const response = await getAllStudents(params)
 			if (response && response.result) {
-				setUsers(response.result.items)
+				// setUsers(response.result.items)
 				setUserResponse(response.result)
 			} else {
 				throw new Error("Ma'lumotlarni yuklashda xatolik")
@@ -443,7 +444,7 @@ function AdminPage() {
 								</div>
 								<div className='text-right'>
 									<p className='text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										{userResponse?.totalCount || 0}
+										{20}
 									</p>
 									<p className='text-sm text-slate-500 dark:text-slate-400'>
 										nafar
@@ -600,10 +601,7 @@ function AdminPage() {
 												<div className='flex size-12 items-center gap-3'>
 													{item.userPhotoId ? (
 														<Image
-															src={downloadImage({
-																id: item.userPhotoId,
-																quality: 'low',
-															})}
+															src={item.userPhoto}
 															alt={item.firstName}
 															width={400}
 															height={300}
@@ -666,17 +664,15 @@ function AdminPage() {
 				</div>
 
 				{/* Pagination */}
-				{userResponse && (
-					<div className='mt-6 animate-slide-in-up'>
-						<Pagination
-							currentPage={pageNumber}
-							totalPages={userResponse.totalPages}
-							totalItems={userResponse.totalCount}
-							pageSize={pageSize}
-							onPageChange={handlePageChange}
-						/>
-					</div>
-				)}
+				<div className='mt-6 animate-slide-in-up'>
+					<Pagination
+						currentPage={2}
+						totalPages={10}
+						totalItems={30}
+						pageSize={pageSize}
+						onPageChange={handlePageChange}
+					/>
+				</div>
 			</div>
 		</div>
 	)

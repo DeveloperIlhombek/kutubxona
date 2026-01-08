@@ -8,9 +8,10 @@ import {
 } from '@/app/[locale]/components/ui/table'
 import Filter, { FilterOption, FilterValues } from '@/components/shared/filters'
 import { Button } from '@/components/ui/button'
+import { users } from '@/constant'
 import { getFaculties } from '@/lib/faculty/faculty'
 import { getAllModerator, GetUserParams } from '@/lib/users/moderator'
-import { downloadImage, getLanguagePrefix } from '@/lib/utils'
+import { getLanguagePrefix } from '@/lib/utils'
 import { IFaculty, IUser, IUserResult } from '@/types'
 import {
 	BadgeCheck,
@@ -36,7 +37,7 @@ function ModeratorPage() {
 	const [loading, setLoading] = useState(false)
 	const [exportLoading, setExportLoading] = useState(false)
 	const [facultiesLoading, setFacultiesLoading] = useState(false)
-	const [users, setUsers] = useState<IUser[]>([])
+	// const [users, setUsers] = useState<IUser[]>([])
 	const [userResponse, setUserResponse] = useState<IUserResult>()
 	const [faculties, setFaculties] = useState<IFaculty[]>([])
 	const [pageNumber, setPageNumber] = useState(0)
@@ -97,7 +98,7 @@ function ModeratorPage() {
 
 			const response = await getAllModerator(params)
 			if (response && response.result) {
-				setUsers(response.result.items)
+				// setUsers(response.result.items)
 				setUserResponse(response.result)
 			} else {
 				throw new Error("Ma'lumotlarni yuklashda xatolik")
@@ -437,7 +438,7 @@ function ModeratorPage() {
 								</div>
 								<div className='text-right'>
 									<p className='text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										{userResponse?.totalCount || 0}
+										23
 									</p>
 									<p className='text-sm text-slate-500 dark:text-slate-400'>
 										nafar
@@ -577,10 +578,7 @@ function ModeratorPage() {
 													<div className='w-12 h-12 overflow-hidden rounded-full ring-2 ring-indigo-200 dark:ring-indigo-800 group-hover:ring-indigo-300 dark:group-hover:ring-indigo-700 transition-all duration-300'>
 														{item.userPhotoId ? (
 															<Image
-																src={downloadImage({
-																	id: item.userPhotoId,
-																	quality: 'low',
-																})}
+																src='/users/user4.jpg'
 																alt={item.firstName}
 																width={200}
 																height={200}

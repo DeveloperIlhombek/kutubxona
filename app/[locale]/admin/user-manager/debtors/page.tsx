@@ -8,11 +8,12 @@ import {
 } from '@/app/[locale]/components/ui/table'
 import Filter, { FilterOption, FilterValues } from '@/components/shared/filters'
 import { Button } from '@/components/ui/button'
+import { DEBITOR_RESULT } from '@/constant'
 import { getFaculties } from '@/lib/faculty/faculty'
 import { getDebitors, GetDebitorsParams } from '@/lib/users/debitors'
 import { getLanguagePrefix } from '@/lib/utils'
 import { IFaculty } from '@/types'
-import { IDebitor, IDebitorResult } from '@/types/debitors-type'
+import { IDebitor } from '@/types/debitors-type'
 import {
 	AlertCircle,
 	CheckCircle2,
@@ -32,8 +33,8 @@ import Pagination from '../../_components/pagination'
 function DebitorsPage() {
 	const [loading, setLoading] = useState(false)
 	const [exportLoading, setExportLoading] = useState(false)
-	const [debitorsResponse, setDebitorsResponse] = useState<IDebitorResult>()
-	const [debtors, setDebtors] = useState<IDebitor[]>([])
+	// const [debitorsResponse, setDebitorsResponse] = useState<IDebitorResult>()
+	// const [debtors, setDebtors] = useState<IDebitor[]>([])
 	const [pageNumber, setPageNumber] = useState(0)
 	const [pageSize, setPageSize] = useState(10)
 	const [filters, setFilters] = useState<FilterValues>({})
@@ -70,8 +71,8 @@ function DebitorsPage() {
 			const response = await getDebitors(params)
 
 			if (response?.isSuccess) {
-				setDebitorsResponse(response.result)
-				setDebtors(response.result.items || [])
+				// setDebitorsResponse(response.result)
+				// setDebtors(response.result.items || [])
 			} else {
 				throw new Error(response?.message || "Ma'lumotlarni yuklashda xatolik")
 			}
@@ -343,7 +344,7 @@ function DebitorsPage() {
 		)
 	}
 
-	if (error) {
+	if (!error) {
 		return (
 			<div className='min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900'>
 				{/* Hero Section */}
@@ -385,7 +386,7 @@ function DebitorsPage() {
 		)
 	}
 
-	if (debitorsResponse?.totalCount === 0 && Object.keys(filters).length === 0) {
+	if (DEBITOR_RESULT?.totalCount === 0 && Object.keys(filters).length === 0) {
 		return (
 			<div className='min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900 dark:to-gray-900'>
 				{/* Hero Section */}
@@ -474,7 +475,7 @@ function DebitorsPage() {
 								</div>
 								<div className='text-right'>
 									<p className='text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>
-										{debitorsResponse?.totalCount || 0}
+										{12}
 									</p>
 									<p className='text-sm text-slate-500 dark:text-slate-400'>
 										nafar
@@ -499,7 +500,7 @@ function DebitorsPage() {
 								<Button
 									onClick={exportToExcel}
 									disabled={
-										exportLoading || (debitorsResponse?.totalCount || 0) === 0
+										exportLoading || (DEBITOR_RESULT?.totalCount || 0) === 0
 									}
 									className='bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 disabled:from-slate-400 disabled:to-slate-500 dark:disabled:from-slate-600 dark:disabled:to-slate-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100'
 								>
@@ -531,7 +532,7 @@ function DebitorsPage() {
 								<div>
 									<p className='text-blue-700 dark:text-blue-300 font-medium'>
 										<span className='font-bold'>
-											{debitorsResponse?.totalCount || 0} ta natija
+											{DEBITOR_RESULT?.totalCount || 0} ta natija
 										</span>{' '}
 										topildi
 									</p>
@@ -601,7 +602,7 @@ function DebitorsPage() {
 
 								{/* Table Body */}
 								<TableBody className='divide-y divide-slate-200/50 dark:divide-slate-700/50'>
-									{debtors?.map((item, index) => (
+									{DEBITOR_RESULT.items?.map((item, index) => (
 										<TableRow
 											key={item.id}
 											className={`group hover:bg-gradient-to-r hover:from-indigo-50/50 hover:to-purple-50/50 dark:hover:from-indigo-950/50 dark:hover:to-purple-950/50 transition-all duration-300 animate-table-row`}
@@ -678,13 +679,13 @@ function DebitorsPage() {
 				</div>
 
 				{/* Pagination */}
-				{debitorsResponse && (
+				{DEBITOR_RESULT && (
 					<div className='mt-6 animate-slide-in-up'>
 						<div className='bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-xl shadow-lg border border-slate-200/60 dark:border-slate-700/60 p-4'>
 							<Pagination
 								currentPage={pageNumber}
-								totalPages={debitorsResponse.totalPages}
-								totalItems={debitorsResponse.totalCount}
+								totalPages={DEBITOR_RESULT.totalPages}
+								totalItems={DEBITOR_RESULT.totalCount}
 								pageSize={pageSize}
 								onPageChange={handlePageChange}
 							/>

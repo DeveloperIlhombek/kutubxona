@@ -7,23 +7,23 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import { getDashboard } from '@/lib/dashboard'
-import { useAuthStore } from '@/store/auth'
-import { IDashboard } from '@/types'
+import { dashboardData, user } from '@/constant'
+// import { getDashboard } from '@/lib/dashboard'
+// import { useAuthStore } from '@/store/auth'
+// import { IDashboard } from '@/types'
 import { BookOpen, Building2, Sparkles, Users2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 function DashboardPage() {
-	const [dashboardData, setDashboardData] = useState<IDashboard>()
-	const [isLoading, setIsLoading] = useState(true)
-	const { user } = useAuthStore()
-
+	// const [dashboardData, setDashboardData] = useState<IDashboard>()
+	const [isLoading, setIsLoading] = useState(false)
+	// const { user } = useAuthStore()
 	useEffect(() => {
 		const fetchDashboardData = async () => {
 			try {
-				setIsLoading(true)
-				const response = await getDashboard()
-				setDashboardData(response?.result)
+				setIsLoading(false)
+				// const response = await getDashboard()
+				// setDashboardData(response?.result)
 			} catch (error) {
 				console.error('Error fetching dashboard data:', error)
 			} finally {

@@ -41,15 +41,15 @@ export interface IUser {
 }
 
 export interface IUserPhoto {
-	id: string
-	size: number
-	mimeType: string
-	extension: string
+	id?: string
+	size?: number
+	mimeType?: string
+	extension?: string
 	filename: string
-	updatedAt: string
-	createdAt: string
-	fileUrl: string
-	originFileUrl: string
+	updatedAt?: string
+	createdAt?: string
+	fileUrl?: string
+	originFileUrl?: string
 }
 //================= Faculte Interface =================
 export interface IFacultyResult {
